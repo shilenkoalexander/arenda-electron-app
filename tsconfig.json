@@ -12,6 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "vuetify",
       "webpack-env"
     ],
     "paths": {
@@ -24,7 +25,11 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/vuetify/types"
+    ],
   },
   "include": [
     "src/**/*.ts",
