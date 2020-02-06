@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue } from 'vue-property-decorator';
 
-@Component
+    @Component
 export default class ContractsList extends Vue {
-    public headers = [
+    headers = [
         { text: 'Статус', align: 'left', sortable: false, value: 'name', width: '10%' },
         { text: 'Договор', value: 'calories', width: '40%' },
         { text: 'Арендатор', value: 'fat', width: '40%' },
