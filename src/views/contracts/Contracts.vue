@@ -15,12 +15,12 @@
         <v-row>
             <v-col>
                 <v-card>
-                    <ContractsList/>
+                    <ContractsList @show-contract-details="showContractDetails"/>
                 </v-card>
             </v-col>
             <v-col>
-                <v-card>
-
+                <v-card v-if="id">
+                    <ContractDetails :id="id"/>
                 </v-card>
             </v-col>
         </v-row>
@@ -28,21 +28,27 @@
 </template>
 
 <script lang="ts">
-import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
-import ContractsActionPanel from '@/components/contracts/ContractsActionPanel.vue';
-import { Component, Vue } from 'vue-property-decorator';
-import ContractsList from '@/components/contracts/ContractsList.vue';
+    import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
+    import ContractsActionPanel from '@/components/contracts/ContractsActionPanel.vue';
+    import { Component, Vue } from 'vue-property-decorator';
+    import ContractsList from '@/components/contracts/ContractsList.vue';
+    import ContractDetails from '@/components/contracts/ContractDetails.vue';
 
-@Component({
-    components: {
-        ContractsFilter,
-        ContractsActionPanel,
-        ContractsList,
-    },
-})
-export default class Contracts extends Vue {
+    @Component({
+        components: {
+            ContractsFilter,
+            ContractsActionPanel,
+            ContractsList,
+            ContractDetails,
+        },
+    })
+    export default class Contracts extends Vue {
+        id: number | null = null;
 
-}
+        showContractDetails(id: number) {
+            this.id = id;
+        }
+    }
 </script>
 
 <style scoped>

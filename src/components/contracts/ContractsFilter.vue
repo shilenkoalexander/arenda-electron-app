@@ -45,7 +45,7 @@
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
-    import { enumToComboBoxItems } from '@/utils/enumutils';
+    import { enumToComboBoxItems } from '@/utils/enum-utils';
     import { ContractStatus, getContractStatusValue } from '@/types/contracts';
 
     @Component

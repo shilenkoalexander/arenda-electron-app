@@ -9,14 +9,14 @@
                     :key="index"
                     :to="button.action"
                     text
-                    color="grey lighten-1"
+                    color="secondary"
                     class="toolbar-button ml-3"
             >
                 {{ button.text }}
             </v-btn>
         </div>
         <v-spacer/>
-        <v-btn icon color="grey lighten-1" class="mr-2" small>
+        <v-btn icon color="secondary" class="mr-2" small>
             <v-icon size="25px">
                 mdi-settings
             </v-icon>
@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { MenuItem } from '@/types/common';
+    import { Component, Vue } from 'vue-property-decorator';
+    import { MenuItem } from '@/types/common';
 
-@Component
+    @Component
 export default class Toolbar extends Vue {
     public buttons: MenuItem[] = [
         {
