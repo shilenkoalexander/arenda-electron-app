@@ -19,8 +19,8 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card v-if="id">
-                    <ContractDetails :id="id"/>
+                <v-card v-if="item">
+                    <ContractDetails :item="item"/>
                 </v-card>
             </v-col>
         </v-row>
@@ -33,6 +33,8 @@
     import { Component, Vue } from 'vue-property-decorator';
     import ContractsList from '@/components/contracts/ContractsList.vue';
     import ContractDetails from '@/components/contracts/ContractDetails.vue';
+    import { getContractDetails } from '@/backend/service/contracts-service';
+    import { FullContractDetails } from '@/types/contracts';
 
     @Component({
         components: {
@@ -43,10 +45,10 @@
         },
     })
     export default class Contracts extends Vue {
-        id: number | null = null;
+        item: FullContractDetails | null = null;
 
         showContractDetails(id: number) {
-            this.id = id;
+            this.item = getContractDetails(id);
         }
     }
 </script>
