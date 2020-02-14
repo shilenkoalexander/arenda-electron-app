@@ -1,19 +1,7 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col>
-                <v-card>
-                    <ContractsFilter/>
-                </v-card>
-            </v-col>
-            <v-col>
-                <v-card class="fill-height">
-                    <ContractsActionPanel/>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
+            <v-col cols="5">
                 <v-card>
                     <ContractsList @show-contract-details="showContractDetails"/>
                 </v-card>

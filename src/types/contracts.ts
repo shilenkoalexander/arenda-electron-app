@@ -49,7 +49,23 @@ export interface ShortContractDetails {
 
 export interface FullContractDetails {
     contractInfo: ShortContractDetails;
-    contacts: string[];
+    contacts: Contact[];
     objectsInfo: ShortObjectDetails[];
 }
 
+export interface Contact {
+    contact: string;
+    type: ContactType;
+}
+
+export enum ContactType {
+    PHONE, EMAIL, SOCIAL,
+}
+
+export function getContactTypeValue(type: ContactType): string {
+    return $enum.mapValue(type).with({
+        [ContactType.EMAIL]: 'Электронная почта',
+        [ContactType.PHONE]: 'Телефон',
+        [ContactType.SOCIAL]: 'Соц. сеть или мессенджер',
+    });
+}

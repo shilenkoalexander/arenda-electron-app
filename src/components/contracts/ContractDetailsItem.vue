@@ -1,18 +1,18 @@
 <template>
     <v-row>
-        <v-col cols="4" class="pb-0">
-            <p class="mb-0 grey--text">{{text}}</p>
+        <v-col cols="4" class="pb-0 pt-1">
+            <p class="mb-0 grey--text">{{text}}:</p>
         </v-col>
-        <v-col class="pb-0">
+        <v-col class="pb-0 pt-1">
             <p class="mb-0">{{value}}</p>
         </v-col>
     </v-row>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
 
-@Component
+    @Component
 export default class ContractDetailsItem extends Vue {
     @Prop({
         type: String,

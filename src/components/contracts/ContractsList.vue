@@ -1,6 +1,10 @@
 <template>
     <v-container fluid>
         <v-row>
+            <ContractsFilter/>
+        </v-row>
+        <v-divider/>
+        <v-row>
             <v-col>
                 <v-data-table
                         :headers="headers"
@@ -44,8 +48,13 @@
     import { Contract } from '@/types/contracts';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
+    import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
 
-    @Component
+    @Component({
+        components: {
+            ContractsFilter,
+        },
+    })
     export default class ContractsList extends Vue {
         headers = [
             { text: 'Статус', align: 'center', sortable: false, value: 'status', width: '10%' },

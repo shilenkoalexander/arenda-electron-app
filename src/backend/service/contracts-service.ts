@@ -1,4 +1,4 @@
-import { Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
+import { ContactType, Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
 import { TenantType } from '@/types/tenants';
 
 export function getContracts(): Contract[] {
@@ -91,13 +91,29 @@ export function getContractDetails(id: number): FullContractDetails {
             lastContractExtensionTo: new Date(2020, 5, 8),
         },
         contacts: [
-            '0713368012',
-            '0713368012',
-            '0713368012',
+            { contact: '0713368012', type: ContactType.PHONE },
+            { contact: 'sashazemzer@gmail.com', type: ContactType.EMAIL },
+            { contact: 'vk.com/id33333', type: ContactType.SOCIAL },
         ],
         objectsInfo: [
             {
                 id: 1,
+                address: 'ул. НЕстерова',
+                businessType: 'продажа котиков',
+                onBalance: 'ЖЭК',
+                payment: 300.2,
+                rentalRate: 145.4,
+                subtenantsCount: 2,
+                startDate: new Date(2019, 2, 8),
+                endDate: new Date(2020, 12, 8),
+                objectIndividualInformation: {
+                    custom1: 'dfdf',
+                    custom2: 'dasdfsfsdffdf',
+                    custom3: 'dgdfgfdhfghgffg',
+                },
+            },
+            {
+                id: 2,
                 address: 'ул. НЕстерова',
                 businessType: 'продажа котиков',
                 onBalance: 'ЖЭК',
