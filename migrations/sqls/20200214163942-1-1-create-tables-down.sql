@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS `subtenants`;
+DROP TABLE IF EXISTS `objects_information`;
+DROP TABLE IF EXISTS `objects`;
+DROP TABLE IF EXISTS `contract_extensions`;
+DROP TABLE IF EXISTS `contacts`;
+DROP TABLE IF EXISTS `premise_types`;
+DROP TABLE IF EXISTS `indexing`;
+DROP TABLE IF EXISTS `payments`;
+DROP TABLE IF EXISTS `business_types`;
+DROP TABLE IF EXISTS `areas`;
+DROP TABLE IF EXISTS `accruals`;
+DROP TABLE IF EXISTS `adjustments`;
+DROP TABLE IF EXISTS `contracts`;
+DROP TABLE IF EXISTS `contract_type`;
+DROP TABLE IF EXISTS `contract_statuses`;
+DROP TABLE IF EXISTS `tenants`;
+DROP TABLE IF EXISTS `tenant_types`;

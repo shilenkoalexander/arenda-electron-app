@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <v-app class="app">
         <Toolbar/>
         <v-content>
             <v-fade-transition mode="out-in">
@@ -27,3 +27,9 @@
         }),
     });
 </script>
+
+<style>
+    .app {
+        font-family: "Roboto", monospace;
+    }
+</style>
