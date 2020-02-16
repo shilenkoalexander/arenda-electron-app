@@ -1,8 +1,8 @@
 module.exports = {
     extends: [
-        'airbnb-typescript',
-        'plugin:vue/recommended',
-        '@vue/airbnb',
+        'plugin:vue/essential',
+        'eslint:recommended',
+        '@vue/typescript',
     ],
     parserOptions: {
         project: './tsconfig.json',
