@@ -80,7 +80,6 @@
         })
         item!: FullContractDetails;
 
-        getContractStatusValue = getContractStatusValue;
         getContactTypeValue = getContactTypeValue;
         formatToFriendly = formatToFriendly;
 
@@ -102,6 +101,6 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
