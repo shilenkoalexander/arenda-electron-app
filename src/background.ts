@@ -2,8 +2,7 @@
 
 import { app, BrowserWindow, protocol } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
-// @ts-ignore
-import Database from 'better-sqlite3';
+import db from '../database';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -15,9 +14,7 @@ let win: BrowserWindow | null;
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 function createWindow() {
-    const database = new Database('data.db', { verbose: console.log });
-
-    if (!database) {
+    if (!db) {
         throw new Error('Database not load');
     }
 

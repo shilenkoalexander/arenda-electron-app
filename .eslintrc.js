@@ -4,7 +4,4 @@ module.exports = {
         'eslint:recommended',
         '@vue/typescript',
     ],
-    parserOptions: {
-        project: './tsconfig.json',
-    },
 };
