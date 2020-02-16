@@ -1,3 +1,5 @@
+-- Up
+
 insert into tenant_types
 values (1, 'LTD');
 insert into tenant_types
@@ -112,3 +114,5 @@ values (1, 1, '2019-10-01', '2019-12-12', '2019-10-01', 1000);
 insert into CONTACTS
 values (1, 1, '+380743368012', 'Основной телефон'),
        (2, 1, 'sasha@sasze.com', 'Рабочая почта');
+
+-- Down

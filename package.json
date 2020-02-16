@@ -14,10 +14,9 @@
   },
   "dependencies": {
     "better-sqlite3": "^5.4.3",
+    "better-sqlite3-helper": "^2.2.1",
     "core-js": "^3.4.4",
     "date-fns": "^2.9.0",
-    "db-migrate": "^0.11.6",
-    "db-migrate-sqlite3": "^0.4.0",
     "electron-rebuild": "^1.10.0",
     "ts-enum-util": "^4.0.1",
     "vue": "^2.6.10",
