@@ -1,8 +1,9 @@
 import { ContactType, Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
 import { TenantType } from '@/types/tenants';
+import { getAllContracts } from '@/backend/repository/contract-repository';
 
 export function getContracts(): Contract[] {
-    return [
+    /*return [
         {
             id: 1,
             number: '123456',
@@ -68,7 +69,9 @@ export function getContracts(): Contract[] {
                 tenantType: TenantType.LTD,
             },
         },
-    ];
+    ];*/
+
+    return getAllContracts();
 }
 
 export function getContractDetails(id: number): FullContractDetails {
