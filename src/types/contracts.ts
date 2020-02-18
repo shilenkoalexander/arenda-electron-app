@@ -20,13 +20,14 @@ export function getContractStatusValue(status: ContractStatus): string {
     });
 }
 
+// TODO убрать null
 export interface Contract {
     id: number;
     number: string;
     startDate: Date;
     endDate: Date;
-    tenantInfo: TenantInfo;
-    status: ContractStatus;
+    tenantInfo: TenantInfo | null;
+    status: ContractStatus | null;
 }
 
 export interface ShortContractDetails {

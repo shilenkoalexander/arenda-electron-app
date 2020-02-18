@@ -1,5 +1,6 @@
-import db from 'better-sqlite3-helper';
-// The first call creates the global instance with your settings
+import db, { BetterSqlite3Helper } from 'better-sqlite3-helper';
+import { SqliteError } from 'better-sqlite3';
+
 const instance = db({
     path: './data/data.db', // this is the default
     memory: false, // create a db only in memory
@@ -9,8 +10,23 @@ const instance = db({
     migrate: {  // disable completely by setting `migrate: false`
         force: false, // set to 'last' to automatically reapply the last migration-file
         table: 'migration', // name of the database table that is used to keep track
-        migrationsPath: '../migrations', // path of the migration-files
+        migrationsPath: './migrations', // path of the migration-files
     },
 });
 
-export default instance;
+// путь к миграциям почему-то прописывается в appdata
+function init() {
+    try {
+        instance.query('select 1');
+    } catch (e) {
+        if (e instanceof SqliteError) {
+            console.log('у ебать');
+            return;
+        }
+        console.log(e);
+    }
+}
+
+// The first call creates the global instance with your settings
+
+init();

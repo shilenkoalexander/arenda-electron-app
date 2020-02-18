@@ -68,7 +68,7 @@
         getIconColorByStatus = getIconColorByStatus;
         getIconByStatus = getIconByStatus;
 
-        created() {
+        async created() {
             this.items = getContracts();
         }
 
