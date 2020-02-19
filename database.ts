@@ -1,5 +1,6 @@
 import db, { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { SqliteError } from 'better-sqlite3';
+import path from 'path';
 
 const instance = db({
     path: './data/data.db', // this is the default
@@ -10,11 +11,10 @@ const instance = db({
     migrate: {  // disable completely by setting `migrate: false`
         force: false, // set to 'last' to automatically reapply the last migration-file
         table: 'migration', // name of the database table that is used to keep track
-        migrationsPath: './migrations', // path of the migration-files
+        migrationsPath: path.resolve(__dirname, '../../../../../../migrations'), // path of the migration-files
     },
 });
 
-// путь к миграциям почему-то прописывается в appdata
 function init() {
     try {
         instance.query('select 1');
