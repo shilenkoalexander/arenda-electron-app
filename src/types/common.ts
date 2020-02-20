@@ -16,6 +16,12 @@ export interface ComboBoxItem {
 export interface Pagination {
     page: number;
     size: number;
-    sort: string;
-    direction: string;
+    sort: string | null;
+    desc: boolean;
+}
+
+export interface Page<T> {
+    content: T[];
+    totalItems: number;
+    totalPages: number;
 }

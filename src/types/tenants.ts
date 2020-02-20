@@ -8,7 +8,7 @@ export interface TenantInfo {
 }
 
 export enum TenantType {
-    LTD, SE, PE,
+    LTD, SE, PE, UNKNOWN,
 }
 
 export function getTenantValue(type: TenantType): string {
@@ -16,5 +16,6 @@ export function getTenantValue(type: TenantType): string {
         [TenantType.LTD]: 'ООО',
         [TenantType.SE]: 'ГП',
         [TenantType.PE]: 'ЧП',
+        [TenantType.UNKNOWN]: 'Неизвестно',
     });
 }

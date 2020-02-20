@@ -25,9 +25,9 @@ export interface Contract {
     id: number;
     number: string;
     startDate: Date;
-    endDate: Date;
-    tenantInfo: TenantInfo | null;
-    status: ContractStatus | null;
+    validity: Date | null;
+    tenantInfo: TenantInfo;
+    status: ContractStatus;
 }
 
 export interface ShortContractDetails {
