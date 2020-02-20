@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `tenants`
 (
     `id`                 INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     `id_tenant_type`     INTEGER                           NOT NULL,
-    `organization_name`  TEXT                              NOT NULL,
+    `organization_name`  TEXT                              ,
     `responsible_person` TEXT                              NOT NULL,
     `legal_address`      TEXT                              NOT NULL,
     `inn`                TEXT                              NOT NULL,

@@ -9,6 +9,9 @@
                 <v-data-table
                         :headers="headers"
                         :items="items"
+                        :sort-by.sync="pagination.sort"
+                        height="65vh"
+                        hide-default-footer
                         fixed-header
                 >
                     <template v-slot:item.status="{item}">
@@ -21,7 +24,7 @@
                             <p class="clickable-text mb-0 mt-1">Договор №{{item.number}}</p>
                         </router-link>
                         <p class="mb-0 secondary-text">с: {{formatToFriendly(item.startDate)}}</p>
-                        <p class="mb-1 secondary-text">по: {{formatToFriendly(item.endDate)}}</p>
+                        <p class="mb-1 secondary-text">по: {{formatToFriendly(item.validity)}}</p>
                     </template>
                     <template v-slot:item.tenant="{item}">
                         <router-link to="/">
@@ -39,19 +42,32 @@
                 </v-data-table>
             </v-col>
         </v-row>
+        <v-row>
+            <Pagination
+                    color="primary lighten-1"
+                    v-model="pagination.page"
+                    :rows-per-page.sync="pagination.size"
+                    :visible-page-count-xs="5"
+                    :total-items="totalItems"
+                    :total-pages="totalPages"
+            />
+        </v-row>
     </v-container>
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
     import { getContracts } from '@/backend/service/contracts-service';
     import { Contract } from '@/types/contracts';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
+    import { Pagination } from '@/types/common';
+    import PaginationComponent from '@/components/Pagination.vue';
 
     @Component({
         components: {
+            Pagination: PaginationComponent,
             ContractsFilter,
         },
     })
@@ -64,12 +80,26 @@
         ];
         items: Contract[] = [];
 
+        pagination: Pagination = {
+            desc: false,
+            page: 1,
+            size: 5,
+            sort: null,
+        };
+
+        totalItems: number | null = null;
+        totalPages: number | null = null;
+
         formatToFriendly = formatToFriendly;
         getIconColorByStatus = getIconColorByStatus;
         getIconByStatus = getIconByStatus;
 
-        async created() {
-            this.items = getContracts();
+        @Watch('pagination', { immediate: true, deep: true })
+        onPaginationChanged() {
+            const page = getContracts(this.pagination);
+            this.items = page.content;
+            this.totalItems = page.totalItems;
+            this.totalPages = page.totalPages;
         }
 
         showDetails(id: number) {
@@ -78,7 +108,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .clickable-text {
         color: #2f518a;
         font-size: 16px;
@@ -87,4 +117,5 @@
     .secondary-text {
         color: gray;
     }
+
 </style>
