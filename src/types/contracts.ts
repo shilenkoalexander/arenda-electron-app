@@ -20,7 +20,6 @@ export function getContractStatusValue(status: ContractStatus): string {
     });
 }
 
-// TODO убрать null
 export interface Contract {
     id: number;
     number: string;
@@ -61,6 +60,10 @@ export interface Contact {
 
 export enum ContactType {
     PHONE, EMAIL, SOCIAL,
+}
+
+export enum ContractFilterMode {
+    ADDRESS, CONTRACT_NUMBER, TENANT,
 }
 
 export function getContactTypeValue(type: ContactType): string {

@@ -1,11 +1,12 @@
 import { Contract } from '@/types/contracts';
-import db from 'better-sqlite3-helper';
-import { mapContract } from '@/backend/mapper/mapper';
+import { ContractMapper } from '@/backend/mapper/result-mapper';
 import { Page, Pagination } from '@/types/common';
-import { getContractOrderByString, toLimit, toOrderBy } from '@/backend/utils/sql-util';
+import { queryWithPagination } from '@/backend/repository/repository';
+import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
+import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
 
-export function getAllContracts(pagination: Pagination): Page<Contract> {
-    const contracts = db().query(`
+export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<Contract> {
+    const query = `
         select c.id,
                c.contract_number,
                c.start_date,
@@ -20,12 +21,7 @@ export function getAllContracts(pagination: Pagination): Page<Contract> {
                  inner join tenants t on t.id = c.id_tenant
                  inner join tenant_types tt on tt.id = t.id_tenant_type
                  inner join contract_statuses cs on cs.id = c.id_status
-        ${toOrderBy(getContractOrderByString(pagination.sort))}
-        ${toLimit(pagination.page, pagination.size)}
-    `);
-    return {
-        content: contracts.map(mapContract),
-        totalItems: 15,
-        totalPages: 3,
-    };
+        ${contractFilterToWhereClause(filter)}
+        group by c.id`;
+    return queryWithPagination(query, pagination, new ContractMapper(), new ContractOrderMapper());
 }

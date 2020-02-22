@@ -2,9 +2,10 @@ import { ContactType, Contract, ContractStatus, FullContractDetails } from '@/ty
 import { TenantType } from '@/types/tenants';
 import { getAllContracts } from '@/backend/repository/contract-repository';
 import { Page, Pagination } from '@/types/common';
+import { ContractsFilterInfo } from '@/backend/filter/filter';
 
-export function getContracts(pagination: Pagination): Page<Contract> {
-    return getAllContracts(pagination);
+export function getContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<Contract> {
+    return getAllContracts(pagination, filter);
 }
 
 export function getContractDetails(id: number): FullContractDetails {
