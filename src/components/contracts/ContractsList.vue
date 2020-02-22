@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-row>
-            <ContractsFilter/>
+            <ContractsFilter @filter="onFilterChanged"/>
         </v-row>
         <v-divider/>
         <v-row>
@@ -10,6 +10,7 @@
                         :headers="headers"
                         :items="items"
                         :sort-by.sync="pagination.sort"
+                        :sort-desc.sync="pagination.desc"
                         height="65vh"
                         hide-default-footer
                         fixed-header
@@ -64,6 +65,7 @@
     import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
     import { Pagination } from '@/types/common';
     import PaginationComponent from '@/components/Pagination.vue';
+    import { ContractsFilterInfo } from '@/backend/filter/filter';
 
     @Component({
         components: {
@@ -83,9 +85,11 @@
         pagination: Pagination = {
             desc: false,
             page: 1,
-            size: 5,
+            size: 10,
             sort: null,
         };
+
+        filter: ContractsFilterInfo | null = null;
 
         totalItems: number | null = null;
         totalPages: number | null = null;
@@ -96,7 +100,17 @@
 
         @Watch('pagination', { immediate: true, deep: true })
         onPaginationChanged() {
-            const page = getContracts(this.pagination);
+            this.loadContracts();
+        }
+
+        @Watch('filter', { deep: true })
+        onLocalFilterChanged() {
+            this.loadContracts();
+            this.pagination.page = 1;
+        }
+
+        loadContracts() {
+            const page = getContracts(this.pagination, this.filter);
             this.items = page.content;
             this.totalItems = page.totalItems;
             this.totalPages = page.totalPages;
@@ -104,6 +118,10 @@
 
         showDetails(id: number) {
             this.$emit('show-contract-details', id);
+        }
+
+        onFilterChanged(filter: ContractsFilterInfo) {
+            this.filter = filter;
         }
     }
 </script>

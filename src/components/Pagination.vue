@@ -178,8 +178,9 @@
             for (let i = 0; i < this.breakpointsArray.length; i += 1) {
                 if (this.breakpointsArray[i]) {
                     for (let j = i; j >= 0; j -= 1) {
-                        if (this.visiblePagesBreakpointsArray[j] !== null) {
-                            return this.visiblePagesBreakpointsArray[j];
+                        const visibleCount = this.visiblePagesBreakpointsArray[j];
+                        if (visibleCount) {
+                            return visibleCount > this.totalPages ? this.totalPages : visibleCount;
                         }
                     }
                 }

@@ -37,7 +37,7 @@
         <ContractDetailsHeader text="Контакты"/>
         <ContractDetailsItem
                 v-for="(contact, index) in item.contacts"
-                :key="index"
+                :key="'c' + index"
                 :text="getContactTypeValue(contact.type)"
                 :value="contact.contact"
         />
@@ -45,7 +45,7 @@
         <ContractDetailsHeader text="Активные объекты"/>
         <ContractDetailsObjectItem
                 v-for="(object, index) in item.objectsInfo"
-                :key="object.id"
+                :key="'o' + index"
                 :order-number="index + 1"
                 :object-item="object"
         />

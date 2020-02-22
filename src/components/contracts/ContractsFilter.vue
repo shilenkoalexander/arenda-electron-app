@@ -1,3 +1,4 @@
+import { ContractFilterMode } from '@/types/contracts';
 <template>
     <v-container fluid class="py-3 pt-2 pb-3">
         <v-row>
@@ -10,7 +11,7 @@
                         prepend-inner-icon="mdi-magnify"
                         hide-details
                         clearable
-                        v-model="filterText"
+                        v-model="filter.search"
                 />
             </v-col>
         </v-row>
@@ -44,16 +45,40 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
     import { enumToComboBoxItems } from '@/utils/enum-utils';
-    import { ContractStatus, getContractStatusValue } from '@/types/contracts';
+    import { ContractFilterMode, ContractStatus, getContractStatusValue } from '@/types/contracts';
+    import { $enum } from 'ts-enum-util';
+    import { ContractsFilterInfo } from '@/backend/filter/filter';
+    import { ComboBoxItem } from '@/types/common';
 
     @Component
     export default class ContractsFilter extends Vue {
         statuses = enumToComboBoxItems(ContractStatus, getContractStatusValue);
-        status = null;
+
+        filter: ContractsFilterInfo = {
+            status: null,
+            filterMode: ContractFilterMode.ADDRESS,
+            search: null,
+        };
+
         filterMode = 0;
-        filterText = '';
+        status: ComboBoxItem | null = null;
+
+        @Watch('status')
+        onStatusChanged() {
+            this.filter.status = this.status ? this.status.value : null;
+        }
+
+        @Watch('filterMode')
+        onFilterModeChanged() {
+            this.filter.filterMode = $enum(ContractFilterMode).getValues()[this.filterMode];
+        }
+
+        @Watch('filter', { deep: true })
+        onFilterChanged() {
+            this.$emit('filter', this.filter);
+        }
     }
 </script>
 

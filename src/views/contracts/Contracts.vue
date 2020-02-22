@@ -7,7 +7,7 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card v-if="item">
+                <v-card v-if="item" class="fill-height">
                     <ContractDetails :item="item"/>
                 </v-card>
             </v-col>
