@@ -29,10 +29,9 @@
         </template>
 
         <ContractDetailsHeader text="Арендатор"/>
-        <ContractDetailsItem text="Название организации" :value="item.contractInfo.organizationName"/>
-        <ContractDetailsItem text="Руководитель" :value="item.contractInfo.responsiblePerson"/>
-        <ContractDetailsItem text="Юридический адрес" :value="item.contractInfo.legalAddress"/>
-        <ContractDetailsItem text="ИНН" :value="item.contractInfo.inn"/>
+        <ContractDetailsItem text="Название организации" :value="item.tenantInfo.fullName"/>
+        <ContractDetailsItem text="Юридический адрес" :value="item.tenantInfo.legalAddress"/>
+        <ContractDetailsItem text="ИНН" :value="item.tenantInfo.inn"/>
 
         <ContractDetailsHeader text="Контакты"/>
         <ContractDetailsItem

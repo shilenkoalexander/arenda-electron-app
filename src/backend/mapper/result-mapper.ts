@@ -1,13 +1,14 @@
-import { Contract, ContractStatus } from '@/types/contracts';
+import { Contact, ContactType, Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
 import { parseDate } from '@/utils/date-utils';
+import { ShortObjectDetails } from '@/types/objects';
 
 export interface ResultMapper<T> {
     map(value: any): T;
 }
 
-export class ContractMapper implements ResultMapper<Contract> {
+class ContractMapper implements ResultMapper<Contract> {
     map(value: any): Contract {
         return {
             id: value.id,
@@ -23,4 +24,68 @@ export class ContractMapper implements ResultMapper<Contract> {
             status: $enum(ContractStatus).getValueOrDefault(value.status, ContractStatus.UNKNOWN),
         };
     }
+}
+
+class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
+    map(value: any): FullContractDetails {
+        console.log(value);
+        return {
+            contractInfo: {
+                id: value.id,
+                type: value.contract_type,
+                number: value.contract_number,
+                validity: value.validity ? parseDate(value.validity) : null,
+                startDate: parseDate(value.start_date),
+                endDate: value.end_date ? parseDate(value.end_date) : null,
+                endReason: value.end_reason,
+                status: $enum(ContractStatus).getValueOrDefault(value.status, ContractStatus.UNKNOWN),
+                lastContractExtensionFrom: value.last_contract_extention_to ?
+                    parseDate(value.last_contract_extention_to) : null,
+                lastContractExtensionTo: value.last_contract_extention_from ?
+                    parseDate(value.last_contract_extention_from) : null,
+            },
+            tenantInfo: {
+                tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
+                legalAddress: value.legal_address,
+                inn: value.inn,
+                fullName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
+            },
+            contacts: value.contacts,
+            objectsInfo: value.objects,
+        };
+    }
+
+}
+
+class ContactMapper implements ResultMapper<Contact> {
+    map(value: any): Contact {
+        return {
+            contact: value.contact,
+            type: $enum(ContactType).getValueOrDefault(value.type, ContactType.UNKNOWN),
+        };
+    }
+}
+
+class ShortObjectDetailsMapper implements ResultMapper<ShortObjectDetails> {
+    map(value: any): ShortObjectDetails {
+        return {
+            id: value.id,
+            payment: value.payment,
+            businessType: value.business_type,
+            subtenantsCount: value.subtenants_count,
+            rentalRate: value.rental_rate,
+            startDate: value.start_date,
+            onBalance: value.on_balance,
+            address: value.address,
+            endDate: value.end_date,
+            objectIndividualInformation: value.objectIndividualInformation,
+        };
+    }
+}
+
+export class ResultMapperFactory {
+    static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();
+    static readonly fullContractDetailsMapper: ResultMapper<FullContractDetails> = new FullContractDetailsMapper();
+    static readonly contractMapper: ResultMapper<Contract> = new ContractMapper();
+    static readonly objectShortDetailsMapper: ResultMapper<ShortObjectDetails> = new ShortObjectDetailsMapper();
 }

@@ -58,7 +58,7 @@
 
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
-    import { getContracts } from '@/backend/service/contracts-service';
+    import { getAllContracts } from '@/backend/repository/contract-repository';
     import { Contract } from '@/types/contracts';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
@@ -110,7 +110,7 @@
         }
 
         loadContracts() {
-            const page = getContracts(this.pagination, this.filter);
+            const page = getAllContracts(this.pagination, this.filter);
             this.items = page.content;
             this.totalItems = page.totalItems;
             this.totalPages = page.totalPages;

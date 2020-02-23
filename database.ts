@@ -1,4 +1,4 @@
-import db, { BetterSqlite3Helper } from 'better-sqlite3-helper';
+import db from 'better-sqlite3-helper';
 import { SqliteError } from 'better-sqlite3';
 import path from 'path';
 
@@ -20,11 +20,12 @@ function init() {
         instance.query('select 1');
     } catch (e) {
         if (e instanceof SqliteError) {
-            console.log('у ебать');
+            console.log(e);
             return;
         }
         console.log(e);
     }
+    console.log('db success');
 }
 
 // The first call creates the global instance with your settings

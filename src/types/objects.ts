@@ -1,6 +1,6 @@
 export interface ShortObjectDetails {
     id: number;
-    objectIndividualInformation: Record<string, string>;
+    objectIndividualInformation: Record<string, string> | null;
     address: string;
     onBalance: string;
     payment: number;
