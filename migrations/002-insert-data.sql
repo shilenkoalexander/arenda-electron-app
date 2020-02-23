@@ -111,8 +111,14 @@ values (3, 1, 'Количество потолков', '1');
 insert into CONTRACT_EXTENSIONS
 values (1, 1, '2019-10-01', '2019-12-12', '2019-10-01', 1000);
 
+insert into contact_type
+values (1, 'PHONE'),
+       (2, 'EMAIL'),
+       (3, 'SOCIAL'),
+       (4, 'UNKNOWN');
+
 insert into CONTACTS
-values (1, 1, '+380743368012', 'Основной телефон'),
-       (2, 1, 'sasha@sasze.com', 'Рабочая почта');
+values (1, 1, '+380743368012', 1),
+       (2, 1, 'sasha@sasze.com', 2);
 
 -- Down

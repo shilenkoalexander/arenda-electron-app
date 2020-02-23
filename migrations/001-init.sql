@@ -110,14 +110,21 @@ CREATE TABLE IF NOT EXISTS `premise_types`
     `name` TEXT                              NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `contact_type`
+(
+    `id`   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    `name` TEXT                              NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `contacts`
 (
     `id`        INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     `id_tenant` INTEGER                           NOT NULL,
     `contact`   TEXT                              NOT NULL,
-    `comment`   TEXT                              NULL,
+    `id_type`   INTEGER                           NOT NULL,
 
-    foreign key (id_tenant) references tenants (id)
+    foreign key (id_tenant) references tenants (id),
+    foreign key (id_type) references contact_type (id)
 );
 
 CREATE TABLE IF NOT EXISTS `contract_extensions`

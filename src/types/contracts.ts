@@ -1,5 +1,5 @@
 import { $enum } from 'ts-enum-util';
-import { TenantInfo, TenantType } from '@/types/tenants';
+import { TenantInfo } from '@/types/tenants';
 import { ShortObjectDetails } from '@/types/objects';
 
 export enum ContractStatus {
@@ -33,22 +33,18 @@ export interface ShortContractDetails {
     id: number;
     number: string;
     startDate: Date;
-    validity: Date;
-    endDate: Date;
-    endReason: string;
+    validity: Date | null;
+    endDate: Date | null;
+    endReason: string | null;
     status: ContractStatus;
     type: string;
-    lastContractExtensionFrom: Date;
-    lastContractExtensionTo: Date;
-    organizationName: string;
-    responsiblePerson: string;
-    inn: string;
-    legalAddress: string;
-    tenantType: TenantType;
+    lastContractExtensionFrom: Date | null;
+    lastContractExtensionTo: Date | null;
 }
 
 export interface FullContractDetails {
     contractInfo: ShortContractDetails;
+    tenantInfo: TenantInfo;
     contacts: Contact[];
     objectsInfo: ShortObjectDetails[];
 }
@@ -59,7 +55,7 @@ export interface Contact {
 }
 
 export enum ContactType {
-    PHONE, EMAIL, SOCIAL,
+    PHONE, EMAIL, SOCIAL, UNKNOWN,
 }
 
 export enum ContractFilterMode {
@@ -71,5 +67,6 @@ export function getContactTypeValue(type: ContactType): string {
         [ContactType.EMAIL]: 'Электронная почта',
         [ContactType.PHONE]: 'Телефон',
         [ContactType.SOCIAL]: 'Соц. сеть или мессенджер',
+        [ContactType.UNKNOWN]: 'Неизвестный тип',
     });
 }

@@ -21,7 +21,7 @@
     import { Component, Vue } from 'vue-property-decorator';
     import ContractsList from '@/components/contracts/ContractsList.vue';
     import ContractDetails from '@/components/contracts/ContractDetails.vue';
-    import { getContractDetails } from '@/backend/service/contracts-service';
+    import { getContractDetails } from '@/backend/repository/contract-repository';
     import { FullContractDetails } from '@/types/contracts';
 
     @Component({
