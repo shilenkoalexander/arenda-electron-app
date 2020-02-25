@@ -81,12 +81,12 @@
             { text: 'Просмотр', value: 'action', sortable: false, align: 'center' },
         ];
         items: Contract[] = [];
-
+// TODO: на бэке поправить сортировку еще
         pagination: Pagination = {
-            desc: false,
+            desc: [false],
             page: 1,
             size: 10,
-            sort: null,
+            sort: [null],
         };
 
         filter: ContractsFilterInfo | null = null;

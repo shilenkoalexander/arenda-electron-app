@@ -28,7 +28,6 @@ class ContractMapper implements ResultMapper<Contract> {
 
 class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
     map(value: any): FullContractDetails {
-        console.log(value);
         return {
             contractInfo: {
                 id: value.id,
@@ -51,7 +50,7 @@ class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
                 fullName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
             },
             contacts: value.contacts,
-            objectsInfo: value.objects,
+            objectsInfo: value.objectsInfo,
         };
     }
 

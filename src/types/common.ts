@@ -16,8 +16,8 @@ export interface ComboBoxItem {
 export interface Pagination {
     page: number;
     size: number;
-    sort: string | null;
-    desc: boolean;
+    sort: Array<string | null>;
+    desc: boolean[];
 }
 
 export interface Page<T> {

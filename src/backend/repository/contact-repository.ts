@@ -4,7 +4,7 @@ import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
 
 export function getContactsByTenantId(tenantId: number): Contact[] {
     const contacts = db().query(`
-        select *
+        select contact, ct.name as type
         from contacts
             inner join contact_type ct on id_type = ct.id
         where id_tenant = ${tenantId}
