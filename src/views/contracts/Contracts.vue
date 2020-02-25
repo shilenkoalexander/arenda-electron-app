@@ -37,6 +37,7 @@
 
         showContractDetails(id: number) {
             this.item = getContractDetails(id);
+            console.log(this.item);
         }
     }
 </script>
