@@ -1,5 +1,5 @@
 export interface OrderMapper {
-    map(sortBy: string | null, desc: boolean): string | null;
+    map(sortBy: string | null, desc: boolean | null): string | null;
 }
 
 export class ContractOrderMapper implements OrderMapper {
@@ -13,10 +13,10 @@ export class ContractOrderMapper implements OrderMapper {
         }
 
         if (sortBy === 'tenant') {
-            return ` ORDER BY CASE t.organization_name
+            return `CASE t.organization_name
                         WHEN NULL THEN t.responsible_person
                         ELSE t.organization_name
-                     END ${desc ? 'asc' : 'desc'} `;
+                     END ${desc ? 'desc' : ''} `;
         }
 
         return null;
