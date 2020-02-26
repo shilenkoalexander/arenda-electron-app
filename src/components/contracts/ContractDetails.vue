@@ -42,12 +42,17 @@
         />
 
         <ContractDetailsHeader text="Активные объекты"/>
-        <ContractDetailsObjectItem
-                v-for="(object, index) in item.objectsInfo"
-                :key="'o' + index"
-                :order-number="index + 1"
-                :object-item="object"
-        />
+        <template v-if="item.objectsInfo.length > 0">
+            <ContractDetailsObjectItem
+                    v-for="(object, index) in item.objectsInfo"
+                    :key="'o' + index"
+                    :order-number="index + 1"
+                    :object-item="object"
+            />
+        </template>
+        <template v-else>
+            <p class="mb-0">Объекты отсутствуют</p>
+        </template>
     </v-container>
 </template>
 

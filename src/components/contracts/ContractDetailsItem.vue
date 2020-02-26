@@ -13,19 +13,19 @@
     import { Component, Prop, Vue } from 'vue-property-decorator';
 
     @Component
-export default class ContractDetailsItem extends Vue {
-    @Prop({
-        type: String,
-        required: true,
-    })
-    text!: string;
+    export default class ContractDetailsItem extends Vue {
+        @Prop({
+            type: String,
+            required: true,
+        })
+        text!: string;
 
-    @Prop({
-        type: String,
-        required: true,
-    })
-    value!: string;
-}
+        @Prop({
+            type: String,
+            required: true,
+        })
+        value!: string;
+    }
 </script>
 
 <style scoped>

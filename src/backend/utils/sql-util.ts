@@ -2,7 +2,9 @@ import { OrderMapper } from '@/backend/mapper/order-mapper';
 import { Pagination } from '@/types/common';
 
 export function toOrderBy(pagination: Pagination, mapper: OrderMapper): string {
-    const sortBy = mapper.map(pagination.sort, pagination.desc);
+    const sort = pagination.sort ? pagination.sort[0] : null;
+    const desc = pagination.desc ? pagination.desc[0] : null;
+    const sortBy = mapper.map(sort, desc);
     return sortBy && sortBy.length > 0 ? `ORDER BY ${sortBy}` : '';
 }
 

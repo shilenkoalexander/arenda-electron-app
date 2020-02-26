@@ -17,7 +17,7 @@ export interface Pagination {
     page: number;
     size: number;
     sort: Array<string | null>;
-    desc: boolean[];
+    desc: Array<boolean | null>;
 }
 
 export interface Page<T> {

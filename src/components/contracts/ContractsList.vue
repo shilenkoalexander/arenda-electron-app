@@ -81,7 +81,7 @@
             { text: 'Просмотр', value: 'action', sortable: false, align: 'center' },
         ];
         items: Contract[] = [];
-// TODO: на бэке поправить сортировку еще
+
         pagination: Pagination = {
             desc: [false],
             page: 1,
