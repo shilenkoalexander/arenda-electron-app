@@ -14,8 +14,6 @@
                 <v-col>
                     <ContractInfoItem text="Дата заключения" value="18.01.2018"/>
                 </v-col>
-            </v-row>
-            <v-row>
                 <v-col>
                     <ContractInfoItem text="Срок действия" value="18.01.2019"/>
                 </v-col>
@@ -27,12 +25,10 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <ContractInfoItem text="Срок действия" value="18.01.2019"/>
+                    <ContractInfoItem text="С" value="18.01.2019"/>
                 </v-col>
-            </v-row>
-            <v-row>
                 <v-col>
-                    <ContractInfoItem text="Срок действия" value="18.01.2019"/>
+                    <ContractInfoItem text="По" value="18.01.2019"/>
                 </v-col>
             </v-row>
         </v-container>

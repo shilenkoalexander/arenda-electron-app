@@ -2,7 +2,7 @@
     <v-card>
         <v-container fluid class="pl-5">
             <v-row>
-                <v-col cols="4">
+                <v-col cols="3">
                     <ContractInfoItem text="№ договора" value="111111" :text-cols="5"/>
                 </v-col>
                 <v-col>
