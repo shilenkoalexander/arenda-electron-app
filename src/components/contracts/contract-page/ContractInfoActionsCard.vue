@@ -50,7 +50,7 @@
                             block
                             color="error darken-1"
                     >
-                        Редактировать
+                        Закрыть
                     </v-btn>
                 </v-col>
             </v-row>
