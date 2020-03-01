@@ -19,3 +19,11 @@ export function getTenantValue(type: TenantType): string {
         [TenantType.UNKNOWN]: 'Неизвестно',
     });
 }
+
+export interface Subtenant {
+    name: string;
+    square: string;
+    startDate: Date;
+    endDate: Date;
+    businessType: string;
+}
