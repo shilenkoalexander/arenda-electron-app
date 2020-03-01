@@ -11,24 +11,24 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <ContractInfoItem text="Начисление" value="314.35 р"/>
+                    <TextValueItem text="Начисление" value="314.35 р"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="Оплата" value="314.35 р"/>
+                    <TextValueItem text="Оплата" value="314.35 р"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="Дата начисления" value="01.01.2019"/>
+                    <TextValueItem text="Дата начисления" value="01.01.2019"/>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col>
-                    <ContractInfoItem text="Задолженность" value="314.35 р"/>
+                    <TextValueItem text="Задолженность" value="314.35 р"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="Пеня" value="314.35 р"/>
+                    <TextValueItem text="Пеня" value="314.35 р"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="Дата оплаты" value="01.01.2019"/>
+                    <TextValueItem text="Дата оплаты" value="01.01.2019"/>
                 </v-col>
             </v-row>
         </v-container>
@@ -36,12 +36,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import ContractInfoItem from '@/components/contracts/contract-page/ContractInfoItem.vue';
+    import { Component, Vue } from 'vue-property-decorator';
+    import TextValueItem from '@/components/TextValueItem.vue';
 
-@Component({
+    @Component({
     components: {
-        ContractInfoItem,
+        TextValueItem,
     },
 })
 export default class FinancialCard extends Vue {

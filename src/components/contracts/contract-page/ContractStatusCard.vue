@@ -12,10 +12,10 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <ContractInfoItem text="Дата заключения" value="18.01.2018"/>
+                    <TextValueItem text="Дата заключения" value="18.01.2018"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="Срок действия" value="18.01.2019"/>
+                    <TextValueItem text="Срок действия" value="18.01.2019"/>
                 </v-col>
             </v-row>
             <v-row class="mt-2">
@@ -25,10 +25,10 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <ContractInfoItem text="С" value="18.01.2019"/>
+                    <TextValueItem text="С" value="18.01.2019"/>
                 </v-col>
                 <v-col>
-                    <ContractInfoItem text="По" value="18.01.2019"/>
+                    <TextValueItem text="По" value="18.01.2019"/>
                 </v-col>
             </v-row>
         </v-container>
@@ -39,11 +39,11 @@
     import { Component, Vue } from 'vue-property-decorator';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import { ContractStatus, getContractStatusValue } from '@/types/contracts';
-    import ContractInfoItem from '@/components/contracts/contract-page/ContractInfoItem.vue';
+    import TextValueItem from '@/components/TextValueItem.vue';
 
     @Component({
         components: {
-            ContractInfoItem,
+            TextValueItem,
         },
     })
     export default class ContractStatusCard extends Vue {

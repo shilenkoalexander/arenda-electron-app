@@ -1,8 +1,8 @@
 <template>
     <v-card>
-        <v-container fluid>
-            <v-row justify="center">
-                <v-col cols="10">
+        <v-container fluid fill-height class="justify-center align-content-center">
+            <v-row>
+                <v-col cols="4">
                     <v-btn
                             block
                             color="primary lighten-1"
@@ -11,9 +11,7 @@
                         Редактировать
                     </v-btn>
                 </v-col>
-            </v-row>
-            <v-row justify="center">
-                <v-col cols="10">
+                <v-col cols="4">
                     <v-btn
                             block
                             color="primary lighten-1"
@@ -22,20 +20,7 @@
                         Перерасчет
                     </v-btn>
                 </v-col>
-            </v-row>
-            <v-row justify="center">
-                <v-col cols="10">
-                    <v-btn
-                            block
-                            color="primary lighten-1"
-                            class="button-text"
-                    >
-                        Продлить
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row justify="center">
-                <v-col cols="10">
+                <v-col cols="4">
                     <v-btn
                             block
                             color="warning"
@@ -44,8 +29,26 @@
                     </v-btn>
                 </v-col>
             </v-row>
-            <v-row justify="center">
-                <v-col cols="10">
+            <v-row>
+                <v-col cols="4">
+                    <v-btn
+                            block
+                            color="primary lighten-1"
+                            class="button-text"
+                    >
+                        Продлить
+                    </v-btn>
+                </v-col>
+                <v-col cols="4">
+                    <v-btn
+                            block
+                            color="primary lighten-1"
+                            class="button-text"
+                    >
+                        Какая то еще кнопка
+                    </v-btn>
+                </v-col>
+                <v-col cols="4">
                     <v-btn
                             block
                             color="error darken-1"

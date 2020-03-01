@@ -7,13 +7,20 @@
             <v-col cols="5">
                 <ContractStatusCard class="fill-height"/>
             </v-col>
-            <!--<v-col>
-                <ContractInfoActionsCard class="fill-height"/>
-            </v-col>-->
         </v-row>
         <v-row>
             <v-col cols="7">
                 <FinancialCard class="fill-height"/>
+            </v-col>
+            <v-col>
+                <ContractInfoActionsCard class="fill-height"/>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="7">
+                <v-card>
+                    <ObjectList/>
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
@@ -25,18 +32,20 @@
     import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
+    import ObjectList from '@/components/contracts/object-list/ObjectList.vue';
 
     @Component({
-    components: {
-        ContractInfo,
-        ContractStatusCard,
-        ContractInfoActionsCard,
-        FinancialCard,
-    },
-})
-export default class ContractPage extends Vue {
+        components: {
+            ContractInfo,
+            ContractStatusCard,
+            ContractInfoActionsCard,
+            FinancialCard,
+            ObjectList,
+        },
+    })
+    export default class ContractPage extends Vue {
 
-}
+    }
 </script>
 
 <style scoped>
