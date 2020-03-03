@@ -1,4 +1,5 @@
 import { Subtenant } from '@/types/tenants';
+import { AssociativeArrayItem } from '@/types/common';
 
 export interface ShortObjectDetails {
     id: number;
@@ -16,7 +17,7 @@ export interface ShortObjectDetails {
 export interface BasicObjectInfo {
     id: number;
     address: string;
-    square: number;
+    objectType: string;
     payment: number;
     rentalRate: number;
 }
@@ -25,7 +26,7 @@ export interface FullObjectDetails {
     id: number;
     businessType: string;
     area: string;
-    objectIndividualInformation: Record<string, string> | null;
+    objectIndividualInformation: AssociativeArrayItem[] | null;
     address: string;
     onBalance: string;
     payment: number;
@@ -35,8 +36,8 @@ export interface FullObjectDetails {
     expertReviewSum: number;
     expertReviewDate: Date;
     subtenants: Subtenant[];
-    square: number; // todo добавить поле в базу
-    /*dispositionDate: Date; // TODO удалить их из базы. эти поля на уровне договора
-    dispositionNumber: number;
-    dispositionMaker: string;*/
+    objectType: string; // todo добавить в базу
+    dispositionDate: Date;
+    dispositionNumber: string;
+    dispositionMaker: string;
 }

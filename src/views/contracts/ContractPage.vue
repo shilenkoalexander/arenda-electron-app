@@ -1,29 +1,49 @@
 <template>
-    <v-container fluid>
-        <v-row>
-            <v-col cols="7">
-                <ContractInfo class="fill-height"/>
-            </v-col>
-            <v-col cols="5">
-                <ContractStatusCard class="fill-height"/>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="7">
-                <FinancialCard class="fill-height"/>
-            </v-col>
-            <v-col>
-                <ContractInfoActionsCard class="fill-height"/>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="7">
-                <v-card>
-                    <ObjectList/>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <div>
+        <v-tabs
+                v-model="tab"
+                background-color="primary lighten-1"
+                dark
+        >
+            <v-tab>Информация о договоре</v-tab>
+            <v-tab>Информация об объектах</v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+            <v-tab-item>
+                <v-container fluid class="back">
+                    <v-row>
+                        <v-col cols="7">
+                            <ContractInfo class="fill-height"/>
+                        </v-col>
+                        <v-col cols="5">
+                            <ContractStatusCard class="fill-height"/>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="7">
+                            <FinancialCard class="fill-height"/>
+                        </v-col>
+                        <v-col>
+                            <ContractInfoActionsCard class="fill-height"/>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-tab-item>
+            <v-tab-item>
+                <v-container fluid class="back">
+                    <v-row>
+                        <v-col cols="12">
+                            <ObjectListCard/>
+                        </v-col>
+                        <v-col cols="12">
+                            <ObjectDetailsCard/>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-tab-item>
+        </v-tabs-items>
+    </div>
 </template>
 
 <script lang="ts">
@@ -32,7 +52,8 @@
     import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
-    import ObjectList from '@/components/contracts/object-list/ObjectList.vue';
+    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+    import ObjectListCard from '@/components/contracts/contract-page/ObjectListCard.vue';
 
     @Component({
         components: {
@@ -40,14 +61,15 @@
             ContractStatusCard,
             ContractInfoActionsCard,
             FinancialCard,
-            ObjectList,
+            ObjectListCard,
+            ObjectDetailsCard,
         },
     })
     export default class ContractPage extends Vue {
-
+        tab = null;
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

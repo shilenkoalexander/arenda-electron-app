@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
         <v-row>
-            <v-col>
+            <v-col class="pt-0">
                 <v-data-table
                         :headers="headers"
                         :items="items"
@@ -11,10 +11,10 @@
                     <template v-slot:item.address="{item}">
                         {{item.address}}
                     </template>
-                    <template v-slot:item.square="{item}">
-                        {{item.square}}
+                    <template v-slot:item.type="{item}">
+                        {{item.objectType}}
                     </template>
-                    <template v-slot:item.rate="{item}">
+                    <template v-slot:item.payment="{item}">
                         {{`${item.payment} ${CURRENCY} (${item.rentalRate}%)`}}
                     </template>
                     <template v-slot:item.action="{item}">
@@ -43,9 +43,9 @@
     @Component
     export default class ObjectListItems extends Vue {
         headers = [
-            { text: 'Адрес', sortable: false, value: 'address', width: '50%' },
-            { text: 'Площадь', value: 'square', sortable: false, width: '20%' },
-            { text: 'Арендная ставка', value: 'rate', sortable: false, width: '20%' },
+            { text: 'Адрес', sortable: false, value: 'address', width: '40%' },
+            { text: 'Площадь', value: 'type', sortable: false, width: '30%' },
+            { text: 'Арендная плата', value: 'payment', sortable: false, width: '18%' },
             { text: 'Действия', value: 'action', sortable: false, align: 'center' },
         ];
 
@@ -57,7 +57,35 @@
                 address: 'ул. Пушкина дом Колотушкина',
                 payment: 150.3,
                 rentalRate: 10.5,
-                square: 452.63,
+                objectType: 'Пятиэтажное помещение',
+            },
+            {
+                id: 2,
+                address: 'ул. Пушкина дом Колотушкина',
+                payment: 150.3,
+                rentalRate: 10.5,
+                objectType: 'Пятиэтажное помещение',
+            },
+            {
+                id: 3,
+                address: 'ул. Пушкина дом Колотушкина',
+                payment: 150.3,
+                rentalRate: 10.5,
+                objectType: 'Пятиэтажное помещение',
+            },
+            {
+                id: 4,
+                address: 'ул. Пушкина дом Колотушкина',
+                payment: 150.3,
+                rentalRate: 10.5,
+                objectType: 'Пятиэтажное помещение',
+            },
+            {
+                id: 5,
+                address: 'ул. Пушкина дом Колотушкина',
+                payment: 150.3,
+                rentalRate: 10.5,
+                objectType: 'Пятиэтажное помещение',
             },
         ];
     }

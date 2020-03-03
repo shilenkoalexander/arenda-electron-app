@@ -25,3 +25,9 @@ export interface Page<T> {
     totalItems: number;
     totalPages: number;
 }
+
+// это чтобы можно было нормально использовать ascii как ключ
+export interface AssociativeArrayItem {
+    key: string;
+    value: string;
+}
