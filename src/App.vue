@@ -1,7 +1,7 @@
 <template>
     <v-app class="app">
         <Toolbar/>
-        <v-content>
+        <v-content class="back">
             <v-fade-transition mode="out-in">
                 <router-view/>
             </v-fade-transition>
@@ -36,5 +36,9 @@
             font-size: 1rem !important;
             font-weight: normal !important;
         }
+    }
+
+    .back {
+        background-color: #F9F9F9;
     }
 </style>
