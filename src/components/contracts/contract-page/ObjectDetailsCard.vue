@@ -1,21 +1,22 @@
 <template>
     <v-card>
+        <v-card-title class="primary lighten-2 white--text text--darken-3">
+            <v-icon class="mr-3" color="white">mdi-home-city</v-icon>
+            {{ item.address }}
+        </v-card-title>
         <v-container fluid class="pt-0">
             <v-row>
                 <v-col cols="12">
-                    <TextValueItem text="Адрес" :value="item.address" header/>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="6">
                     <v-container fluid class="pa-0">
                         <v-row>
                             <template>
                                 <v-col cols="4">
-                                    <TextValueItem text="Дата начала" :value="formatToFriendly(item.startDate)"/>
+                                    <TextValueItem text="Дата начала"
+                                                   :value="formatToFriendly(item.startDate)"/>
                                 </v-col>
                                 <v-col cols="4">
-                                    <TextValueItem text="Срок действия" :value="formatToFriendly(item.endDate)"/>
+                                    <TextValueItem text="Срок действия"
+                                                   :value="formatToFriendly(item.endDate)"/>
                                 </v-col>
                                 <v-col cols="4">
                                     <TextValueItem text="Район" :value="item.area"/>
@@ -30,29 +31,29 @@
                                     <TextValueItem text="На балансе" :value="item.onBalance"/>
                                 </v-col>
                             </template>
-                            <v-col cols="12">
-                                <v-divider/>
-                            </v-col>
                             <template>
                                 <v-col cols="12">
                                     <TextValueItem text="Индивидуальные данные" header/>
                                 </v-col>
-                                <v-col cols="12" v-for="info in item.objectIndividualInformation" :key="info.key">
+                                <v-col cols="12" v-for="info in item.objectIndividualInformation"
+                                       :key="info.key">
                                     <TextValueItem :text="info.key" :value="info.value"/>
                                 </v-col>
                             </template>
                         </v-row>
                     </v-container>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12">
                     <v-container fluid class="pa-0">
                         <v-row>
                             <template>
                                 <v-col cols="6">
-                                    <TextValueItem text="Арендная плата" :value="item.payment.toString(10) + ' р.'"/>
+                                    <TextValueItem text="Арендная плата"
+                                                   :value="item.payment.toString(10) + ' р.'"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <TextValueItem text="Арендная ставка" :value="item.rentalRate.toString(10) + '%'"/>
+                                    <TextValueItem text="Арендная ставка"
+                                                   :value="item.rentalRate.toString(10) + '%'"/>
                                 </v-col>
                             </template>
                             <template>
@@ -60,10 +61,12 @@
                                     <TextValueItem text="Экспертная оценка" header/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <TextValueItem text="Сумма" :value="item.expertReviewSum.toString(10) + ' р.'"/>
+                                    <TextValueItem text="Сумма"
+                                                   :value="item.expertReviewSum.toString(10) + ' р.'"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <TextValueItem text="Дата" :value="formatToFriendly(item.expertReviewDate)"/>
+                                    <TextValueItem text="Дата"
+                                                   :value="formatToFriendly(item.expertReviewDate)"/>
                                 </v-col>
                             </template>
                             <template>

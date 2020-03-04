@@ -70,3 +70,30 @@ export function getContactTypeValue(type: ContactType): string {
         [ContactType.UNKNOWN]: 'Неизвестный тип',
     });
 }
+
+export interface ContractExtension {
+    actionDate: Date;
+    dateFrom: Date;
+    dateTo: Date;
+}
+
+export interface ContractPageContractDetails {
+    id: number;
+    tenantId: number;
+    tenantName: string;
+    contractType: string;
+    businessType: string;
+    decisionDate: Date;
+    decisionNumber: string;
+    decisionMaker: string;
+}
+
+export interface ContractPageStatusDetails {
+    contractStatus: ContractStatus;
+    startDate: Date;
+    endDate: Date;
+}
+
+/*export interface ContractPageDetails {
+
+}*/

@@ -17,7 +17,7 @@
                             <ContractInfo class="fill-height"/>
                         </v-col>
                         <v-col cols="5">
-                            <ContractStatusCard class="fill-height"/>
+                            <ContractInfoActionsCard class="fill-height"/>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -25,7 +25,7 @@
                             <FinancialCard class="fill-height"/>
                         </v-col>
                         <v-col>
-                            <ContractInfoActionsCard class="fill-height"/>
+                            <ContractStatusCard class="fill-height"/>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -33,10 +33,7 @@
             <v-tab-item>
                 <v-container fluid class="back">
                     <v-row>
-                        <v-col cols="12">
-                            <ObjectListCard/>
-                        </v-col>
-                        <v-col cols="12">
+                        <v-col cols="6" v-for="i in 3" :key="i">
                             <ObjectDetailsCard/>
                         </v-col>
                     </v-row>

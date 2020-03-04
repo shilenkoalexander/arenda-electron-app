@@ -41,3 +41,5 @@ export interface FullObjectDetails {
     dispositionNumber: string;
     dispositionMaker: string;
 }
+
+// todo заменить таблицы payments, accruals и остальные на одну
