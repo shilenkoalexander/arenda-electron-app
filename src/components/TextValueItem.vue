@@ -1,7 +1,7 @@
 <template>
     <v-container fluid class="py-1" :class="itemClasses">
         <v-row class="py-0 px-3">
-            <p class="mb-0 mt-1 mr-3" :class="textClasses">
+            <p class="mb-0 mr-3" :class="textClasses">
                 {{text}}<span v-if="value">:</span>
             </p>
             <template v-if="value">
@@ -46,16 +46,16 @@
 
         get itemClasses(): string[] {
             if (this.header) {
-                return [];
+                return ['pt-0'];
             }
             return ['item'];
         }
 
         get textClasses(): string[] {
             if (this.header) {
-                return ['title', 'grey--text'];
+                return ['title', 'primary--text text--lighten-2', 'mt-0'];
             }
-            return ['grey--text'];
+            return ['primary--text text--lighten-2', 'mt-1'];
         }
 
         get valueClasses(): string[] {

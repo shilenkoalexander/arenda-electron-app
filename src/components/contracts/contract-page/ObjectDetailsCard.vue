@@ -4,81 +4,84 @@
             <v-icon class="mr-3" color="white">mdi-home-city</v-icon>
             {{ item.address }}
         </v-card-title>
+
         <v-container fluid class="pt-0">
             <v-row>
                 <v-col cols="12">
-                    <v-container fluid class="pa-0">
+                    <InfoBlock class="mt-2">
                         <v-row>
-                            <template>
-                                <v-col cols="4">
-                                    <TextValueItem text="Дата начала"
-                                                   :value="formatToFriendly(item.startDate)"/>
-                                </v-col>
-                                <v-col cols="4">
-                                    <TextValueItem text="Срок действия"
-                                                   :value="formatToFriendly(item.endDate)"/>
-                                </v-col>
-                                <v-col cols="4">
-                                    <TextValueItem text="Район" :value="item.area"/>
-                                </v-col>
-                                <v-col cols="12">
-                                    <TextValueItem text="Вид деятельности" :value="item.businessType"/>
-                                </v-col>
-                                <v-col cols="6">
-                                    <TextValueItem text="Тип объекта" :value="item.objectType"/>
-                                </v-col>
-                                <v-col cols="6">
-                                    <TextValueItem text="На балансе" :value="item.onBalance"/>
-                                </v-col>
-                            </template>
-                            <template>
-                                <v-col cols="12">
-                                    <TextValueItem text="Индивидуальные данные" header/>
-                                </v-col>
-                                <v-col cols="12" v-for="info in item.objectIndividualInformation"
-                                       :key="info.key">
-                                    <TextValueItem :text="info.key" :value="info.value"/>
-                                </v-col>
-                            </template>
+                            <v-col cols="4">
+                                <TextValueItem text="Дата начала"
+                                               :value="formatToFriendly(item.startDate)"/>
+                            </v-col>
+                            <v-col cols="4">
+                                <TextValueItem text="Срок действия"
+                                               :value="formatToFriendly(item.endDate)"/>
+                            </v-col>
+                            <v-col cols="4">
+                                <TextValueItem text="Район" :value="item.area"/>
+                            </v-col>
+                            <v-col cols="12">
+                                <TextValueItem text="Вид деятельности" :value="item.businessType"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <TextValueItem text="Тип объекта" :value="item.objectType"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <TextValueItem text="На балансе" :value="item.onBalance"/>
+                            </v-col>
                         </v-row>
-                    </v-container>
+                    </InfoBlock>
+                    <InfoBlock class="mt-2">
+                        <v-row>
+                            <v-col cols="12">
+                                <TextValueItem text="Индивидуальные данные" header/>
+                            </v-col>
+                            <v-col cols="12" v-for="info in item.objectIndividualInformation"
+                                   :key="info.key">
+                                <TextValueItem :text="info.key" :value="info.value"/>
+                            </v-col>
+                        </v-row>
+                    </InfoBlock>
                 </v-col>
                 <v-col cols="12">
-                    <v-container fluid class="pa-0">
+                    <InfoBlock>
                         <v-row>
-                            <template>
-                                <v-col cols="6">
-                                    <TextValueItem text="Арендная плата"
-                                                   :value="item.payment.toString(10) + ' р.'"/>
-                                </v-col>
-                                <v-col cols="6">
-                                    <TextValueItem text="Арендная ставка"
-                                                   :value="item.rentalRate.toString(10) + '%'"/>
-                                </v-col>
-                            </template>
-                            <template>
-                                <v-col cols="12">
-                                    <TextValueItem text="Экспертная оценка" header/>
-                                </v-col>
-                                <v-col cols="6">
-                                    <TextValueItem text="Сумма"
-                                                   :value="item.expertReviewSum.toString(10) + ' р.'"/>
-                                </v-col>
-                                <v-col cols="6">
-                                    <TextValueItem text="Дата"
-                                                   :value="formatToFriendly(item.expertReviewDate)"/>
-                                </v-col>
-                            </template>
-                            <template>
-                                <v-col cols="12">
-                                    <TextValueItem text="Субарендаторы" header/>
-                                </v-col>
-                                <v-col cols="12">
-                                    <SubtenantsList :items="item.subtenants"/>
-                                </v-col>
-                            </template>
+                            <v-col cols="6">
+                                <TextValueItem text="Арендная плата"
+                                               :value="item.payment.toString(10) + ' р.'"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <TextValueItem text="Арендная ставка"
+                                               :value="item.rentalRate.toString(10) + '%'"/>
+                            </v-col>
                         </v-row>
-                    </v-container>
+                    </InfoBlock>
+                    <InfoBlock class="mt-2">
+                        <v-row>
+                            <v-col cols="12">
+                                <TextValueItem text="Экспертная оценка" header/>
+                            </v-col>
+                            <v-col cols="6">
+                                <TextValueItem text="Сумма"
+                                               :value="item.expertReviewSum.toString(10) + ' р.'"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <TextValueItem text="Дата"
+                                               :value="formatToFriendly(item.expertReviewDate)"/>
+                            </v-col>
+                        </v-row>
+                    </InfoBlock>
+                    <template>
+                        <v-row>
+                            <v-col>
+                                <TextValueItem text="Субарендаторы" header/>
+                            </v-col>
+                            <v-col cols="12">
+                                <SubtenantsList :items="item.subtenants"/>
+                            </v-col>
+                        </v-row>
+                    </template>
                 </v-col>
             </v-row>
         </v-container>
@@ -91,11 +94,13 @@
     import { FullObjectDetails } from '@/types/objects';
     import { formatToFriendly } from '@/utils/date-utils';
     import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
+    import InfoBlock from '@/components/InfoBlock.vue';
 
     @Component({
         components: {
             TextValueItem,
             SubtenantsList,
+            InfoBlock,
         },
     })
     export default class ObjectDetailsCard extends Vue {

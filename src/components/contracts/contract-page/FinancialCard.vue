@@ -30,7 +30,7 @@
                             <TextValueItem text="Дата начисления" value="01.01.2019"/>
                         </v-col>
                     </v-row>
-                    <v-row key="financial-short-1">
+                    <v-row key="financial-short-2">
                         <v-col>
                             <TextValueItem text="Задолженность" value="314.35 р"/>
                         </v-col>
