@@ -15,44 +15,71 @@
         </v-row>
         <v-divider/>
 
-        <ContractDetailsItem class="mt-2" text="Вид договора" :value="item.contractInfo.type"/>
-        <ContractDetailsItem text="Дата заключения" :value="formatToFriendly(item.contractInfo.startDate)"/>
-        <ContractDetailsItem
-                v-if="!isClosed"
-                text="Дата действия"
-                :value="formatToFriendly(item.contractInfo.validity)"
-        />
+        <v-row>
+            <v-col cols="4">
+                <Label class="mt-2" label="Вид договора" :value="item.contractInfo.type"/>
+            </v-col>
+            <v-col cols="4">
+                <Label label="Дата заключения" :value="formatToFriendly(item.contractInfo.startDate)"/>
+            </v-col>
+            <v-col cols="4">
+                <Label
+                        v-if="!isClosed"
+                        label="Дата действия"
+                        :value="formatToFriendly(item.contractInfo.validity)"
+                />
+            </v-col>
+        </v-row>
 
-        <template v-if="isClosed">
-            <ContractDetailsItem text="Дата расторжения" :value="formatToFriendly(item.contractInfo.endDate)"/>
-            <ContractDetailsItem text="Причина расторжения" :value="item.contractInfo.endReason"/>
-        </template>
+        <v-row v-if="isClosed">
+            <v-col cols="4">
+                <Label label="Дата расторжения" :value="formatToFriendly(item.contractInfo.endDate)"/>
+            </v-col>
+            <v-col cols="4">
+                <Label label="Причина расторжения" :value="item.contractInfo.endReason"/>
+            </v-col>
+        </v-row>
 
-        <ContractDetailsHeader text="Арендатор"/>
-        <ContractDetailsItem text="Название организации" :value="item.tenantInfo.fullName"/>
-        <ContractDetailsItem text="Юридический адрес" :value="item.tenantInfo.legalAddress"/>
-        <ContractDetailsItem text="ИНН" :value="item.tenantInfo.inn"/>
+        <v-row>
+            <v-col cols="12">
+                <Header value="Арендатор"/>
+            </v-col>
+            <v-col cols="4">
+                <Label label="Название организации" :value="item.tenantInfo.fullName"/>
+            </v-col>
+            <v-col cols="4">
+                <Label label="Юридический адрес" :value="item.tenantInfo.legalAddress"/>
+            </v-col>
+            <v-col cols="4">
+                <Label label="ИНН" :value="item.tenantInfo.inn"/>
+            </v-col>
+        </v-row>
 
-        <ContractDetailsHeader text="Контакты"/>
-        <ContractDetailsItem
-                v-for="(contact, index) in item.contacts"
-                :key="'c' + index"
-                :text="getContactTypeValue(contact.type)"
-                :value="contact.contact"
-        />
+        <v-row>
+            <v-col cols="12">
+                <Header value="Контакты"/>
+            </v-col>
+            <v-col cols="4" v-for="(contact, index) in item.contacts" :key="'c' + index">
+                <Label
+                        :label="getContactTypeValue(contact.type)"
+                        :value="contact.contact"
+                />
+            </v-col>
+        </v-row>
 
-        <ContractDetailsHeader text="Активные объекты"/>
-        <template v-if="item.objectsInfo.length > 0">
-            <ContractDetailsObjectItem
-                    v-for="(object, index) in item.objectsInfo"
-                    :key="'o' + index"
-                    :order-number="index + 1"
-                    :object-item="object"
-            />
-        </template>
-        <template v-else>
-            <p class="mb-0">Объекты отсутствуют</p>
-        </template>
+        <v-row>
+            <v-col cols="12">
+                <Header value="Активные объекты"/>
+            </v-col>
+            <v-col>
+                <template v-if="item.objectsInfo.length > 0">
+                    <ContractDetailsObjects :items="item.objectsInfo"/>
+                </template>
+                <template v-else>
+                    <p class="mb-0">Объекты отсутствуют</p>
+                </template>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -66,15 +93,17 @@
     } from '@/types/contracts';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import { formatToFriendly } from '@/utils/date-utils';
-    import ContractDetailsItem from '@/components/contracts/ContractDetailsItem.vue';
     import ContractDetailsHeader from '@/components/contracts/ContractDetailsHeader.vue';
-    import ContractDetailsObjectItem from '@/components/contracts/ContractDetailsObjectItem.vue';
+    import ContractDetailsObjects from '@/components/contracts/ContractDetailsObjects.vue';
+    import Label from '@/components/Label.vue';
+    import Header from '@/components/Header.vue';
 
     @Component({
         components: {
-            ContractDetailsItem,
+            Header,
+            Label,
             ContractDetailsHeader,
-            ContractDetailsObjectItem,
+            ContractDetailsObjects,
         },
     })
     export default class ContractDetails extends Vue {

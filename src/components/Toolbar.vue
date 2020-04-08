@@ -9,8 +9,9 @@
                     :key="index"
                     :to="button.action"
                     text
+                    tile
                     color="secondary"
-                    class="toolbar-button ml-3"
+                    class="ml-3 white--text"
             >
                 {{ button.text }}
             </v-btn>

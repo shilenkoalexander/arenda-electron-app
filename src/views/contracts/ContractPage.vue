@@ -12,19 +12,19 @@
         <v-tabs-items v-model="tab">
             <v-tab-item>
                 <v-container fluid class="back">
-                    <v-row>
-                        <v-col cols="7">
+                    <v-row justify="center">
+                        <v-col cols="6">
                             <ContractInfo class="fill-height"/>
                         </v-col>
-                        <v-col cols="5">
+                        <v-col cols="4">
                             <ContractInfoActionsCard class="fill-height"/>
                         </v-col>
                     </v-row>
-                    <v-row>
-                        <v-col cols="7">
+                    <v-row justify="center">
+                        <v-col cols="6">
                             <FinancialCard class="fill-height"/>
                         </v-col>
-                        <v-col>
+                        <v-col cols="4">
                             <ContractStatusCard class="fill-height"/>
                         </v-col>
                     </v-row>

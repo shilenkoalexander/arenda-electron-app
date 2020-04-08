@@ -1,8 +1,8 @@
 <template>
     <v-card>
-        <v-container fluid fill-height class="justify-center align-content-center">
+        <v-container fluid fill-height class="justify-center align-content-center px-8">
             <v-row>
-                <v-col cols="4">
+                <v-col cols="6">
                     <v-btn
                             block
                             color="primary lighten-1"
@@ -11,7 +11,7 @@
                         Редактировать
                     </v-btn>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="6">
                     <v-btn
                             block
                             color="primary lighten-1"
@@ -20,26 +20,7 @@
                         Перерасчет
                     </v-btn>
                 </v-col>
-                <v-col cols="4">
-                    <v-btn
-                            block
-                            color="warning"
-                    >
-                        Приостановить
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="4">
-                    <v-btn
-                            block
-                            color="primary lighten-1"
-                            class="button-text"
-                    >
-                        Продлить
-                    </v-btn>
-                </v-col>
-                <v-col cols="4">
+                <v-col cols="6">
                     <v-btn
                             block
                             color="primary lighten-1"
@@ -48,7 +29,24 @@
                         Какая то еще кнопка
                     </v-btn>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="6">
+                    <v-btn
+                            block
+                            color="primary lighten-1"
+                            class="button-text"
+                    >
+                        Продлить
+                    </v-btn>
+                </v-col>
+                <v-col cols="6">
+                    <v-btn
+                            block
+                            color="warning"
+                    >
+                        Приостановить
+                    </v-btn>
+                </v-col>
+                <v-col cols="6">
                     <v-btn
                             block
                             color="error darken-1"
