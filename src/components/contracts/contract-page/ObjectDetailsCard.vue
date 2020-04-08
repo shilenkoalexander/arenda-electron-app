@@ -2,80 +2,91 @@
     <v-card>
         <v-card-title class="primary lighten-2 white--text text--darken-3">
             <v-icon class="mr-3" color="white">mdi-home-city</v-icon>
-            {{ item.address }}
+            <p class="mb-0 font-regular">{{ item.address }}</p>
         </v-card-title>
 
-        <v-container fluid class="pt-0">
+        <v-container fluid class="pt-0 info-container">
             <v-row>
                 <v-col cols="12">
                     <InfoBlock class="mt-2">
                         <v-row>
-                            <v-col cols="4">
-                                <TextValueItem text="Дата начала"
-                                               :value="formatToFriendly(item.startDate)"/>
+                            <v-col cols="3">
+                                <Label label="Дата начала"
+                                       :value="formatToFriendly(item.startDate)"
+                                />
                             </v-col>
-                            <v-col cols="4">
-                                <TextValueItem text="Срок действия"
-                                               :value="formatToFriendly(item.endDate)"/>
+                            <v-col cols="3">
+                                <Label label="Срок действия"
+                                       :value="formatToFriendly(item.endDate)"/>
                             </v-col>
-                            <v-col cols="4">
-                                <TextValueItem text="Район" :value="item.area"/>
+                            <v-col cols="6">
+                                <Label label="Район" :value="item.area"/>
                             </v-col>
                             <v-col cols="12">
-                                <TextValueItem text="Вид деятельности" :value="item.businessType"/>
+                                <Label label="Вид деятельности" :value="item.businessType"/>
                             </v-col>
                             <v-col cols="6">
-                                <TextValueItem text="Тип объекта" :value="item.objectType"/>
+                                <Label label="Тип объекта" :value="item.objectType"/>
                             </v-col>
                             <v-col cols="6">
-                                <TextValueItem text="На балансе" :value="item.onBalance"/>
+                                <Label label="На балансе" :value="item.onBalance"/>
                             </v-col>
                         </v-row>
                     </InfoBlock>
-                    <InfoBlock class="mt-2">
+                </v-col>
+
+                <v-col cols="6">
+                    <InfoBlock>
                         <v-row>
                             <v-col cols="12">
-                                <TextValueItem text="Индивидуальные данные" header/>
+                                <Header value="Арендная информация"/>
                             </v-col>
-                            <v-col cols="12" v-for="info in item.objectIndividualInformation"
-                                   :key="info.key">
-                                <TextValueItem :text="info.key" :value="info.value"/>
+                            <v-col cols="6">
+                                <Label label="Арендная плата"
+                                       :value="item.payment.toString(10) + ' р.'"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <Label label="Арендная ставка"
+                                       :value="item.rentalRate.toString(10) + '%'"/>
+                            </v-col>
+                        </v-row>
+                    </InfoBlock>
+                    <InfoBlock>
+                        <v-row>
+                            <v-col cols="12">
+                                <Header value="Экспертная оценка"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <Label label="Стоимость"
+                                       :value="item.expertReviewSum.toString(10) + ' р.'"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <Label label="Дата"
+                                       :value="formatToFriendly(item.expertReviewDate)"/>
+                            </v-col>
+                        </v-row>
+                    </InfoBlock>
+                </v-col>
+                <v-col cols="6">
+                    <InfoBlock>
+                        <v-row>
+                            <v-col cols="12">
+                                <Header value="Индивидуальные данные"/>
+                            </v-col>
+                            <v-col cols="12"
+                                   v-for="info in item.objectIndividualInformation"
+                                   :key="info.key"
+                            >
+                                <Label :label="info.key" :value="info.value"/>
                             </v-col>
                         </v-row>
                     </InfoBlock>
                 </v-col>
                 <v-col cols="12">
-                    <InfoBlock>
-                        <v-row>
-                            <v-col cols="6">
-                                <TextValueItem text="Арендная плата"
-                                               :value="item.payment.toString(10) + ' р.'"/>
-                            </v-col>
-                            <v-col cols="6">
-                                <TextValueItem text="Арендная ставка"
-                                               :value="item.rentalRate.toString(10) + '%'"/>
-                            </v-col>
-                        </v-row>
-                    </InfoBlock>
-                    <InfoBlock class="mt-2">
-                        <v-row>
-                            <v-col cols="12">
-                                <TextValueItem text="Экспертная оценка" header/>
-                            </v-col>
-                            <v-col cols="6">
-                                <TextValueItem text="Сумма"
-                                               :value="item.expertReviewSum.toString(10) + ' р.'"/>
-                            </v-col>
-                            <v-col cols="6">
-                                <TextValueItem text="Дата"
-                                               :value="formatToFriendly(item.expertReviewDate)"/>
-                            </v-col>
-                        </v-row>
-                    </InfoBlock>
                     <template>
                         <v-row>
                             <v-col>
-                                <TextValueItem text="Субарендаторы" header/>
+                                <Header value="Субарендаторы"/>
                             </v-col>
                             <v-col cols="12">
                                 <SubtenantsList :items="item.subtenants"/>
@@ -90,15 +101,17 @@
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
-    import TextValueItem from '@/components/TextValueItem.vue';
     import { FullObjectDetails } from '@/types/objects';
     import { formatToFriendly } from '@/utils/date-utils';
     import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
     import InfoBlock from '@/components/InfoBlock.vue';
+    import Label from '@/components/Label.vue';
+    import Header from '@/components/Header.vue';
 
     @Component({
         components: {
-            TextValueItem,
+            Header,
+            Label,
             SubtenantsList,
             InfoBlock,
         },
@@ -159,5 +172,9 @@
 <style scoped lang="scss">
     .col {
         padding: 5px 12px;
+    }
+
+    .info-container {
+        /*background-color: #fafafa;*/
     }
 </style>

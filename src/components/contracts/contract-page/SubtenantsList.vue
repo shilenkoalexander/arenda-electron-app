@@ -1,50 +1,41 @@
 <template>
-    <v-expansion-panels accordion hover>
-        <v-expansion-panel
-                v-for="(item,i) in items"
-                :key="i + 's'"
-        >
-            <v-expansion-panel-header>
-                <v-container fluid class="pa-0">
-                    <v-row no-gutters>
-                        <v-col cols="6" align-self="center" class="subtitle-1 py-0">
-                            {{item.name}}
-                        </v-col>
-                        <v-col cols="3" offset="3" align-self="center">
-                            Площадь: {{item.square}}
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-                <v-container fluid class="pa-0">
-                    <v-row>
-                        <v-col cols="6">
-                            <TextValueItem text="Дата начала" :value="formatToFriendly(item.startDate)"/>
-                        </v-col>
-                        <v-col cols="6">
-                            <TextValueItem text="Дата действия" :value="formatToFriendly(item.endDate)"/>
-                        </v-col>
-                        <v-col cols="12">
-                            <TextValueItem text="Вид деятельности" :value="item.businessType"/>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
-    </v-expansion-panels>
+    <v-container fluid class="pa-0">
+        <v-row>
+            <v-col>
+                <v-simple-table>
+                    <template v-slot:default>
+                        <thead>
+                        <tr>
+                            <th class="text-left">Имя</th>
+                            <th class="text-left">Площадь</th>
+                            <th class="text-left">Дата начала</th>
+                            <th class="text-left">Дата действия</th>
+                            <th class="text-left">Вид деятельности</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,i) in items" :key="i + 's'">
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.square }}</td>
+                            <td>{{ formatToFriendly(item.startDate) }}</td>
+                            <td>{{ formatToFriendly(item.endDate) }}</td>
+                            <td>{{ item.businessType }}</td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { Subtenant } from '@/types/tenants';
-    import TextValueItem from '@/components/TextValueItem.vue';
     import { formatToFriendly } from '@/utils/date-utils';
 
     @Component({
-        components: {
-            TextValueItem,
-        },
+        components: {},
     })
     export default class SubtenantsList extends Vue {
         @Prop({

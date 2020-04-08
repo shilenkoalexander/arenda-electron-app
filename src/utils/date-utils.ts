@@ -7,3 +7,7 @@ export function formatToFriendly(date: Date): string {
 export function parseDate(date: string): Date {
     return parse(date, 'yyyy-MM-dd', new Date());
 }
+
+export function formatMonthToFriendly(date: Date): string {
+    return format(date, 'MM.yyyy');
+}

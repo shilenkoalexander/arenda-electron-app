@@ -1,52 +1,71 @@
 <template>
     <v-card>
         <v-container fluid>
+            <v-row justify="space-between">
+                <v-col cols="4">
+                    <DatePickerMenu
+                            v-if="!showAllOperations"
+                            v-model="month"
+                            label="Месяц"
+                            hide-details
+                            outlined
+                            without-days
+                            clearable
+                    />
+                </v-col>
+                <v-col cols="4" class="text-right">
+                    <v-btn
+                            v-if="!showAllOperations"
+                            block
+                            color="primary lighten-1"
+                            :disabled="showAllOperations"
+                            @click="showAllOperations = true"
+                    >
+                        Показать все операции
+                    </v-btn>
+                    <v-btn
+                            v-else
+                            block
+                            color="primary lighten-1"
+                            @click="showAllOperations = false"
+                    >
+                        <v-icon>
+                            mdi-arrow-left
+                        </v-icon>
+                        Вернуться
+                    </v-btn>
+                </v-col>
+            </v-row>
             <v-expand-transition mode="out-in">
-                <div v-if="!showAllOperations">
-                    <v-row key="financial-control">
-                        <v-col cols="3">
-                            <v-text-field label="Месяц" hide-details outlined dense/>
-                        </v-col>
-                        <v-col cols="3" offset="6">
-                            <v-btn
-                                    block
-                                    color="primary lighten-1"
-                                    :disabled="showAllOperations"
-                                    @click="showAllOperations = true"
-                            >
-                                Показать все операции
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-
-                    <v-row key="financial-short-1">
+                <v-row v-if="showAllOperations" key="financial-table">
+                    <v-col cols="12">
+                        <FinancialList/>
+                    </v-col>
+                </v-row>
+                <div v-else>
+                    <v-row key="financial-short-1" class="mt-5">
                         <v-col>
-                            <TextValueItem text="Начисление" value="314.35 р"/>
+                            <Label label="Начисление" value="314.35 р"/>
                         </v-col>
                         <v-col>
-                            <TextValueItem text="Оплата" value="314.35 р"/>
+                            <Label label="Оплата" value="314.35 р"/>
                         </v-col>
                         <v-col>
-                            <TextValueItem text="Дата начисления" value="01.01.2019"/>
+                            <Label label="Дата начисления" value="01.01.2019"/>
                         </v-col>
                     </v-row>
                     <v-row key="financial-short-2">
                         <v-col>
-                            <TextValueItem text="Задолженность" value="314.35 р"/>
+                            <Label label="Задолженность" value="314.35 р"/>
                         </v-col>
                         <v-col>
-                            <TextValueItem text="Пеня" value="314.35 р"/>
+                            <Label label="Пеня" value="314.35 р"/>
                         </v-col>
                         <v-col>
-                            <TextValueItem text="Дата оплаты" value="01.01.2019"/>
+                            <Label label="Дата оплаты" value="01.01.2019"/>
                         </v-col>
                     </v-row>
                 </div>
-                <v-row v-else key="financial-table">
-                    <v-col>
-                        <FinancialList/>
-                    </v-col>
-                </v-row>
             </v-expand-transition>
         </v-container>
     </v-card>
@@ -54,17 +73,20 @@
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
-    import TextValueItem from '@/components/TextValueItem.vue';
     import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import Label from '@/components/Label.vue';
 
     @Component({
         components: {
-            TextValueItem,
+            Label,
             FinancialList,
+            DatePickerMenu,
         },
     })
     export default class FinancialCard extends Vue {
         showAllOperations = false;
+        month = '';
     }
 </script>
 

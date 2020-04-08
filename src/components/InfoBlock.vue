@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-2 info-block">
+    <div class="pa-0 info-block">
         <slot></slot>
     </div>
 </template>
@@ -17,7 +17,5 @@
     .info-block {
         width: 100%;
         border-radius: 5px;
-        border: 1px #cecece solid;
-        background-color: #fdfdfd;
     }
 </style>

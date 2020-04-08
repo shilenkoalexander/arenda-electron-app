@@ -12,10 +12,10 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <TextValueItem text="Дата заключения" value="18.01.2018"/>
+                    <Label label="Дата заключения" value="18.01.2018"/>
                 </v-col>
                 <v-col>
-                    <TextValueItem text="Срок действия" value="18.01.2019"/>
+                    <Label label="Срок действия" value="18.01.2019"/>
                 </v-col>
             </v-row>
             <v-row class="mt-2">
@@ -35,10 +35,10 @@
             <v-expand-transition mode="out-in">
                 <v-row v-if="!showAllExtensions" key="last-extension">
                     <v-col>
-                        <TextValueItem text="С" value="18.01.2019"/>
+                        <Label label="С" value="18.01.2019"/>
                     </v-col>
                     <v-col>
-                        <TextValueItem text="По" value="18.01.2019"/>
+                        <Label label="По" value="18.01.2019"/>
                     </v-col>
                 </v-row>
                 <v-row v-else key="all-extensions">
@@ -70,12 +70,12 @@
     import { Component, Vue } from 'vue-property-decorator';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import { ContractExtension, ContractStatus, getContractStatusValue } from '@/types/contracts';
-    import TextValueItem from '@/components/TextValueItem.vue';
     import { formatToFriendly } from '@/utils/date-utils';
+    import Label from '@/components/Label.vue';
 
     @Component({
         components: {
-            TextValueItem,
+            Label,
         },
     })
     export default class ContractStatusCard extends Vue {
