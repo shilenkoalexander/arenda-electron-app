@@ -37,11 +37,11 @@ export default class Toolbar extends Vue {
             action: '/contacts',
         },
         {
-            text: 'Арендаторы',
-            action: '/',
+            text: 'Договор',
+            action: '/contact',
         },
         {
-            text: 'Объекты',
+            text: 'DEV',
             action: '/',
         },
     ];

@@ -50,7 +50,7 @@ import { ContractFilterMode } from '@/types/contracts';
     import { ContractFilterMode, ContractStatus, getContractStatusValue } from '@/types/contracts';
     import { $enum } from 'ts-enum-util';
     import { ContractsFilterInfo } from '@/backend/filter/filter';
-    import { ComboBoxItem } from '@/types/common';
+    import { InputItem } from '@/types/common';
 
     @Component
     export default class ContractsFilter extends Vue {
@@ -63,7 +63,7 @@ import { ContractFilterMode } from '@/types/contracts';
         };
 
         filterMode = 0;
-        status: ComboBoxItem | null = null;
+        status: InputItem | null = null;
 
         @Watch('status')
         onStatusChanged() {
