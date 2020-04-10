@@ -97,3 +97,14 @@ export interface ContractPageStatusDetails {
 /*export interface ContractPageDetails {
 
 }*/
+
+export interface AddContractMainInfoDto {
+    tenantId: number;
+    contractNumber: string;
+    startDate: Date;
+    decisionDate: Date;
+    decisionNumber: string;
+    decisionMaker: string;
+    contractTypeId: number;
+    indexing: boolean;
+}

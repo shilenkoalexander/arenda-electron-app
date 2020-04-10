@@ -1,6 +1,6 @@
 import { Contract, FullContractDetails } from '@/types/contracts';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
-import { Page, Pagination } from '@/types/common';
+import { InputItem, Page, Pagination } from '@/types/common';
 import { queryWithPagination } from '@/backend/repository/repository';
 import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
 import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
@@ -74,4 +74,14 @@ export function getContractDetails(id: number): FullContractDetails {
             objectsInfo,
         },
     );
+}
+
+export function getContractTypes(): InputItem[] {
+    const result = db().query(`select *
+                               from contract_type`);
+
+    return result.map((value) => ({
+        text: value.name,
+        value: value.id,
+    }));
 }

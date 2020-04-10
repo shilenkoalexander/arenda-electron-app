@@ -50,7 +50,6 @@
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import ObjectListCard from '@/components/contracts/contract-page/ObjectListCard.vue';
 
     @Component({
         components: {
@@ -58,7 +57,6 @@
             ContractStatusCard,
             ContractInfoActionsCard,
             FinancialCard,
-            ObjectListCard,
             ObjectDetailsCard,
         },
     })

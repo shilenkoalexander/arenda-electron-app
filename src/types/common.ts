@@ -8,7 +8,7 @@ export interface MenuItem {
     action: string;
 }
 
-export interface ComboBoxItem {
+export interface InputItem {
     text: string;
     value: any;
 }
