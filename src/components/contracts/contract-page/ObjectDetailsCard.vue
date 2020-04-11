@@ -122,9 +122,9 @@
             address: 'ул. Пушкина дом Колотушкина',
             area: 'Центрально-Городской',
             businessType: 'Размещение аптек, которые реализуют готовые лекарства',
-            dispositionDate: new Date(),
-            dispositionMaker: 'Юрьев Сергей Валентинович',
-            dispositionNumber: '123654',
+            decisionDate: new Date(),
+            decisionMaker: 'Юрьев Сергей Валентинович',
+            decisionNumber: '123654',
             startDate: new Date(),
             endDate: new Date(),
             objectType: 'Одноэтажное здание',
@@ -172,9 +172,5 @@
 <style scoped lang="scss">
     .col {
         padding: 5px 12px;
-    }
-
-    .info-container {
-        /*background-color: #fafafa;*/
     }
 </style>

@@ -15,7 +15,6 @@ export interface ShortObjectDetails {
 }
 
 export interface BasicObjectInfo {
-    id: number;
     address: string;
     objectType: string;
     payment: number;
@@ -37,9 +36,28 @@ export interface FullObjectDetails {
     expertReviewDate: Date;
     subtenants: Subtenant[];
     objectType: string; // todo добавить в базу
-    dispositionDate: Date;
-    dispositionNumber: string;
-    dispositionMaker: string;
+    decisionDate: Date;
+    decisionNumber: string;
+    decisionMaker: string;
 }
 
 // todo заменить таблицы payments, accruals и остальные на одну
+
+export interface AddObjectDto {
+    businessType: string;
+    areaId: number;
+    objectIndividualInformation: AssociativeArrayItem[] | null;
+    address: string;
+    onBalance: string;
+    payment: number;
+    rentalRate: number;
+    startDate: Date;
+    endDate: Date;
+    expertReviewSum: number;
+    expertReviewDate: Date;
+    subtenants: Subtenant[];
+    objectType: string; // todo добавить в базу
+    decisionDate: Date;
+    decisionNumber: string;
+    decisionMaker: string;
+}

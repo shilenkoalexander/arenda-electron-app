@@ -1,8 +1,13 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col>
+            <v-col cols="6" offset="3">
                 <p class="title text-center">Информация об объектах</p>
+            </v-col>
+            <v-col offset="1" cols="2">
+                <v-btn to="/object/add" color="primary" block>
+                    Добавить
+                </v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -44,38 +49,23 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
     import { BasicObjectInfo } from '@/types/objects';
     import { CURRENCY } from '@/utils/finance-util';
 
     @Component
-    export default class AddContractObjectsInfo extends Vue {
+    export default class AddContractObjectsList extends Vue {
+        @Prop({
+            type: Array,
+            default: () => [],
+        })
+        items!: BasicObjectInfo;
+
         CURRENCY = CURRENCY;
 
-        items: BasicObjectInfo[] = [
-            {
-                id: 1,
-                address: 'ул. Пушкина дом Колотушкина',
-                payment: 150.3,
-                rentalRate: 10.5,
-                objectType: 'Пятиэтажное помещение',
-            },
-            {
-                id: 2,
-                address: 'ул. Пушкина дом Колотушкина',
-                payment: 150.3,
-                rentalRate: 10.5,
-                objectType: 'Пятиэтажное помещение',
-            },
-            {
-                id: 3,
-                address: 'ул. Пушкина дом Колотушкина',
-                payment: 150.3,
-                rentalRate: 10.5,
-                objectType: 'Пятиэтажное помещение',
-            },
-        ];
-
+        created() {
+            // addContractEventBus.$on('save', (value: AddObjectDto) => this.$emit('add', value))
+        }
     }
 </script>
 
