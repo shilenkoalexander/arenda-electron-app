@@ -1,32 +1,33 @@
 <template>
-    <v-container fluid class="pa-0">
-        <v-row>
-            <v-col>
-                <v-simple-table>
-                    <template v-slot:default>
-                        <thead>
-                        <tr>
-                            <th class="text-left">Имя</th>
-                            <th class="text-left">Площадь</th>
-                            <th class="text-left">Дата начала</th>
-                            <th class="text-left">Дата действия</th>
-                            <th class="text-left">Вид деятельности</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(item,i) in items" :key="i + 's'">
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.square }}</td>
-                            <td>{{ formatToFriendly(item.startDate) }}</td>
-                            <td>{{ formatToFriendly(item.endDate) }}</td>
-                            <td>{{ item.businessType }}</td>
-                        </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
-            </v-col>
-        </v-row>
-    </v-container>
+    <div>
+        <v-simple-table>
+            <template v-slot:default>
+                <thead>
+                <tr>
+                    <th class="text-left">Имя</th>
+                    <th class="text-left">Площадь</th>
+                    <th class="text-left">Дата начала</th>
+                    <th class="text-left">Дата действия</th>
+                    <th class="text-left">Вид деятельности</th>
+                </tr>
+                </thead>
+                <tbody>
+                <template v-if="items.length > 0">
+                    <tr v-for="(item,i) in items" :key="i + 's'">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.square }}</td>
+                        <td>{{ formatToFriendly(item.startDate) }}</td>
+                        <td>{{ formatToFriendly(item.endDate) }}</td>
+                        <td>{{ item.businessType }}</td>
+                    </tr>
+                </template>
+                </tbody>
+            </template>
+        </v-simple-table>
+        <p v-if="items.length < 1" class="text-center mb-0 mt-5">
+            Список субарендаторов пуст
+        </p>
+    </div>
 </template>
 
 <script lang="ts">

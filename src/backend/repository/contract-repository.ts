@@ -85,3 +85,15 @@ export function getContractTypes(): InputItem[] {
         value: value.id,
     }));
 }
+
+/*export function createNewContract(): number {
+    return db().insert('contracts', {});
+}
+
+export function deleteContract(id: number) {
+    const result = db().query(`select id from objects where id_contract = ${id}`);
+    result.forEach((v) => db().query(`delete from objects_information where id_object = ${v.id}`));
+
+    db().query(`delete from objects where id_contract = ${id}`);
+    db().query(`delete from contracts where id = ${id}`);
+}*/
