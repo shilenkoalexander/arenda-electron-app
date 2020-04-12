@@ -7,6 +7,6 @@ Vue.use(store);
 export default new store.Store({
     state: {},
     modules: {
-        AddContractModule,
+        addContract: AddContractModule,
     },
 });

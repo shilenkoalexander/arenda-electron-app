@@ -6,8 +6,13 @@
             hide-details
             dense
             :label="label"
-            :value="value"
-    />
+            :value="value">
+        <template v-slot:append v-if="deletable">
+            <v-icon color="error" @click="$emit('delete')">
+                mdi-close
+            </v-icon>
+        </template>
+    </v-text-field>
 </template>
 
 <script lang="ts">
@@ -26,6 +31,12 @@
             default: ' ',
         })
         value!: string;
+
+        @Prop({
+            type: Boolean,
+            default: false,
+        })
+        deletable!: boolean;
     }
 </script>
 

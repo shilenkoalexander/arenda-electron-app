@@ -76,7 +76,7 @@
                     </v-container>
                 </v-col>
                 <v-col cols="8">
-                    <AddContractObjectsList :items="basicObjectsItems" @add="onObjectAdd"/>
+                    <AddContractObjectsList :items="basicObjectsItems"/>
                 </v-col>
             </v-row>
         </v-container>
@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import { InputItem } from '@/types/common';
     import { notEmptyRule } from '@/validation/common-rules';
@@ -93,31 +93,53 @@
     import { getContractTypes } from '@/backend/repository/contract-repository';
     import CenteredCard from '@/components/CenteredCard.vue';
     import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
+    import { getModule } from 'vuex-module-decorators';
+    import AddContractModule from '@/store/add-contract-module';
+
 
     @Component({
         components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
     })
     export default class AddContract extends Vue {
+        moduleState = this.$store.state.addContract;
+
         notEmptyRule = notEmptyRule;
 
-        tenantId: number | null = null;
-        contractNumber = '';
-        startDate = '';
-        contractTypeId: number | null = null;
-        indexing = false;
+        tenantId: number | null = this.moduleState.tenantId;
+        contractNumber = this.moduleState.contractNumber;
+        startDate = this.moduleState.startDate;
+        contractTypeId: number | null = this.moduleState.contractTypeId;
+        indexing = this.moduleState.indexing;
 
         tenants: InputItem[] = [];
         contractTypes: InputItem[] = [];
 
-        objects: AddObjectDto[] = [];
+        objects: AddObjectDto[] = this.moduleState.objects;
 
         created() {
             this.tenants = getAllTenantsNames();
             this.contractTypes = getContractTypes();
         }
 
+        @Watch('moduleState.objects', { deep: true })
+        onObjectsChanged() {
+            this.objects = this.moduleState.objects;
+        }
+
+        @Watch('contract')
+        onContractChanged() {
+            const module = getModule(AddContractModule, this.$store);
+
+            module.setContractNumber(this.contractNumber);
+            module.setContractTypeId(this.contractTypeId);
+            module.setIndexing(this.indexing);
+            module.setStartDate(this.startDate);
+            module.setTenantId(this.tenantId);
+        }
+
         get basicObjectsItems(): BasicObjectInfo[] {
             return this.objects.map((v) => ({
+                id: v.index,
                 address: v.address,
                 objectType: v.objectType,
                 payment: v.payment,

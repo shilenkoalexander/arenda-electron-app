@@ -15,6 +15,7 @@ export interface ShortObjectDetails {
 }
 
 export interface BasicObjectInfo {
+    id: number;
     address: string;
     objectType: string;
     payment: number;
@@ -44,6 +45,7 @@ export interface FullObjectDetails {
 // todo заменить таблицы payments, accruals и остальные на одну
 
 export interface AddObjectDto {
+    index: number;
     businessType: string;
     areaId: number;
     objectIndividualInformation: AssociativeArrayItem[] | null;

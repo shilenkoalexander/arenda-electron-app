@@ -28,12 +28,12 @@
                             <td>{{ item.objectType }}</td>
                             <td>{{`${item.payment} ${CURRENCY} (${item.rentalRate}%)`}}</td>
                             <td>
-                                <v-btn icon color="primary">
+                                <v-btn icon color="primary" @click="editObject(item.id)">
                                     <v-icon>
                                         mdi-pencil
                                     </v-icon>
                                 </v-btn>
-                                <v-btn icon color="error">
+                                <v-btn icon color="error" @click="removeObject(item.id)">
                                     <v-icon>
                                         mdi-delete
                                     </v-icon>
@@ -43,30 +43,40 @@
                         </tbody>
                     </template>
                 </v-simple-table>
+                <p v-if="items.length < 1" class="text-center mb-0 mt-5">
+                    Список объектов пуст
+                </p>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { BasicObjectInfo } from '@/types/objects';
-    import { CURRENCY } from '@/utils/finance-util';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { BasicObjectInfo } from '@/types/objects';
+import { CURRENCY } from '@/utils/finance-util';
+import { getModule } from 'vuex-module-decorators';
+import AddContractModule from '@/store/add-contract-module';
 
-    @Component
-    export default class AddContractObjectsList extends Vue {
-        @Prop({
-            type: Array,
-            default: () => [],
-        })
-        items!: BasicObjectInfo;
+@Component
+export default class AddContractObjectsList extends Vue {
+    @Prop({
+        type: Array,
+        default: () => [],
+    })
+    items!: BasicObjectInfo[];
 
-        CURRENCY = CURRENCY;
+    CURRENCY = CURRENCY;
 
-        created() {
-            // addContractEventBus.$on('save', (value: AddObjectDto) => this.$emit('add', value))
-        }
+    editObject(index: number) {
+        getModule(AddContractModule, this.$store).editObject(index);
+        this.$router.push('/object/edit');
     }
+
+    removeObject(index: number) {
+        getModule(AddContractModule, this.$store).removeObject(index);
+    }
+}
 </script>
 
 <style scoped>

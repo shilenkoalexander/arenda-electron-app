@@ -99,11 +99,16 @@
                         </v-col>
                         <template v-if="objectIndividualInformation.length > 0">
                             <v-col
-                                    cols="4"
+                                    cols="6"
                                     v-for="info in objectIndividualInformation"
                                     :key="info.key"
                             >
-                                <Label :label="info.key" :value="info.value"/>
+                                <Label
+                                        :label="info.key"
+                                        :value="info.value"
+                                        deletable
+                                        @delete="onIndividualInfoDelete(info.key)"
+                                />
                             </v-col>
                         </template>
                         <v-col v-else cols="12">
@@ -162,7 +167,7 @@
             SubtenantsList,
         },
     })
-    export default class AddObject extends Vue {
+    export default class AddEditObject extends Vue {
         address = '';
         startDate = '';
         endDate = '';
@@ -187,8 +192,32 @@
 
         areas: InputItem[] = [];
 
+        get isEditingPage() {
+            return this.$router.currentRoute.path === '/object/edit';
+        }
+
         created() {
             this.areas = getAreas();
+            const editingObject = this.$store.getters.editingObject;
+
+            if (this.isEditingPage && editingObject) {
+                this.address = editingObject.address;
+                this.startDate = editingObject.startDate.toISOString();
+                this.endDate = editingObject.endDate.toISOString();
+                this.areaId = editingObject.areaId;
+                this.businessType = editingObject.businessType;
+                this.objectType = editingObject.objectType;
+                this.onBalance = editingObject.onBalance;
+                this.payment = editingObject.payment.toString(10);
+                this.rentalRate = editingObject.rentalRate.toString(10);
+                this.expertReviewSum = editingObject.expertReviewSum.toString(10);
+                this.expertReviewDate = editingObject.expertReviewDate.toISOString();
+                this.objectIndividualInformation = editingObject.objectIndividualInformation;
+                this.subtenants = editingObject.subtenants;
+                this.decisionDate = editingObject.decisionDate.toISOString();
+                this.decisionMaker = editingObject.decisionMaker;
+                this.decisionNumber = editingObject.decisionNumber;
+            }
         }
 
         onIndividualInfoAdd() {
@@ -210,12 +239,19 @@
             this.value = '';
         }
 
+        onIndividualInfoDelete(key: string) {
+            this.objectIndividualInformation = this.objectIndividualInformation.filter((value) => value.key !== key);
+        }
+
         onSubtenantAdd(subtenant: Subtenant) {
             this.subtenants.push(subtenant);
         }
 
         onSaveClick() {
-            getModule(AddContractModule, this.$store).addObject({
+            const addContractState = this.$store.state.addContract;
+
+            const newObject = {
+                index: this.isEditingPage ? addContractState.editingObjectIndex : addContractState.objects.length,
                 address: this.address,
                 startDate: parseDate(this.startDate),
                 endDate: parseDate(this.endDate),
@@ -232,7 +268,16 @@
                 expertReviewSum: Number.parseFloat(this.expertReviewSum),
                 objectIndividualInformation: this.objectIndividualInformation,
                 subtenants: this.subtenants,
-            } as AddObjectDto);
+            } as AddObjectDto;
+
+            const module = getModule(AddContractModule, this.$store);
+            if (this.isEditingPage) {
+                module.saveEditingObject(newObject);
+            } else {
+                module.addObject(newObject);
+            }
+
+            this.$router.back();
         }
 
     }
