@@ -7,6 +7,7 @@ export default class AddContractModule extends VuexModule {
     tenantId: number | null = null;
     contractNumber = '';
     startDate = '';
+    validity = '';
     contractTypeId: number | null = null;
     indexing = false;
 

@@ -1,4 +1,4 @@
-import { Contract, FullContractDetails } from '@/types/contracts';
+import { AddContractMainInfoDto, Contract, FullContractDetails } from '@/types/contracts';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
 import { InputItem, Page, Pagination } from '@/types/common';
 import { queryWithPagination } from '@/backend/repository/repository';
@@ -7,6 +7,7 @@ import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filt
 import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId } from '@/backend/repository/objects-repository';
+import { AddObjectDto } from '@/types/objects';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<Contract> {
     const query = `
@@ -86,14 +87,13 @@ export function getContractTypes(): InputItem[] {
     }));
 }
 
-/*export function createNewContract(): number {
-    return db().insert('contracts', {});
+export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: AddObjectDto[]) {
+    db().insert('contracts', {
+        id_tenant: contractInfo.tenantId,
+        id_status: 1,
+        id_type: contractInfo.contractTypeId,
+        contract_number: contractInfo.contractNumber,
+        start_date: contractInfo.startDate,
+        validity: contractInfo.validity,
+    });
 }
-
-export function deleteContract(id: number) {
-    const result = db().query(`select id from objects where id_contract = ${id}`);
-    result.forEach((v) => db().query(`delete from objects_information where id_object = ${v.id}`));
-
-    db().query(`delete from objects where id_contract = ${id}`);
-    db().query(`delete from contracts where id = ${id}`);
-}*/

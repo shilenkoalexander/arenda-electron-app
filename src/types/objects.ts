@@ -36,7 +36,7 @@ export interface FullObjectDetails {
     expertReviewSum: number;
     expertReviewDate: Date;
     subtenants: Subtenant[];
-    objectType: string; // todo добавить в базу
+    objectType: string;
     decisionDate: Date;
     decisionNumber: string;
     decisionMaker: string;
@@ -46,20 +46,20 @@ export interface FullObjectDetails {
 
 export interface AddObjectDto {
     index: number;
-    businessType: string;
+    businessTypeId: number;
     areaId: number;
-    objectIndividualInformation: AssociativeArrayItem[] | null;
+    objectIndividualInformation: AssociativeArrayItem[];
     address: string;
     onBalance: string;
     payment: number;
     rentalRate: number;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     expertReviewSum: number;
-    expertReviewDate: Date;
+    expertReviewDate: string;
     subtenants: Subtenant[];
-    objectType: string; // todo добавить в базу
-    decisionDate: Date;
+    objectType: string;
+    decisionDate: string;
     decisionNumber: string;
     decisionMaker: string;
 }

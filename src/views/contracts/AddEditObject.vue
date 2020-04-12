@@ -11,7 +11,11 @@
                             <EditableTextField v-model="address" label="Адрес"/>
                         </v-col>
                         <v-col cols="6">
-                            <EditableTextField v-model="businessType" label="Вид деятельности"/>
+                            <v-autocomplete
+                                    v-model="businessTypeId"
+                                    :items="businessTypes"
+                                    label="Вид деятельности"
+                            />
                         </v-col>
                         <v-col cols="3">
                             <DatePickerMenu v-model="startDate" label="Дата начала"/>
@@ -151,8 +155,7 @@
     import { Subtenant } from '@/types/tenants';
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
     import { AddObjectDto } from '@/types/objects';
-    import { parseDate } from '@/utils/date-utils';
-    import { getAreas } from '@/backend/repository/directory-repository';
+    import { getAreas, getBusinessTypes } from '@/backend/repository/directory-repository';
     import AddContractModule from './../../store/add-contract-module';
     import { getModule } from 'vuex-module-decorators';
 
@@ -172,7 +175,7 @@
         startDate = '';
         endDate = '';
         areaId: number | null = null;
-        businessType = '';
+        businessTypeId: number | null = null;
         objectType = '';
         onBalance = '';
         payment = '';
@@ -191,6 +194,7 @@
         keyErrorMessage = '';
 
         areas: InputItem[] = [];
+        businessTypes: InputItem[] = [];
 
         get isEditingPage() {
             return this.$router.currentRoute.path === '/object/edit';
@@ -198,6 +202,8 @@
 
         created() {
             this.areas = getAreas();
+            this.businessTypes = getBusinessTypes();
+
             const editingObject = this.$store.getters.editingObject;
 
             if (this.isEditingPage && editingObject) {
@@ -205,7 +211,7 @@
                 this.startDate = editingObject.startDate.toISOString();
                 this.endDate = editingObject.endDate.toISOString();
                 this.areaId = editingObject.areaId;
-                this.businessType = editingObject.businessType;
+                this.businessTypeId = editingObject.businessTypeId;
                 this.objectType = editingObject.objectType;
                 this.onBalance = editingObject.onBalance;
                 this.payment = editingObject.payment.toString(10);
@@ -253,18 +259,18 @@
             const newObject = {
                 index: this.isEditingPage ? addContractState.editingObjectIndex : addContractState.objects.length,
                 address: this.address,
-                startDate: parseDate(this.startDate),
-                endDate: parseDate(this.endDate),
+                startDate: this.startDate,
+                endDate: this.endDate,
                 areaId: this.areaId,
-                businessType: this.businessType,
+                businessTypeId: this.businessTypeId,
                 payment: Number.parseFloat(this.payment),
                 rentalRate: Number.parseFloat(this.rentalRate),
                 onBalance: this.onBalance,
                 objectType: this.objectType,
-                decisionDate: parseDate(this.decisionDate),
+                decisionDate: this.decisionDate,
                 decisionMaker: this.decisionMaker,
                 decisionNumber: this.decisionNumber,
-                expertReviewDate: parseDate(this.expertReviewDate),
+                expertReviewDate: this.expertReviewDate,
                 expertReviewSum: Number.parseFloat(this.expertReviewSum),
                 objectIndividualInformation: this.objectIndividualInformation,
                 subtenants: this.subtenants,
