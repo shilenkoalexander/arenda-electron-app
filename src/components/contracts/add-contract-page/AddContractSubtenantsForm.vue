@@ -2,10 +2,10 @@
     <v-form>
         <v-row>
 
-            <v-col cols="12">
+            <v-col cols="6">
                 <EditableTextField v-model="name" label="Имя" hide-details/>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="6">
                 <EditableTextField v-model="businessType" label="Вид деятельности" hide-details/>
             </v-col>
             <v-col cols="2">

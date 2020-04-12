@@ -17,7 +17,7 @@
     export default class CenteredCard extends Vue {
         @Prop({
             type: String,
-            default: "10",
+            default: '10',
         })
         cols!: string;
     }

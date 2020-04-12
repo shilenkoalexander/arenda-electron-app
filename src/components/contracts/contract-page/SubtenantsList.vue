@@ -12,15 +12,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <template v-if="items.length > 0">
-                    <tr v-for="(item,i) in items" :key="i + 's'">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.square }}</td>
-                        <td>{{ formatToFriendly(item.startDate) }}</td>
-                        <td>{{ formatToFriendly(item.endDate) }}</td>
-                        <td>{{ item.businessType }}</td>
-                    </tr>
-                </template>
+                <tr v-for="(item,i) in items" :key="i + 's'">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.square }}</td>
+                    <td>{{ formatToFriendly(item.startDate) }}</td>
+                    <td>{{ formatToFriendly(item.endDate) }}</td>
+                    <td>{{ item.businessType }}</td>
+                </tr>
                 </tbody>
             </template>
         </v-simple-table>
