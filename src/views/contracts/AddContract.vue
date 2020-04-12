@@ -4,7 +4,7 @@
             <v-row>
                 <v-col cols="4">
                     <v-container fluid>
-                        <form ref="form">
+                        <v-form ref="form">
                             <v-row>
                                 <v-col>
                                     <p class="title text-center">Информация о договоре</p>
@@ -34,11 +34,21 @@
                                             dense
                                     />
                                 </v-col>
+
+                            </v-row>
+                            <v-row>
                                 <v-col>
                                     <DatePickerMenu
                                             v-model="startDate"
                                             :rules="[notEmptyRule]"
                                             label="Дата заключения"
+                                    />
+                                </v-col>
+                                <v-col>
+                                    <DatePickerMenu
+                                            v-model="validity"
+                                            :rules="[notEmptyRule]"
+                                            label="Действителен до"
                                     />
                                 </v-col>
                             </v-row>
@@ -67,12 +77,12 @@
                             </v-row>
                             <v-row class="mt-5" justify="center">
                                 <v-col cols="5">
-                                    <v-btn color="primary" block>
+                                    <v-btn color="primary" block @click="save">
                                         Сохранить
                                     </v-btn>
                                 </v-col>
                             </v-row>
-                        </form>
+                        </v-form>
                     </v-container>
                 </v-col>
                 <v-col cols="8">
@@ -84,83 +94,92 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Watch } from 'vue-property-decorator';
-    import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { InputItem } from '@/types/common';
-    import { notEmptyRule } from '@/validation/common-rules';
-    import AddContractObjectsList from '@/components/contracts/add-contract-page/AddContractObjectsList.vue';
-    import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
-    import { getContractTypes } from '@/backend/repository/contract-repository';
-    import CenteredCard from '@/components/CenteredCard.vue';
-    import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
-    import { getModule } from 'vuex-module-decorators';
-    import AddContractModule from '@/store/add-contract-module';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import DatePickerMenu from '@/components/DatePickerMenu.vue';
+import { InputItem } from '@/types/common';
+import { notEmptyRule } from '@/validation/common-rules';
+import AddContractObjectsList from '@/components/contracts/add-contract-page/AddContractObjectsList.vue';
+import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
+import { getContractTypes, saveNewContract } from '@/backend/repository/contract-repository';
+import CenteredCard from '@/components/CenteredCard.vue';
+import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
+import { getModule } from 'vuex-module-decorators';
+import AddContractModule from '@/store/add-contract-module';
+import { AddContractMainInfoDto } from '@/types/contracts';
 
 
-    @Component({
-        components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
-    })
-    export default class AddContract extends Vue {
-        moduleState = this.$store.state.addContract;
+@Component({
+    components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
+})
+export default class AddContract extends Vue {
 
-        notEmptyRule = notEmptyRule;
+    get basicObjectsItems(): BasicObjectInfo[] {
+        return this.objects.map((v) => ({
+            id: v.index,
+            address: v.address,
+            objectType: v.objectType,
+            payment: v.payment,
+            rentalRate: v.rentalRate,
+        }));
+    }
 
-        tenantId: number | null = this.moduleState.tenantId;
-        contractNumber = this.moduleState.contractNumber;
-        startDate = this.moduleState.startDate;
-        contractTypeId: number | null = this.moduleState.contractTypeId;
-        indexing = this.moduleState.indexing;
+    get contract(): AddContractMainInfoDto {
+        return {
+            tenantId: this.tenantId,
+            contractNumber: this.contractNumber,
+            startDate: this.startDate,
+            validity: this.validity,
+            contractTypeId: this.contractTypeId,
+            indexing: this.indexing,
+        };
+    }
+    moduleState = this.$store.state.addContract;
 
-        tenants: InputItem[] = [];
-        contractTypes: InputItem[] = [];
+    notEmptyRule = notEmptyRule;
 
-        objects: AddObjectDto[] = this.moduleState.objects;
+    tenantId: number | null = this.moduleState.tenantId;
+    contractNumber = this.moduleState.contractNumber;
+    startDate = this.moduleState.startDate;
+    validity = this.moduleState.validity;
+    contractTypeId: number | null = this.moduleState.contractTypeId;
+    indexing = this.moduleState.indexing;
 
-        created() {
-            this.tenants = getAllTenantsNames();
-            this.contractTypes = getContractTypes();
-        }
+    tenants: InputItem[] = [];
+    contractTypes: InputItem[] = [];
 
-        @Watch('moduleState.objects', { deep: true })
-        onObjectsChanged() {
-            this.objects = this.moduleState.objects;
-        }
+    objects: AddObjectDto[] = this.moduleState.objects;
 
-        @Watch('contract')
-        onContractChanged() {
-            const module = getModule(AddContractModule, this.$store);
+    $refs!: {
+        form: HTMLFormElement;
+    };
 
-            module.setContractNumber(this.contractNumber);
-            module.setContractTypeId(this.contractTypeId);
-            module.setIndexing(this.indexing);
-            module.setStartDate(this.startDate);
-            module.setTenantId(this.tenantId);
-        }
+    created() {
+        this.tenants = getAllTenantsNames();
+        this.contractTypes = getContractTypes();
+    }
 
-        get basicObjectsItems(): BasicObjectInfo[] {
-            return this.objects.map((v) => ({
-                id: v.index,
-                address: v.address,
-                objectType: v.objectType,
-                payment: v.payment,
-                rentalRate: v.rentalRate,
-            }));
-        }
+    @Watch('moduleState.objects', { deep: true })
+    onObjectsChanged() {
+        this.objects = this.moduleState.objects;
+    }
 
-        get contract() {
-            return {
-                tenantId: this.tenantId,
-                contractNumber: this.contractNumber,
-                startDate: this.startDate,
-                contractTypeId: this.contractTypeId,
-                indexing: this.indexing,
-            };
-        }
+    @Watch('contract')
+    onContractChanged() {
+        const module = getModule(AddContractModule, this.$store);
 
-        onObjectAdd(object: AddObjectDto) {
-            this.objects.push(object);
+        module.setContractNumber(this.contractNumber);
+        module.setContractTypeId(this.contractTypeId);
+        module.setIndexing(this.indexing);
+        module.setStartDate(this.startDate);
+        module.setTenantId(this.tenantId);
+    }
+
+    save() {
+        if (this.$refs.form.validate()) {
+            saveNewContract(this.contract, this.objects);
         }
     }
+}
 </script>
 
 <style scoped lang="scss">

@@ -4,4 +4,7 @@ module.exports = {
         'eslint:recommended',
         '@vue/typescript/recommended',
     ],
+    rules: {
+        '@typescript-eslint/camelcase': 0,
+    },
 };

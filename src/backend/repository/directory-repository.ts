@@ -9,3 +9,12 @@ export function getAreas(): InputItem[] {
         value: value.id,
     } as InputItem));
 }
+
+export function getBusinessTypes(): InputItem[] {
+    const result = db().query('select * from business_types');
+
+    return result.map((value) => ({
+        text: value.name,
+        value: value.id,
+    } as InputItem));
+}

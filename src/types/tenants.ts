@@ -23,7 +23,7 @@ export function getTenantValue(type: TenantType): string {
 export interface Subtenant {
     name: string;
     square: number;
-    startDate: Date;
-    endDate: Date;
-    businessType: string;
+    startDate: string;
+    endDate: string;
+    businessTypeId: number;
 }

@@ -77,34 +77,11 @@ export interface ContractExtension {
     dateTo: Date;
 }
 
-export interface ContractPageContractDetails {
-    id: number;
-    tenantId: number;
-    tenantName: string;
-    contractType: string;
-    businessType: string;
-    decisionDate: Date;
-    decisionNumber: string;
-    decisionMaker: string;
-}
-
-export interface ContractPageStatusDetails {
-    contractStatus: ContractStatus;
-    startDate: Date;
-    endDate: Date;
-}
-
-/*export interface ContractPageDetails {
-
-}*/
-
 export interface AddContractMainInfoDto {
-    tenantId: number;
+    tenantId: number | null;
     contractNumber: string;
-    startDate: Date;
-    decisionDate: Date;
-    decisionNumber: string;
-    decisionMaker: string;
-    contractTypeId: number;
+    startDate: string;
+    validity: string;
+    contractTypeId: number | null;
     indexing: boolean;
 }
