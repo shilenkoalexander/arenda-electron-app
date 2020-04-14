@@ -21,7 +21,7 @@
                         </v-icon>
                     </template>
                     <template v-slot:item.contract="{item}">
-                        <router-link to="/">
+                        <router-link :to="'/contract/' + item.id">
                             <p class="clickable-text mb-0 mt-1">Договор №{{item.number}}</p>
                         </router-link>
                         <p class="mb-0 secondary-text">с: {{formatToFriendly(item.startDate)}}</p>

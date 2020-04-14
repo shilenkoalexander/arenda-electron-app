@@ -44,7 +44,7 @@
 
         items: FinancialPeriod[] = [
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,
@@ -52,7 +52,7 @@
                 fine: 369985.3,
             },
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,
@@ -60,7 +60,7 @@
                 fine: 369985.3,
             },
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,
@@ -68,7 +68,7 @@
                 fine: 369985.3,
             },
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,
@@ -76,7 +76,7 @@
                 fine: 369985.3,
             },
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,
@@ -84,7 +84,7 @@
                 fine: 369985.3,
             },
             {
-                date: new Date(),
+                date: '2020-01-01',
                 accruals: 100.0,
                 adjustments: 650.5,
                 payments: 3654.5,

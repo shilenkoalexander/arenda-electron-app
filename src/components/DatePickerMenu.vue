@@ -38,30 +38,30 @@
 </template>
 
 <script lang="ts">
-import { parseISO } from 'date-fns';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import DatePicker from '@/components/DatePicker.vue';
-import { formatMonthToFriendly, formatToFriendly } from '@/utils/date-utils';
+    import { parseISO } from 'date-fns';
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+    import DatePicker from '@/components/DatePicker.vue';
+    import { formatMonthToFriendly, formatToFriendlyByDate } from '@/utils/date-utils';
 
-@Component({
-    components: { DatePicker },
-})
-export default class DatePickerMenu extends Vue {
-    /**
-     * Значение, которое будет установлено при появлении компонента
-     */
-    @Prop({ type: String, default: null })
-    value!: string | null;
+    @Component({
+        components: { DatePicker },
+    })
+    export default class DatePickerMenu extends Vue {
+        /**
+         * Значение, которое будет установлено при появлении компонента
+         */
+        @Prop({ type: String, default: null })
+        value!: string | null;
 
-    /**
-     * Текст в поле выбора
-     */
-    @Prop({ type: String, default: null })
-    label!: string | null;
+        /**
+         * Текст в поле выбора
+         */
+        @Prop({ type: String, default: null })
+        label!: string | null;
 
-    /**
-     * Добавляет кнопку для очистки введенного значения
-     */
+        /**
+         * Добавляет кнопку для очистки введенного значения
+         */
     @Prop({ type: Boolean, default: false })
     clearable!: boolean;
 
@@ -128,7 +128,7 @@ export default class DatePickerMenu extends Vue {
 
     private get formattedDate() {
         if (this.localDate) {
-            return this.withoutDays ? formatMonthToFriendly(this.localDate) : formatToFriendly(this.localDate);
+            return this.withoutDays ? formatMonthToFriendly(this.localDate) : formatToFriendlyByDate(this.localDate);
         }
         return '';
     }

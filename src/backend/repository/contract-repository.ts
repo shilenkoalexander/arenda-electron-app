@@ -6,7 +6,7 @@ import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
 import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
 import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
-import { getShortObjectDetailsByContractId } from '@/backend/repository/objects-repository';
+import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
 import { AddObjectDto } from '@/types/objects';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<Contract> {
@@ -88,7 +88,7 @@ export function getContractTypes(): InputItem[] {
 }
 
 export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: AddObjectDto[]) {
-    db().insert('contracts', {
+    const contractId = db().insert('contracts', {
         id_tenant: contractInfo.tenantId,
         id_status: 1,
         id_type: contractInfo.contractTypeId,
@@ -96,4 +96,7 @@ export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: A
         start_date: contractInfo.startDate,
         validity: contractInfo.validity,
     });
+    db().transaction(() => {
+        objects.forEach((object) => saveObject(contractId, object));
+    })();
 }

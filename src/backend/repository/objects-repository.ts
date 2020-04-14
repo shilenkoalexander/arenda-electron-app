@@ -74,5 +74,5 @@ export function saveObject(contractId: number, object: AddObjectDto) {
                 id_business_type: value.businessTypeId,
             });
         });
-    });
+    })();
 }

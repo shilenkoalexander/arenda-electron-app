@@ -15,8 +15,8 @@
                 <tr v-for="(item,i) in items" :key="i + 's'">
                     <td>{{ item.name }}</td>
                     <td>{{ item.square }}</td>
-                    <td>{{ formatToFriendly(item.startDate) }}</td>
-                    <td>{{ formatToFriendly(item.endDate) }}</td>
+                    <td>{{ item.startDate }}</td>
+                    <td>{{ item.endDate }}</td>
                     <td>{{ item.businessType }}</td>
                 </tr>
                 </tbody>
@@ -31,7 +31,6 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { Subtenant } from '@/types/tenants';
-    import { formatToFriendly } from '@/utils/date-utils';
 
     @Component({
         components: {},
@@ -42,8 +41,6 @@
             default: [],
         })
         items!: Subtenant[];
-
-        formatToFriendly = formatToFriendly;
     }
 </script>
 

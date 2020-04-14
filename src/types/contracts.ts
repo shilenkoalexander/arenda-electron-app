@@ -23,8 +23,8 @@ export function getContractStatusValue(status: ContractStatus): string {
 export interface Contract {
     id: number;
     number: string;
-    startDate: Date;
-    validity: Date | null;
+    startDate: string;
+    validity: string | null;
     tenantInfo: TenantInfo;
     status: ContractStatus;
 }
@@ -32,14 +32,14 @@ export interface Contract {
 export interface ShortContractDetails {
     id: number;
     number: string;
-    startDate: Date;
-    validity: Date | null;
-    endDate: Date | null;
+    startDate: string;
+    validity: string | null;
+    endDate: string | null;
     endReason: string | null;
     status: ContractStatus;
     type: string;
-    lastContractExtensionFrom: Date | null;
-    lastContractExtensionTo: Date | null;
+    lastContractExtensionFrom: string | null;
+    lastContractExtensionTo: string | null;
 }
 
 export interface FullContractDetails {
@@ -72,9 +72,9 @@ export function getContactTypeValue(type: ContactType): string {
 }
 
 export interface ContractExtension {
-    actionDate: Date;
-    dateFrom: Date;
-    dateTo: Date;
+    actionDate: string;
+    dateFrom: string;
+    dateTo: string;
 }
 
 export interface AddContractMainInfoDto {
@@ -84,4 +84,9 @@ export interface AddContractMainInfoDto {
     validity: string;
     contractTypeId: number | null;
     indexing: boolean;
+}
+
+export interface ContractPageMainInfo {
+    tenantName: string;
+    contractType: string;
 }

@@ -12,6 +12,18 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-btn
+                fixed
+                fab
+                right
+                bottom
+                color="primary"
+                to="/contract/add"
+        >
+            <v-icon>
+                mdi-plus
+            </v-icon>
+        </v-btn>
     </v-container>
 </template>
 

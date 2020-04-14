@@ -17,7 +17,7 @@
 
         <v-row>
             <v-col cols="4">
-                <Label class="mt-2" label="Вид договора" :value="item.contractInfo.type"/>
+                <Label label="Вид договора" :value="item.contractInfo.type"/>
             </v-col>
             <v-col cols="4">
                 <Label label="Дата заключения" :value="formatToFriendly(item.contractInfo.startDate)"/>

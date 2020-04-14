@@ -1,7 +1,6 @@
 import { Contact, ContactType, Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
-import { parseDate } from '@/utils/date-utils';
 import { ShortObjectDetails } from '@/types/objects';
 
 export interface ResultMapper<T> {
@@ -13,8 +12,8 @@ class ContractMapper implements ResultMapper<Contract> {
         return {
             id: value.id,
             number: value.contract_number,
-            startDate: parseDate(value.start_date),
-            validity: value.validity ? parseDate(value.validity) : null,
+            startDate: value.start_date,
+            validity: value.validity,
             tenantInfo: {
                 tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
                 legalAddress: value.legal_address,
@@ -33,15 +32,13 @@ class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
                 id: value.id,
                 type: value.contract_type,
                 number: value.contract_number,
-                validity: value.validity ? parseDate(value.validity) : null,
-                startDate: parseDate(value.start_date),
-                endDate: value.end_date ? parseDate(value.end_date) : null,
+                validity: value.validity,
+                startDate: value.start_date,
+                endDate: value.end_date,
                 endReason: value.end_reason,
                 status: $enum(ContractStatus).getValueOrDefault(value.status, ContractStatus.UNKNOWN),
-                lastContractExtensionFrom: value.last_contract_extention_to ?
-                    parseDate(value.last_contract_extention_to) : null,
-                lastContractExtensionTo: value.last_contract_extention_from ?
-                    parseDate(value.last_contract_extention_from) : null,
+                lastContractExtensionFrom: value.last_contract_extention_to,
+                lastContractExtensionTo: value.last_contract_extention_from,
             },
             tenantInfo: {
                 tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),

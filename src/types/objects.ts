@@ -9,8 +9,8 @@ export interface ShortObjectDetails {
     payment: number;
     rentalRate: number;
     businessType: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     subtenantsCount: number;
 }
 
@@ -31,13 +31,13 @@ export interface FullObjectDetails {
     onBalance: string;
     payment: number;
     rentalRate: number;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     expertReviewSum: number;
-    expertReviewDate: Date;
+    expertReviewDate: string;
     subtenants: Subtenant[];
     objectType: string;
-    decisionDate: Date;
+    decisionDate: string;
     decisionNumber: string;
     decisionMaker: string;
 }

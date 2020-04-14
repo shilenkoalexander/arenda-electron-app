@@ -15,6 +15,9 @@
                                     v-model="businessTypeId"
                                     :items="businessTypes"
                                     label="Вид деятельности"
+                                    outlined
+                                    dense
+                                    validate-on-blur
                             />
                         </v-col>
                         <v-col cols="3">
@@ -208,8 +211,8 @@
 
             if (this.isEditingPage && editingObject) {
                 this.address = editingObject.address;
-                this.startDate = editingObject.startDate.toISOString();
-                this.endDate = editingObject.endDate.toISOString();
+                this.startDate = editingObject.startDate;
+                this.endDate = editingObject.endDate;
                 this.areaId = editingObject.areaId;
                 this.businessTypeId = editingObject.businessTypeId;
                 this.objectType = editingObject.objectType;
@@ -217,10 +220,10 @@
                 this.payment = editingObject.payment.toString(10);
                 this.rentalRate = editingObject.rentalRate.toString(10);
                 this.expertReviewSum = editingObject.expertReviewSum.toString(10);
-                this.expertReviewDate = editingObject.expertReviewDate.toISOString();
+                this.expertReviewDate = editingObject.expertReviewDate;
                 this.objectIndividualInformation = editingObject.objectIndividualInformation;
                 this.subtenants = editingObject.subtenants;
-                this.decisionDate = editingObject.decisionDate.toISOString();
+                this.decisionDate = editingObject.decisionDate;
                 this.decisionMaker = editingObject.decisionMaker;
                 this.decisionNumber = editingObject.decisionNumber;
             }

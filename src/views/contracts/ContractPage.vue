@@ -11,10 +11,10 @@
 
         <v-tabs-items v-model="tab">
             <v-tab-item>
-                <v-container fluid class="back">
+                <v-container fluid class="back" v-if="contractId">
                     <v-row justify="center">
                         <v-col cols="6">
-                            <ContractInfo class="fill-height"/>
+                            <ContractInfo :contract-id="contractId" class="fill-height"/>
                         </v-col>
                         <v-col cols="4">
                             <ContractInfoActionsCard class="fill-height"/>
@@ -62,6 +62,11 @@
     })
     export default class ContractPage extends Vue {
         tab = null;
+        contractId: number | null = null;
+
+        created() {
+            this.contractId = Number.parseInt(this.$route.params.id, 10);
+        }
     }
 </script>
 

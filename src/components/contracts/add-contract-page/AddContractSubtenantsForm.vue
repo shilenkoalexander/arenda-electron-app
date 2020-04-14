@@ -1,7 +1,6 @@
 <template>
     <v-form>
         <v-row>
-
             <v-col cols="6">
                 <EditableTextField v-model="name" label="Имя" hide-details/>
             </v-col>
@@ -11,6 +10,9 @@
                         :items="businessTypes"
                         label="Вид деятельности"
                         hide-details
+                        outlined
+                        dense
+                        validate-on-blur
                 />
             </v-col>
             <v-col cols="2">
@@ -68,7 +70,7 @@
             } as Subtenant);
 
             this.name = '';
-            this.businessTypeId = '';
+            this.businessTypeId = null;
             this.square = '';
             this.startDate = '';
             this.endDate = '';

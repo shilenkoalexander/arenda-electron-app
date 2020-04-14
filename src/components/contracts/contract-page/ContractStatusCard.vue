@@ -89,19 +89,19 @@
 
         items: ContractExtension[] = [
             {
-                actionDate: new Date(),
-                dateFrom: new Date(),
-                dateTo: new Date(),
+                actionDate: '2020-01-01',
+                dateFrom: '2020-01-01',
+                dateTo: '2020-01-01',
             },
             {
-                actionDate: new Date(),
-                dateFrom: new Date(),
-                dateTo: new Date(),
+                actionDate: '2020-01-01',
+                dateFrom: '2020-01-01',
+                dateTo: '2020-01-01',
             },
             {
-                actionDate: new Date(),
-                dateFrom: new Date(),
-                dateTo: new Date(),
+                actionDate: '2020-01-01',
+                dateFrom: '2020-01-01',
+                dateTo: '2020-01-01',
             },
         ];
 

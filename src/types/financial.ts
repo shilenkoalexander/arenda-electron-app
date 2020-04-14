@@ -1,5 +1,5 @@
 export interface FinancialPeriod {
-    date: Date;
+    date: string;
     accruals: number; // начисления
     adjustments: number; // корректировки
     payments: number; // оплаты
