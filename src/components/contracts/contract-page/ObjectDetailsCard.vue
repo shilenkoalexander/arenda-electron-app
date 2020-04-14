@@ -12,12 +12,12 @@
                         <v-row>
                             <v-col cols="3">
                                 <Label label="Дата начала"
-                                       :value="formatToFriendly(item.startDate)"
+                                       :value="item.startDate"
                                 />
                             </v-col>
                             <v-col cols="3">
                                 <Label label="Срок действия"
-                                       :value="formatToFriendly(item.endDate)"/>
+                                       :value="item.endDate"/>
                             </v-col>
                             <v-col cols="6">
                                 <Label label="Район" :value="item.area"/>
@@ -122,30 +122,30 @@
             address: 'ул. Пушкина дом Колотушкина',
             area: 'Центрально-Городской',
             businessType: 'Размещение аптек, которые реализуют готовые лекарства',
-            decisionDate: new Date(),
+            decisionDate: '2020-01-01',
             decisionMaker: 'Юрьев Сергей Валентинович',
             decisionNumber: '123654',
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: '2020-01-01',
+            endDate: '2020-01-01',
             objectType: 'Одноэтажное здание',
             payment: 300.3,
             onBalance: 'ЖК Пушкинский ДонецкМакеевка',
             rentalRate: 10,
-            expertReviewDate: new Date(),
+            expertReviewDate: '2020-01-01',
             expertReviewSum: 1526.33,
             subtenants: [
                 {
                     name: 'Садогурский Барух Джавович',
-                    businessType: 'Продажа алкогольной продукции',
-                    startDate: new Date(),
-                    endDate: new Date(),
+                    businessTypeId: 1,
+                    startDate: formatToFriendly('2020-01-01'),
+                    endDate: formatToFriendly('2020-01-01'),
                     square: 300.3,
                 },
                 {
                     name: 'Садогурский Барух Джавович',
-                    businessType: 'Продажа алкогольной продукции',
-                    startDate: new Date(),
-                    endDate: new Date(),
+                    businessTypeId: 1,
+                    startDate: formatToFriendly('2020-01-01'),
+                    endDate: formatToFriendly('2020-01-01'),
                     square: 300.3,
                 },
             ],

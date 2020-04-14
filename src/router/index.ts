@@ -10,16 +10,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "contacts_page" */ '../views/contracts/AddContract.vue'),
     },
     {
-        path: '/contacts',
-        name: 'contacts',
+        path: '/contracts',
+        name: 'contracts',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "contacts_page" */ '../views/contracts/Contracts.vue'),
     },
     {
-        path: '/contact',
-        name: 'contact',
+        path: '/contract/:id',
+        name: 'contract',
         component: () => import(/* webpackChunkName: "contacts_page" */ '../views/contracts/ContractPage.vue'),
     },
     {
@@ -31,6 +31,11 @@ const routes = [
         path: '/object/edit',
         name: 'object-edit',
         component: () => import(/* webpackChunkName: "object_add_page" */ '../views/contracts/AddEditObject.vue'),
+    },
+    {
+        path: '/contract/add',
+        name: 'contract-add',
+        component: () => import(/* webpackChunkName: "contacts_page" */ '../views/contracts/AddContract.vue'),
     },
 ];
 

@@ -61,6 +61,11 @@ export default class AddContractModule extends VuexModule {
     }
 
     @Mutation
+    setValidity(validity: string) {
+        this.validity = validity;
+    }
+
+    @Mutation
     setContractNumber(contractNumber: string) {
         this.contractNumber = contractNumber;
     }
@@ -73,5 +78,16 @@ export default class AddContractModule extends VuexModule {
     @Mutation
     setIndexing(indexing: boolean) {
         this.indexing = indexing;
+    }
+
+    @Mutation
+    clearContract() {
+        this.objects = [];
+        this.tenantId = null;
+        this.contractNumber = '';
+        this.startDate = '';
+        this.validity = '';
+        this.contractTypeId = null;
+        this.indexing = false;
     }
 }

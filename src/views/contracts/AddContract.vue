@@ -94,46 +94,47 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
-import { InputItem } from '@/types/common';
-import { notEmptyRule } from '@/validation/common-rules';
-import AddContractObjectsList from '@/components/contracts/add-contract-page/AddContractObjectsList.vue';
-import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
-import { getContractTypes, saveNewContract } from '@/backend/repository/contract-repository';
-import CenteredCard from '@/components/CenteredCard.vue';
-import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
-import { getModule } from 'vuex-module-decorators';
-import AddContractModule from '@/store/add-contract-module';
-import { AddContractMainInfoDto } from '@/types/contracts';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import { InputItem } from '@/types/common';
+    import { notEmptyRule } from '@/validation/common-rules';
+    import AddContractObjectsList from '@/components/contracts/add-contract-page/AddContractObjectsList.vue';
+    import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
+    import { getContractTypes, saveNewContract } from '@/backend/repository/contract-repository';
+    import CenteredCard from '@/components/CenteredCard.vue';
+    import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
+    import { getModule } from 'vuex-module-decorators';
+    import AddContractModule from '@/store/add-contract-module';
+    import { AddContractMainInfoDto } from '@/types/contracts';
 
 
-@Component({
-    components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
-})
-export default class AddContract extends Vue {
+    @Component({
+        components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
+    })
+    export default class AddContract extends Vue {
 
-    get basicObjectsItems(): BasicObjectInfo[] {
-        return this.objects.map((v) => ({
-            id: v.index,
-            address: v.address,
-            objectType: v.objectType,
-            payment: v.payment,
-            rentalRate: v.rentalRate,
-        }));
-    }
+        get basicObjectsItems(): BasicObjectInfo[] {
+            return this.objects.map((v) => ({
+                id: v.index,
+                address: v.address,
+                objectType: v.objectType,
+                payment: v.payment,
+                rentalRate: v.rentalRate,
+            }));
+        }
 
-    get contract(): AddContractMainInfoDto {
-        return {
-            tenantId: this.tenantId,
-            contractNumber: this.contractNumber,
-            startDate: this.startDate,
-            validity: this.validity,
-            contractTypeId: this.contractTypeId,
-            indexing: this.indexing,
-        };
-    }
-    moduleState = this.$store.state.addContract;
+        get contract(): AddContractMainInfoDto {
+            return {
+                tenantId: this.tenantId,
+                contractNumber: this.contractNumber,
+                startDate: this.startDate,
+                validity: this.validity,
+                contractTypeId: this.contractTypeId,
+                indexing: this.indexing,
+            };
+        }
+
+        moduleState = this.$store.state.addContract;
 
     notEmptyRule = notEmptyRule;
 
@@ -171,15 +172,32 @@ export default class AddContract extends Vue {
         module.setContractTypeId(this.contractTypeId);
         module.setIndexing(this.indexing);
         module.setStartDate(this.startDate);
+        module.setValidity(this.validity);
         module.setTenantId(this.tenantId);
     }
 
-    save() {
-        if (this.$refs.form.validate()) {
-            saveNewContract(this.contract, this.objects);
+        clearAddingContract() {
+            getModule(AddContractModule, this.$store).clearContract();
+            this.tenantId = null;
+            this.contractNumber = '';
+            this.startDate = '';
+            this.validity = '';
+            this.contractTypeId = null;
+            this.indexing = false;
+        }
+
+        save() {
+            if (this.$refs.form.validate()) {
+                try {
+                    saveNewContract(this.contract, this.objects);
+                    // todo и переход на страницу этого договора
+                    this.clearAddingContract();
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         }
     }
-}
 </script>
 
 <style scoped lang="scss">

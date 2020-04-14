@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
     import Label from '@/components/Label.vue';
 
     @Component({
@@ -48,7 +48,11 @@
         },
     })
     export default class ContractInfo extends Vue {
-
+        @Prop({
+            type: Number,
+            required: true,
+        })
+        contractId!: number;
     }
 </script>
 
