@@ -48,27 +48,23 @@ CREATE TABLE IF NOT EXISTS `contracts`
     foreign key (id_type) references contract_type (id)
 );
 
-
-CREATE TABLE IF NOT EXISTS `adjustments`
+CREATE TABLE IF NOT EXISTS `finance_action_type`
 (
     `id`          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    `id_contract` INTEGER                           NOT NULL,
-    `date`        date                              NOT NULL,
-    `period`      date                              NOT NULL,
-    `sum`         double                            NOT NULL,
-
-    foreign key (id_contract) references contracts (id)
+    `name`        TEXT                           NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `accruals`
+CREATE TABLE IF NOT EXISTS `finance_action`
 (
     `id`          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     `id_contract` INTEGER                           NOT NULL,
+    `id_action_type` INTEGER                           NOT NULL,
     `date`        date                              NOT NULL,
     `period`      date                              NOT NULL,
     `sum`         double                            NOT NULL,
 
-    foreign key (id_contract) references contracts (id)
+    foreign key (id_contract) references contracts (id),
+    foreign key (id_action_type) references finance_action_type (id)
 );
 
 CREATE TABLE IF NOT EXISTS `areas`
@@ -81,17 +77,6 @@ CREATE TABLE IF NOT EXISTS `business_types`
 (
     `id`   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     `name` TEXT                              NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS `payments`
-(
-    `id`          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    `id_contract` INTEGER                           NOT NULL,
-    `date`        date                              NOT NULL,
-    `period`      date                              NOT NULL,
-    `sum`         double                            NOT NULL,
-
-    foreign key (id_contract) references contracts (id)
 );
 
 CREATE TABLE IF NOT EXISTS `indexing`
@@ -152,11 +137,12 @@ CREATE TABLE IF NOT EXISTS `objects`
     `expert_review_sum`  double                            NOT NULL,
     `expert_review_date` date                              NOT NULL,
     `payment`            double                            NULL,
-    `disposition_date`   date                              NULL,
-    `disposition_number` TEXT                              NULL,
-    `disposition_maker`  TEXT                              NULL,
+    `decision_date`   date                              NULL,
+    `decision_number` TEXT                              NULL,
+    `decision_maker`  TEXT                              NULL,
     `start_date`         date                              NULL,
     `end_date`           date                              NULL,
+    `object_type` TEXT NOT NULL,
 
     foreign key (id_contract) references contracts (id),
     foreign key (id_business_type) references business_types (id),
@@ -196,11 +182,10 @@ DROP TABLE IF EXISTS `contract_extensions`;
 DROP TABLE IF EXISTS `contacts`;
 DROP TABLE IF EXISTS `premise_types`;
 DROP TABLE IF EXISTS `indexing`;
-DROP TABLE IF EXISTS `payments`;
+DROP TABLE IF EXISTS `finance_action_type`;
+DROP TABLE IF EXISTS `finance_action`;
 DROP TABLE IF EXISTS `business_types`;
 DROP TABLE IF EXISTS `areas`;
-DROP TABLE IF EXISTS `accruals`;
-DROP TABLE IF EXISTS `adjustments`;
 DROP TABLE IF EXISTS `contracts`;
 DROP TABLE IF EXISTS `contract_type`;
 DROP TABLE IF EXISTS `contract_statuses`;

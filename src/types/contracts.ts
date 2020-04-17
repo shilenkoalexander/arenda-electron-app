@@ -25,6 +25,16 @@ export interface Contract {
     number: string;
     startDate: string;
     validity: string | null;
+    totalPayment: number;
+    conclusionDate: Date;
+    status: ContractStatus;
+}
+
+export interface ContractWithTenant {
+    id: number;
+    number: string;
+    startDate: string;
+    validity: string | null;
     tenantInfo: TenantInfo;
     status: ContractStatus;
 }
@@ -87,6 +97,8 @@ export interface AddContractMainInfoDto {
 }
 
 export interface ContractPageMainInfo {
+    tenantId: number;
     tenantName: string;
     contractType: string;
+    contractNumber: string;
 }

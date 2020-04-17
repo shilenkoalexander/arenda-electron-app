@@ -76,3 +76,11 @@ export function saveObject(contractId: number, object: AddObjectDto) {
         });
     })();
 }
+
+export function getTotalPayment(contractId: number): number { // todo: добавить получение даты (расчет на состояние ...)
+    const result = db().queryFirstRow(`
+        select sum(payment) as sum from objects where id_contract = ${contractId}
+    `) as any;
+
+    return result.sum;
+}

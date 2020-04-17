@@ -1,33 +1,33 @@
 <template>
     <v-card>
-        <v-container fluid>
+        <v-container fluid class="px-5">
             <v-row justify="space-between">
                 <v-col cols="4">
                     <DatePickerMenu
-                            v-if="!showAllOperations"
+                            v-if="!showAllPeriods"
                             v-model="month"
-                            label="Месяц"
+                            :allowed-dates="availablePeriods"
+                            label="Период"
                             hide-details
                             outlined
                             without-days
-                            clearable
                     />
                 </v-col>
                 <v-col cols="4" class="text-right">
                     <v-btn
-                            v-if="!showAllOperations"
+                            v-if="!showAllPeriods"
                             block
                             color="primary lighten-1"
-                            :disabled="showAllOperations"
-                            @click="showAllOperations = true"
+                            :disabled="showAllPeriods"
+                            @click="showAllPeriods = true"
                     >
-                        Показать все операции
+                        Показать все периоды
                     </v-btn>
                     <v-btn
                             v-else
                             block
                             color="primary lighten-1"
-                            @click="showAllOperations = false"
+                            @click="showAllPeriods = false"
                     >
                         <v-icon>
                             mdi-arrow-left
@@ -37,32 +37,28 @@
                 </v-col>
             </v-row>
             <v-expand-transition mode="out-in">
-                <v-row v-if="showAllOperations" key="financial-table">
+                <v-row v-if="showAllPeriods" key="financial-table">
                     <v-col cols="12">
-                        <FinancialList/>
+                        <FinancialList :contract-id="contractId"/>
                     </v-col>
                 </v-row>
-                <div v-else>
-                    <v-row key="financial-short-1" class="mt-5">
+                <div v-if="!showAllPeriods && item">
+                    <v-row class="mt-5">
                         <v-col>
-                            <Label label="Начисление" value="314.35 р"/>
+                            <Label label="Начисление" :value="item.accruals.toFixed(2)"/>
                         </v-col>
                         <v-col>
-                            <Label label="Оплата" value="314.35 р"/>
+                            <Label label="Оплата" :value="item.payments.toFixed(2)"/>
                         </v-col>
                         <v-col>
-                            <Label label="Дата начисления" value="01.01.2019"/>
+                            <Label label="Корректировки" :value="item.adjustments.toFixed(2)"/>
                         </v-col>
-                    </v-row>
-                    <v-row key="financial-short-2">
+
                         <v-col>
-                            <Label label="Задолженность" value="314.35 р"/>
-                        </v-col>
-                        <v-col>
-                            <Label label="Пеня" value="314.35 р"/>
+                            <Label label="Задолженность" :value="item.debt.toFixed(2)"/>
                         </v-col>
                         <v-col>
-                            <Label label="Дата оплаты" value="01.01.2019"/>
+                            <Label label="Пеня" value="DEV"/>
                         </v-col>
                     </v-row>
                 </div>
@@ -72,10 +68,15 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
     import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import Label from '@/components/Label.vue';
+    import { FinancePeriod } from '@/types/finance';
+    import { getAvailablePeriods, getFinancePeriod } from '@/backend/repository/finance-repository';
+    import { formatDateStringToMonthString, formatMonthStringToStartMonthDateString } from '@/utils/date-utils';
+
+    // todo: подумать как кэшировать данные в списке
 
     @Component({
         components: {
@@ -85,8 +86,33 @@
         },
     })
     export default class FinancialCard extends Vue {
-        showAllOperations = false;
+        @Prop({
+            type: Number,
+            required: true,
+        })
+        contractId!: number;
+
+        showAllPeriods = false;
         month = '';
+        item: FinancePeriod | null = null;
+        availablePeriods: string[] = [];
+
+        created() {
+            this.availablePeriods = getAvailablePeriods(this.contractId);
+            this.item = getFinancePeriod(
+                this.month ? formatMonthStringToStartMonthDateString(this.month) : this.month,
+                this.contractId,
+            );
+
+            this.month = formatDateStringToMonthString(this.item.period);
+        }
+
+        @Watch('month')
+        onMonthChanged(newValue: string, oldValue: string) {
+            if (oldValue !== newValue && oldValue !== '') {
+                this.item = getFinancePeriod(this.month, this.contractId);
+            }
+        }
     }
 </script>
 

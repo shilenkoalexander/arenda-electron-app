@@ -22,7 +22,7 @@
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="6">
-                            <FinancialCard class="fill-height"/>
+                            <FinancialCard class="fill-height" :contract-id="1"/>
                         </v-col>
                         <v-col cols="4">
                             <ContractStatusCard class="fill-height"/>
@@ -50,6 +50,7 @@
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+    import { recalculate } from '@/backend/service/finance-service';
 
     @Component({
         components: {
@@ -66,6 +67,7 @@
 
         created() {
             this.contractId = Number.parseInt(this.$route.params.id, 10);
+            recalculate('2020-01', '2020-04', 1, false);
         }
     }
 </script>

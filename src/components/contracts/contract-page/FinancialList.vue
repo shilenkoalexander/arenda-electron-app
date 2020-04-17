@@ -6,7 +6,7 @@
             fixed-header
     >
         <template v-slot:item.date="{item}">
-            {{ formatToFriendly(item.date) }}
+            {{ formatToFriendly(item.period) }}
         </template>
         <template v-slot:item.accruals="{item}">
             {{ item.accruals.toFixed(2) }}
@@ -27,12 +27,19 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import { FinancialPeriod } from '@/types/financial';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import { FinancePeriod } from '@/types/finance';
     import { formatToFriendly } from '@/utils/date-utils';
+    import { getAllPeriods } from '@/backend/repository/finance-repository';
 
     @Component
     export default class FinancialList extends Vue {
+        @Prop({
+            type: Number,
+            required: true,
+        })
+        contractId!: number;
+
         headers = [
             { text: 'Период', value: 'date', sortable: false, width: '19%' },
             { text: 'Начислено', value: 'accruals', sortable: false, width: '16%' },
@@ -42,58 +49,13 @@
             { text: 'Пеня', value: 'fine', sortable: false, width: '16%' },
         ];
 
-        items: FinancialPeriod[] = [
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-            {
-                date: '2020-01-01',
-                accruals: 100.0,
-                adjustments: 650.5,
-                payments: 3654.5,
-                debt: 96658.66,
-                fine: 369985.3,
-            },
-        ];
+        items: FinancePeriod[] = [];
 
         formatToFriendly = formatToFriendly;
+
+        created() {
+            this.items = getAllPeriods(this.contractId);
+        }
     }
 </script>
 

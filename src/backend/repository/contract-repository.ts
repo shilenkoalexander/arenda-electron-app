@@ -1,4 +1,9 @@
-import { AddContractMainInfoDto, Contract, FullContractDetails } from '@/types/contracts';
+import {
+    AddContractMainInfoDto,
+    ContractPageMainInfo,
+    ContractWithTenant,
+    FullContractDetails,
+} from '@/types/contracts';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
 import { InputItem, Page, Pagination } from '@/types/common';
 import { queryWithPagination } from '@/backend/repository/repository';
@@ -9,7 +14,7 @@ import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
 import { AddObjectDto } from '@/types/objects';
 
-export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<Contract> {
+export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
     const query = `
         select c.id,
                c.contract_number,
@@ -100,3 +105,19 @@ export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: A
         objects.forEach((object) => saveObject(contractId, object));
     })();
 }
+
+export function getContractMainPageInfo(contractId: number): ContractPageMainInfo {
+    const result = db().queryFirstRow(
+        `select t.id as tenant_id,
+                       t.responsible_person,
+                       t.organization_name,
+                       c.contract_number,
+                       ct.name as contract_type
+                from contracts c
+                         inner join tenants t on t.id = c.id_tenant
+                         inner join contract_type ct on c.id_type = ct.id
+                where c.id = ${contractId}`);
+
+    return ResultMapperFactory.contractPageMainInfoMapper.map(result);
+}
+
