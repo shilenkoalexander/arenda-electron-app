@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-container fluid>
+        <v-container fluid class="px-5">
             <v-row>
                 <v-col class="d-flex mt-2" align-self="center">
                     <p class="ml-3 mb-0 subtitle-1 grey--text">Статус:</p>

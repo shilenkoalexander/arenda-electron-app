@@ -1,14 +1,22 @@
-import { Contact, ContactType, Contract, ContractStatus, FullContractDetails } from '@/types/contracts';
+import {
+    Contact,
+    ContactType,
+    ContractPageMainInfo,
+    ContractStatus,
+    ContractWithTenant,
+    FullContractDetails,
+} from '@/types/contracts';
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
 import { ShortObjectDetails } from '@/types/objects';
+import { FinancePeriod } from '@/types/finance';
 
 export interface ResultMapper<T> {
     map(value: any): T;
 }
 
-class ContractMapper implements ResultMapper<Contract> {
-    map(value: any): Contract {
+class ContractMapper implements ResultMapper<ContractWithTenant> {
+    map(value: any): ContractWithTenant {
         return {
             id: value.id,
             number: value.contract_number,
@@ -79,9 +87,34 @@ class ShortObjectDetailsMapper implements ResultMapper<ShortObjectDetails> {
     }
 }
 
+class ContractPageMainInfoMapper implements ResultMapper<ContractPageMainInfo> {
+    map(value: any): ContractPageMainInfo {
+        return {
+            tenantId: value.tenant_id,
+            tenantName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
+            contractNumber: value.contract_number,
+            contractType: value.contract_type,
+        };
+    }
+}
+
+class FinancialPeriodMapper implements ResultMapper<FinancePeriod> {
+    map(value: any): FinancePeriod {
+        return {
+            period: value.period,
+            accruals: Number.parseFloat(value.accruals),
+            adjustments: Number.parseFloat(value.adjustments),
+            payments: Number.parseFloat(value.payments),
+            debt: Number.parseFloat(value.debt),
+        };
+    }
+}
+
 export class ResultMapperFactory {
     static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();
     static readonly fullContractDetailsMapper: ResultMapper<FullContractDetails> = new FullContractDetailsMapper();
-    static readonly contractMapper: ResultMapper<Contract> = new ContractMapper();
+    static readonly contractMapper: ResultMapper<ContractWithTenant> = new ContractMapper();
     static readonly objectShortDetailsMapper: ResultMapper<ShortObjectDetails> = new ShortObjectDetailsMapper();
+    static readonly contractPageMainInfoMapper: ResultMapper<ContractPageMainInfo> = new ContractPageMainInfoMapper();
+    static readonly financialPeriodMapper: ResultMapper<FinancePeriod> = new FinancialPeriodMapper();
 }

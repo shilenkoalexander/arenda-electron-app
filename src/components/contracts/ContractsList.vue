@@ -59,7 +59,7 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { getAllContracts } from '@/backend/repository/contract-repository';
-    import { Contract } from '@/types/contracts';
+    import { ContractWithTenant } from '@/types/contracts';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
@@ -80,7 +80,7 @@
             { text: 'Арендатор', value: 'tenant', width: '50%' },
             { text: 'Просмотр', value: 'action', sortable: false, align: 'center' },
         ];
-        items: Contract[] = [];
+        items: ContractWithTenant[] = [];
 
         pagination: Pagination = {
             desc: [false],

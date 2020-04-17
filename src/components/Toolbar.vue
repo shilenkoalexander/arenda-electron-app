@@ -34,11 +34,11 @@ export default class Toolbar extends Vue {
     public buttons: MenuItem[] = [
         {
             text: 'Договоры',
-            action: '/contacts',
+            action: '/contracts',
         },
         {
             text: 'Договор',
-            action: '/contact',
+            action: '/contract',
         },
         {
             text: 'DEV',

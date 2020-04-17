@@ -62,96 +62,96 @@
         /**
          * Добавляет кнопку для очистки введенного значения
          */
-    @Prop({ type: Boolean, default: false })
-    clearable!: boolean;
+        @Prop({ type: Boolean, default: false })
+        clearable!: boolean;
 
-    /**
-     * Не позволяет изменить значение
-     */
-    @Prop({ type: Boolean, default: false })
-    readonly!: boolean;
+        /**
+         * Не позволяет изменить значение
+         */
+        @Prop({ type: Boolean, default: false })
+        readonly!: boolean;
 
-    /**
-     * Анимация загрузки
-     */
-    @Prop({ type: Boolean, default: false })
-    loading!: boolean;
+        /**
+         * Анимация загрузки
+         */
+        @Prop({ type: Boolean, default: false })
+        loading!: boolean;
 
-    /**
-     * Правила для выбранного значения даты
-     */
-    @Prop({ type: Array, default: () => [] })
-    rules!: Array<(value: string) => boolean | string>;
+        /**
+         * Правила для выбранного значения даты
+         */
+        @Prop({ type: Array, default: () => [] })
+        rules!: Array<(value: string) => boolean | string>;
 
-    /**
-     * Функция или массив для определения доступных для выбора дат
-     */
-    @Prop({ type: [Function, Array], default: null })
-    allowedDates!: ((value: string) => boolean | string[]) | null;
+        /**
+         * Функция или массив для определения доступных для выбора дат
+         */
+        @Prop({ type: [Function, Array], default: null })
+        allowedDates!: ((value: string) => boolean | string[]) | null;
 
-    /**
-     * Отключает возвожность выбора дня в дате
-     */
-    @Prop({ type: Boolean, default: false })
-    withoutDays!: boolean;
+        /**
+         * Отключает возвожность выбора дня в дате
+         */
+        @Prop({ type: Boolean, default: false })
+        withoutDays!: boolean;
 
-    /**
-     * Скрывает сообщения под текстовым полем
-     */
-    @Prop({ type: Boolean, default: false })
-    hideDetails!: boolean;
+        /**
+         * Скрывает сообщения под текстовым полем
+         */
+        @Prop({ type: Boolean, default: false })
+        hideDetails!: boolean;
 
-    /**
-     * Минимальное значение для даты
-     */
-    @Prop({ type: String, default: null })
-    minDate!: string | null;
+        /**
+         * Минимальное значение для даты
+         */
+        @Prop({ type: String, default: null })
+        minDate!: string | null;
 
-    /**
-     * Максимальное значение для даты
-     */
-    @Prop({ type: String, default: null })
-    maxDate!: string | null;
+        /**
+         * Максимальное значение для даты
+         */
+        @Prop({ type: String, default: null })
+        maxDate!: string | null;
 
-    /**
-     * Цвет компонента
-     */
-    @Prop({ type: String, default: 'primary' })
-    color!: string;
+        /**
+         * Цвет компонента
+         */
+        @Prop({ type: String, default: 'primary' })
+        color!: string;
 
-    private localDateISO: string | null = this.value;
-    private menuVisible: boolean | null = null;
+        private localDateISO: string | null = this.value;
+        private menuVisible: boolean | null = null;
 
-    private get localDate() {
-        return this.localDateISO ? parseISO(this.localDateISO) : null;
-    }
-
-    private get formattedDate() {
-        if (this.localDate) {
-            return this.withoutDays ? formatMonthToFriendly(this.localDate) : formatToFriendlyByDate(this.localDate);
+        private get localDate() {
+            return this.localDateISO ? parseISO(this.localDateISO) : null;
         }
-        return '';
-    }
 
-    @Watch('value')
-    private onValueChanged(newValue: string | null) {
-        this.localDateISO = newValue;
-    }
+        private get formattedDate() {
+            if (this.localDate) {
+                return this.withoutDays ? formatMonthToFriendly(this.localDate) : formatToFriendlyByDate(this.localDate);
+            }
+            return '';
+        }
 
-    @Watch('localDateISO')
-    private onLocalDateChanged() {
-        if (this.localDateISO !== this.value) {
-            /**
-             * Событие при изменении значения даты
-             */
-            this.$emit('input', this.localDateISO);
+        @Watch('value')
+        private onValueChanged(newValue: string | null) {
+            this.localDateISO = newValue;
+        }
+
+        @Watch('localDateISO')
+        private onLocalDateChanged() {
+            if (this.localDateISO !== this.value) {
+                /**
+                 * Событие при изменении значения даты
+                 */
+                this.$emit('input', this.localDateISO);
+            }
+        }
+
+        private clearDate() {
+            this.localDateISO = null;
         }
     }
-
-    private clearDate() {
-        this.localDateISO = null;
-    }
-}
 </script>
 
 <style scoped lang="scss">
