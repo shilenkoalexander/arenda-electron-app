@@ -1,8 +1,14 @@
-import { formatDateToDefaultFormat, generatePeriodsArray, parseMonth } from '@/utils/date-utils';
-import { isAfter, isEqual, subMonths } from 'date-fns';
-import { getMonthDebt, isNeverCalculated } from '@/backend/repository/finance-repository';
+import { generatePeriodsArray, parseDate, parseMonth } from '@/utils/date-utils';
+import { addMonths, isAfter, isEqual, subMonths } from 'date-fns';
+import {
+    getFinancePeriod,
+    getInflationIndexes,
+    getMonthDebt,
+    isNeverCalculated,
+} from '@/backend/repository/finance-repository';
 import { FinancePeriod } from '@/types/finance';
-import { getTotalPayment } from '@/backend/repository/objects-repository';
+import { getPaymentContractInfo } from '@/backend/repository/contract-repository';
+import { isNotEmpty } from '@/backend/utils/other-util';
 
 export function recalculate(periodFrom: string, periodTo: string, contractId: number, save: boolean) {
     const periodFromDate = parseMonth(periodFrom);
@@ -20,7 +26,7 @@ export function recalculate(periodFrom: string, periodTo: string, contractId: nu
         let previousMonthDept = -1;
         if (isEqual(value, periodFromDate)) {
             previousMonthDept = getMonthDebt(
-                formatDateToDefaultFormat(subMonths(value, 1)),
+                subMonths(value, 1),
                 contractId,
             );
         }
@@ -29,12 +35,36 @@ export function recalculate(periodFrom: string, periodTo: string, contractId: nu
     });
 }
 
-
 // если первый платеж - нужно учитывать дату актуальности платы из договора и умножать на индексы инфляции
 export function calculate(period: string, contractId: number) {
     const periodDate = parseMonth(period);
+    console.log('period =', period);
 
     if (isNeverCalculated(contractId)) {
-        const payment = getTotalPayment(contractId);
+        console.log('Never Calculated');
+        const paymentContractInfo = getPaymentContractInfo(contractId);
+        const indexNeedDates = generatePeriodsArray(
+            addMonths(parseDate(paymentContractInfo.actualityDate), 1),
+            periodDate,
+        );
+        const inflationIndexes = getInflationIndexes(indexNeedDates);
+        let finalIndex = 1;
+
+        if (isNotEmpty(inflationIndexes)) {
+            finalIndex = inflationIndexes
+                .map((value) => value.index)
+                .reduce((previousValue, currentValue) => previousValue * currentValue);
+        }
+        const payment = paymentContractInfo.payment * finalIndex;
+
+        console.log('payment =', payment.toFixed(2));
+        return;
+    }
+
+    const financePeriodOptional = getFinancePeriod(subMonths(periodDate, 1), contractId);
+
+    if (financePeriodOptional.isPresent()) {
+        const financePeriod = financePeriodOptional.get();
+
     }
 }

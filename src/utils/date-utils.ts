@@ -1,4 +1,4 @@
-import { addMonths, format, isAfter, isBefore, parse } from 'date-fns';
+import { addMonths, format, isAfter, isBefore, isEqual, parse, startOfMonth } from 'date-fns';
 
 export function parseDate(date: string): Date {
     return parse(date, 'yyyy-MM-dd', new Date());
@@ -40,6 +40,13 @@ export function parseMonth(date: string): Date {
 }
 
 export function generatePeriodsArray(periodFrom: Date, periodTo: Date): Date[] {
+    periodFrom = startOfMonth(periodFrom);
+    periodTo = startOfMonth(periodTo);
+
+    if (isEqual(periodFrom, periodTo)) {
+        return [periodFrom];
+    }
+
     if (isAfter(periodFrom, periodTo)) {
         return [];
     }
@@ -53,4 +60,12 @@ export function generatePeriodsArray(periodFrom: Date, periodTo: Date): Date[] {
     } while (isBefore(currentMonth, addMonths(periodTo, 1)));
 
     return periods;
+}
+
+export function formatToPeriod(date: Date): string {
+    return formatDateToDefaultFormat(startOfMonth(date));
+}
+
+export function toPeriodsArray(dates: Date[]): string[] {
+    return dates.map((value) => formatToPeriod(value));
 }

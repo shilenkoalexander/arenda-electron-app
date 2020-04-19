@@ -41,8 +41,7 @@ export function contractFilterToWhereClause(filter: ContractsFilterInfo | null):
 
     let clausesQuery = '';
     if (clauses.length > 0) {
-        clausesQuery = clauses
-            .reduce((previousValue, currentValue) => previousValue + ' AND ' + currentValue);
+        clausesQuery = clauses.join(' AND ');
     }
     return `${addressSearchClause} ${clausesQuery ? 'WHERE' : ''} ${clausesQuery}`;
 }

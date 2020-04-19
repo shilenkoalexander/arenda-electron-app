@@ -9,14 +9,27 @@ import {
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
 import { ShortObjectDetails } from '@/types/objects';
-import { FinancePeriod } from '@/types/finance';
+import { FinancePeriod, InflationIndex } from '@/types/finance';
+import { BetterSqlite3Helper } from 'better-sqlite3-helper';
+import DataObject = BetterSqlite3Helper.DataObject;
 
-export interface ResultMapper<T> {
-    map(value: any): T;
+export abstract class ResultMapper<T> {
+    public map(value: DataObject | undefined): T {
+        if (value === undefined) {
+            throw new Error('Value is undefined');
+        }
+        return this.innerMap(value);
+    }
+
+    public get() {
+        return this;
+    }
+
+    protected abstract innerMap(value: DataObject): T;
 }
 
-class ContractMapper implements ResultMapper<ContractWithTenant> {
-    map(value: any): ContractWithTenant {
+export class ContractMapper extends ResultMapper<ContractWithTenant> {
+    protected innerMap(value: DataObject): ContractWithTenant {
         return {
             id: value.id,
             number: value.contract_number,
@@ -33,8 +46,8 @@ class ContractMapper implements ResultMapper<ContractWithTenant> {
     }
 }
 
-class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
-    map(value: any): FullContractDetails {
+class FullContractDetailsMapper extends ResultMapper<FullContractDetails> {
+    protected innerMap(value: DataObject): FullContractDetails {
         return {
             contractInfo: {
                 id: value.id,
@@ -61,8 +74,8 @@ class FullContractDetailsMapper implements ResultMapper<FullContractDetails> {
 
 }
 
-class ContactMapper implements ResultMapper<Contact> {
-    map(value: any): Contact {
+class ContactMapper extends ResultMapper<Contact> {
+    protected innerMap(value: DataObject): Contact {
         return {
             contact: value.contact,
             type: $enum(ContactType).getValueOrDefault(value.type, ContactType.UNKNOWN),
@@ -70,8 +83,8 @@ class ContactMapper implements ResultMapper<Contact> {
     }
 }
 
-class ShortObjectDetailsMapper implements ResultMapper<ShortObjectDetails> {
-    map(value: any): ShortObjectDetails {
+class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
+    protected innerMap(value: DataObject): ShortObjectDetails {
         return {
             id: value.id,
             payment: value.payment,
@@ -87,8 +100,8 @@ class ShortObjectDetailsMapper implements ResultMapper<ShortObjectDetails> {
     }
 }
 
-class ContractPageMainInfoMapper implements ResultMapper<ContractPageMainInfo> {
-    map(value: any): ContractPageMainInfo {
+class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInfo> {
+    protected innerMap(value: DataObject): ContractPageMainInfo {
         return {
             tenantId: value.tenant_id,
             tenantName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
@@ -98,8 +111,8 @@ class ContractPageMainInfoMapper implements ResultMapper<ContractPageMainInfo> {
     }
 }
 
-class FinancialPeriodMapper implements ResultMapper<FinancePeriod> {
-    map(value: any): FinancePeriod {
+class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
+    protected innerMap(value: DataObject): FinancePeriod {
         return {
             period: value.period,
             accruals: Number.parseFloat(value.accruals),
@@ -110,11 +123,22 @@ class FinancialPeriodMapper implements ResultMapper<FinancePeriod> {
     }
 }
 
+class InflationIndexMapper extends ResultMapper<InflationIndex> {
+    protected innerMap(value: DataObject): InflationIndex {
+        return {
+            period: value.period,
+            date: value.date,
+            index: Number.parseFloat(value.index),
+        };
+    }
+}
+
 export class ResultMapperFactory {
     static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();
     static readonly fullContractDetailsMapper: ResultMapper<FullContractDetails> = new FullContractDetailsMapper();
     static readonly contractMapper: ResultMapper<ContractWithTenant> = new ContractMapper();
     static readonly objectShortDetailsMapper: ResultMapper<ShortObjectDetails> = new ShortObjectDetailsMapper();
     static readonly contractPageMainInfoMapper: ResultMapper<ContractPageMainInfo> = new ContractPageMainInfoMapper();
-    static readonly financialPeriodMapper: ResultMapper<FinancePeriod> = new FinancialPeriodMapper();
+    static readonly financePeriodMapper: ResultMapper<FinancePeriod> = new FinancialPeriodMapper();
+    static readonly inflationIndexMapper: ResultMapper<InflationIndex> = new InflationIndexMapper();
 }
