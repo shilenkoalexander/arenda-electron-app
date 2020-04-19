@@ -8,5 +8,3 @@ alter table contracts
     add column total_payment double;
 
 -- Down
-
-drop table if exists contracts;

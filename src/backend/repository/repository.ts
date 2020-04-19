@@ -1,8 +1,8 @@
 import { Page, Pagination } from '@/types/common';
 import db from 'better-sqlite3-helper';
 import { toLimit, toOrderBy } from '@/backend/utils/sql-util';
-import { ResultMapper } from '@/backend/mapper/result-mapper';
 import { OrderMapper } from '@/backend/mapper/order-mapper';
+import { ResultMapper } from '@/backend/mapper/result-mapper';
 
 export function queryWithPagination<T>(
     query: string,
@@ -24,6 +24,6 @@ export function queryWithPagination<T>(
     return {
         totalItems: count.totalItems,
         totalPages: Math.ceil(count.totalItems / pagination.size),
-        content: items.map(resultMapper.map),
+        content: items.map((value) => resultMapper.map(value)),
     };
 }

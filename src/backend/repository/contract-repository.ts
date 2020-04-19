@@ -13,6 +13,7 @@ import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
 import { AddObjectDto } from '@/types/objects';
+import { PaymentContractInfo } from '@/types/finance';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
     const query = `
@@ -121,3 +122,15 @@ export function getContractMainPageInfo(contractId: number): ContractPageMainInf
     return ResultMapperFactory.contractPageMainInfoMapper.map(result);
 }
 
+export function getPaymentContractInfo(contractId: number): PaymentContractInfo {
+    const result = db().queryFirstRow(`
+        select total_payment, payment_actuality_date
+        from contracts
+        where id = ${contractId}
+    `) as any;
+
+    return {
+        actualityDate: result.payment_actuality_date,
+        payment: result.total_payment,
+    };
+}

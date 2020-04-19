@@ -31,7 +31,7 @@ export function getShortObjectDetailsByContractId(contractId: number): ShortObje
         value.objectIndividualInformation = getObjectInformationByObjectId(value.id);
     });
 
-    return objectsInfo.map(ResultMapperFactory.objectShortDetailsMapper.map);
+    return objectsInfo.map((value) => ResultMapperFactory.objectShortDetailsMapper.map(value));
 }
 
 
@@ -75,12 +75,4 @@ export function saveObject(contractId: number, object: AddObjectDto) {
             });
         });
     })();
-}
-
-export function getTotalPayment(contractId: number): number { // todo: добавить получение даты (расчет на состояние ...)
-    const result = db().queryFirstRow(`
-        select sum(payment) as sum from objects where id_contract = ${contractId}
-    `) as any;
-
-    return result.sum;
 }

@@ -5,3 +5,14 @@ export interface FinancePeriod {
     payments: number; // оплаты
     debt: number; // долг
 }
+
+export interface PaymentContractInfo {
+    payment: number;
+    actualityDate: string;
+}
+
+export interface InflationIndex {
+    index: number;
+    period: string;
+    date: string;
+}

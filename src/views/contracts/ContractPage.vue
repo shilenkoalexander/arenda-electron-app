@@ -50,7 +50,7 @@
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import { recalculate } from '@/backend/service/finance-service';
+    import { calculate } from '@/backend/service/finance-service';
 
     @Component({
         components: {
@@ -67,7 +67,8 @@
 
         created() {
             this.contractId = Number.parseInt(this.$route.params.id, 10);
-            recalculate('2020-01', '2020-04', 1, false);
+            // recalculate('2020-01', '2020-04', 1, false);
+            calculate('2020-05', 2);
         }
     }
 </script>

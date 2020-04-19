@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-container fluid class="px-5">
+        <v-container fluid class="px-5" v-if="item">
             <v-row justify="space-between">
                 <v-col cols="4">
                     <DatePickerMenu
@@ -64,6 +64,9 @@
                 </div>
             </v-expand-transition>
         </v-container>
+        <v-container fluid v-else>
+            <p>Записи отсутствуют</p>
+        </v-container>
     </v-card>
 </template>
 
@@ -73,8 +76,8 @@
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import Label from '@/components/Label.vue';
     import { FinancePeriod } from '@/types/finance';
-    import { getAvailablePeriods, getFinancePeriod } from '@/backend/repository/finance-repository';
-    import { formatDateStringToMonthString, formatMonthStringToStartMonthDateString } from '@/utils/date-utils';
+    import { getAvailablePeriods, getLastFinancePeriod } from '@/backend/repository/finance-repository';
+    import { formatDateStringToMonthString, parseMonth } from '@/utils/date-utils';
 
     // todo: подумать как кэшировать данные в списке
 
@@ -99,18 +102,17 @@
 
         created() {
             this.availablePeriods = getAvailablePeriods(this.contractId);
-            this.item = getFinancePeriod(
-                this.month ? formatMonthStringToStartMonthDateString(this.month) : this.month,
-                this.contractId,
-            );
+            this.item = getLastFinancePeriod(this.month ? parseMonth(this.month) : null, this.contractId);
 
-            this.month = formatDateStringToMonthString(this.item.period);
+            if (this.item) {
+                this.month = formatDateStringToMonthString(this.item.period);
+            }
         }
 
         @Watch('month')
         onMonthChanged(newValue: string, oldValue: string) {
             if (oldValue !== newValue && oldValue !== '') {
-                this.item = getFinancePeriod(this.month, this.contractId);
+                this.item = getLastFinancePeriod(parseMonth(this.month), this.contractId);
             }
         }
     }
