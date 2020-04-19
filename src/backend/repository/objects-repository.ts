@@ -1,6 +1,6 @@
 import db from 'better-sqlite3-helper';
 import { AddObjectDto, ShortObjectDetails } from '@/types/objects';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
+import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 
 export function getObjectInformationByObjectId(id: number): Record<string, string> {
     const result = db().query(`select * from objects_information where id_object = ${id}`);

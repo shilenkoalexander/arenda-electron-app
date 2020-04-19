@@ -68,7 +68,7 @@
         created() {
             this.contractId = Number.parseInt(this.$route.params.id, 10);
             // recalculate('2020-01', '2020-04', 1, false);
-            calculate('2020-05', 2);
+            calculate('2020-04', 1);
         }
     }
 </script>
