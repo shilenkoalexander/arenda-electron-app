@@ -1,6 +1,6 @@
 import { FinancePeriod, InflationIndex } from '@/types/finance';
 import db from 'better-sqlite3-helper';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
+import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { formatDateStringToMonthString, formatToPeriod, toPeriodsArray } from '@/utils/date-utils';
 import { toSqlArray } from '@/backend/utils/sql-util';
 import Optional from '@/backend/utils/optional';

@@ -1,6 +1,6 @@
 import { Contact } from '@/types/contracts';
 import db from 'better-sqlite3-helper';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
+import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 
 export function getContactsByTenantId(tenantId: number): Contact[] {
     const contacts = db().query(`

@@ -1,5 +1,5 @@
 export default class Optional<T> {
-    static of<B>(value: B | null): Optional<B> {
+    static of<B>(value: B | null | undefined): Optional<B> {
         return new Optional<B>(value);
     }
 
@@ -7,14 +7,14 @@ export default class Optional<T> {
         return new Optional<B>(null);
     }
 
-    private readonly value: T | null = null;
+    private readonly value: T | null | undefined = null;
 
-    private constructor(value: T | null) {
+    private constructor(value: T | null | undefined) {
         this.value = value;
     }
 
     public isPresent(): boolean {
-        return this.value !== null;
+        return !!this.value;
     }
 
     public ifPresent(func: (value: T) => void) {

@@ -4,7 +4,7 @@ import {
     ContractWithTenant,
     FullContractDetails,
 } from '@/types/contracts';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper';
+import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
 import { queryWithPagination } from '@/backend/repository/repository';
 import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
@@ -14,6 +14,10 @@ import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
 import { AddObjectDto } from '@/types/objects';
 import { PaymentContractInfo } from '@/types/finance';
+import Optional from '@/backend/utils/optional';
+import { formatDateToDefaultFormat, formatToPeriod } from '@/utils/date-utils';
+import { ContractExtension } from '@/backend/types/contract-types';
+import { endOfMonth } from 'date-fns';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
     const query = `
@@ -122,15 +126,25 @@ export function getContractMainPageInfo(contractId: number): ContractPageMainInf
     return ResultMapperFactory.contractPageMainInfoMapper.map(result);
 }
 
-export function getPaymentContractInfo(contractId: number): PaymentContractInfo {
+export function getPaymentContractInfo(contractId: number): Optional<PaymentContractInfo> {
     const result = db().queryFirstRow(`
         select total_payment, payment_actuality_date
         from contracts
         where id = ${contractId}
-    `) as any;
+    `);
 
-    return {
-        actualityDate: result.payment_actuality_date,
-        payment: result.total_payment,
-    };
+    return Optional.of(result).map((value) => ResultMapperFactory.paymentContractInfoMapper.map(value));
+}
+
+export function getContractExtensionPaymentActivatesInPeriod(
+    period: Date,
+    contractId: number,
+): Optional<ContractExtension> {
+    const result = db().queryFirstRow(`
+        select start_date, to_date, payment, payment_actuality_date from contract_extensions
+        where id_contract = ${contractId}
+          and start_date between '${formatToPeriod(period)}' AND '${formatDateToDefaultFormat(endOfMonth(period))}'
+    `);
+
+    return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }

@@ -9,8 +9,10 @@ import {
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
 import { ShortObjectDetails } from '@/types/objects';
-import { FinancePeriod, InflationIndex } from '@/types/finance';
+import { FinancePeriod, InflationIndex, PaymentContractInfo } from '@/types/finance';
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
+import { ContractExtension } from '@/backend/types/contract-types';
+import { parseDate } from '@/utils/date-utils';
 import DataObject = BetterSqlite3Helper.DataObject;
 
 export abstract class ResultMapper<T> {
@@ -19,10 +21,6 @@ export abstract class ResultMapper<T> {
             throw new Error('Value is undefined');
         }
         return this.innerMap(value);
-    }
-
-    public get() {
-        return this;
     }
 
     protected abstract innerMap(value: DataObject): T;
@@ -46,7 +44,7 @@ export class ContractMapper extends ResultMapper<ContractWithTenant> {
     }
 }
 
-class FullContractDetailsMapper extends ResultMapper<FullContractDetails> {
+export class FullContractDetailsMapper extends ResultMapper<FullContractDetails> {
     protected innerMap(value: DataObject): FullContractDetails {
         return {
             contractInfo: {
@@ -74,7 +72,7 @@ class FullContractDetailsMapper extends ResultMapper<FullContractDetails> {
 
 }
 
-class ContactMapper extends ResultMapper<Contact> {
+export class ContactMapper extends ResultMapper<Contact> {
     protected innerMap(value: DataObject): Contact {
         return {
             contact: value.contact,
@@ -83,7 +81,7 @@ class ContactMapper extends ResultMapper<Contact> {
     }
 }
 
-class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
+export class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
     protected innerMap(value: DataObject): ShortObjectDetails {
         return {
             id: value.id,
@@ -100,7 +98,7 @@ class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
     }
 }
 
-class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInfo> {
+export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInfo> {
     protected innerMap(value: DataObject): ContractPageMainInfo {
         return {
             tenantId: value.tenant_id,
@@ -111,7 +109,7 @@ class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInfo> {
     }
 }
 
-class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
+export class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
     protected innerMap(value: DataObject): FinancePeriod {
         return {
             period: value.period,
@@ -123,7 +121,7 @@ class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
     }
 }
 
-class InflationIndexMapper extends ResultMapper<InflationIndex> {
+export class InflationIndexMapper extends ResultMapper<InflationIndex> {
     protected innerMap(value: DataObject): InflationIndex {
         return {
             period: value.period,
@@ -133,12 +131,22 @@ class InflationIndexMapper extends ResultMapper<InflationIndex> {
     }
 }
 
-export class ResultMapperFactory {
-    static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();
-    static readonly fullContractDetailsMapper: ResultMapper<FullContractDetails> = new FullContractDetailsMapper();
-    static readonly contractMapper: ResultMapper<ContractWithTenant> = new ContractMapper();
-    static readonly objectShortDetailsMapper: ResultMapper<ShortObjectDetails> = new ShortObjectDetailsMapper();
-    static readonly contractPageMainInfoMapper: ResultMapper<ContractPageMainInfo> = new ContractPageMainInfoMapper();
-    static readonly financePeriodMapper: ResultMapper<FinancePeriod> = new FinancialPeriodMapper();
-    static readonly inflationIndexMapper: ResultMapper<InflationIndex> = new InflationIndexMapper();
+export class ContractExtensionMapper extends ResultMapper<ContractExtension> {
+    protected innerMap(value: DataObject): ContractExtension {
+        return {
+            rentPayment: Number.parseFloat(value.payment),
+            dateStart: parseDate(value.start_date),
+            dateEnd: parseDate(value.to_date),
+            paymentActualityDate: parseDate(value.payment_actuality_date),
+        };
+    }
+}
+
+export class PaymentContractInfoMapper extends ResultMapper<PaymentContractInfo> {
+    protected innerMap(value: DataObject): PaymentContractInfo {
+        return {
+            actualityDate: parseDate(value.payment_actuality_date),
+            payment: Number.parseFloat(value.total_payment),
+        };
+    }
 }
