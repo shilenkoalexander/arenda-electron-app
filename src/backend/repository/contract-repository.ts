@@ -128,7 +128,7 @@ export function getContractMainPageInfo(contractId: number): ContractPageMainInf
 
 export function getPaymentContractInfo(contractId: number): Optional<PaymentContractInfo> {
     const result = db().queryFirstRow(`
-        select total_payment, payment_actuality_date
+        select total_payment, payment_actuality_date, start_date
         from contracts
         where id = ${contractId}
     `);
@@ -144,6 +144,19 @@ export function getContractExtensionPaymentActivatesInPeriod(
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
           and start_date between '${formatToPeriod(period)}' AND '${formatDateToDefaultFormat(endOfMonth(period))}'
+    `);
+
+    return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+}
+
+export function getContractExtensionPaymentDeactivatesInPeriod(
+    period: Date,
+    contractId: number,
+): Optional<ContractExtension> {
+    const result = db().queryFirstRow(`
+        select start_date, to_date, payment, payment_actuality_date from contract_extensions
+        where id_contract = ${contractId}
+          and to_date between '${formatToPeriod(period)}' AND '${formatDateToDefaultFormat(endOfMonth(period))}'
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
