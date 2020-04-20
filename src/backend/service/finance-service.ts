@@ -36,12 +36,12 @@ import Period from '@/backend/utils/period';
     });
 }*/
 
-function isFirstCalculation(period: Period, contractId: number) {
+export function isFirstCalculation(period: Period, contractId: number) {
     const contractStartDate = getContractStartDate(contractId);
     return isSameMonth(contractStartDate, period.getDate());
 }
 
-function getInflationIndex(period: Period): number {
+export function getInflationIndex(period: Period): number {
     const inflationIndexes = getInflationIndexes([period]);
 
     if (isEmpty(inflationIndexes)) {
@@ -51,7 +51,7 @@ function getInflationIndex(period: Period): number {
     return inflationIndexes[0].index;
 }
 
-function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period): number {
+export function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period): number {
     const indexNeedDates = generatePeriodsArray(startPeriod, endPeriod);
 
     if (isEmpty(indexNeedDates)) {
@@ -79,7 +79,7 @@ function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period)
  * @param period
  * @param contractId
  */
-export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number { // убрать экспорт
+export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number {
     // debugger;
     console.log('период ', period.toFriendlyFormat());
 
@@ -123,7 +123,7 @@ export function getAccrualPerFullMonthByPeriod(period: Period, contractId: numbe
         .orElseThrowWithMessage(`Отсутствует информация о периоде ${period.toFriendlyFormat()}`);
 }
 
-function getAccrualWhenFirstCalculation(period: Period, contractId: number): number {
+export function getAccrualWhenFirstCalculation(period: Period, contractId: number): number {
     console.log('Never Calculated');
     const paymentContractInfo = getPaymentContractInfo(contractId)
         .orElseThrowWithMessage(`Отсутствует информация о договоре с id = ${contractId}`);
@@ -143,7 +143,7 @@ function getAccrualWhenFirstCalculation(period: Period, contractId: number): num
     return (paymentContractInfo.payment * finalIndex) / daysInMonth * calculatedDaysCount;
 }
 
-function getAccrualWhenPrevMonthCalculated(
+export function getAccrualWhenPrevMonthCalculated(
     period: Period,
     contractId: number,
     prevFinancePeriod: FinancePeriod,
@@ -195,7 +195,7 @@ function getAccrualWhenPrevMonthCalculated(
     return prevFinancePeriod.accruals * inflationIndex;
 }
 
-function getAccrualWhenContractExtensionActivatesThisPeriod(
+export function getAccrualWhenContractExtensionActivatesThisPeriod(
     period: Period,
     contractExtension: ContractExtension,
     prevFinancePeriod: FinancePeriod,
@@ -229,7 +229,7 @@ function getAccrualWhenContractExtensionActivatesThisPeriod(
     return accrualBeforeExtension + accrualAfterExtension;
 }
 
-function getAccrualWhenContractExtensionDeactivatesThisPeriod(
+export function getAccrualWhenContractExtensionDeactivatesThisPeriod(
     period: Period,
     contractId: number,
     contractExtension: ContractExtension,
