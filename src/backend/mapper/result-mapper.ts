@@ -146,6 +146,7 @@ export class PaymentContractInfoMapper extends ResultMapper<PaymentContractInfo>
     protected innerMap(value: DataObject): PaymentContractInfo {
         return {
             actualityDate: parseDate(value.payment_actuality_date),
+            startDate: parseDate(value.start_date),
             payment: Number.parseFloat(value.total_payment),
         };
     }

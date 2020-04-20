@@ -9,6 +9,7 @@ export interface FinancePeriod {
 export interface PaymentContractInfo {
     payment: number;
     actualityDate: Date;
+    startDate: Date;
 }
 
 export interface InflationIndex {

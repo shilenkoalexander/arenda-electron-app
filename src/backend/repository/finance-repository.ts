@@ -1,7 +1,7 @@
 import { FinancePeriod, InflationIndex } from '@/types/finance';
 import db from 'better-sqlite3-helper';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { formatDateStringToMonthString, formatToPeriod, toPeriodsArray } from '@/utils/date-utils';
+import { formatDateStringToMonthString, formatToPeriod, parseDate, toPeriodsArray } from '@/utils/date-utils';
 import { toSqlArray } from '@/backend/utils/sql-util';
 import Optional from '@/backend/utils/optional';
 
@@ -108,13 +108,17 @@ export function getMonthDebt(period: Date, contractId: number): number {
     return result ? result.debt as number : 0;
 }
 
-export function isNeverCalculated(contractId: number): boolean {
+export function getContractStartDate(contractId: number): Date {
     const result = db().queryFirstRow(`
-        select count(*) as count from finance_card
-        where id_contract = ${contractId}
-    `) as any;
+        select start_date from contracts
+        where id = ${contractId}
+    `);
 
-    return result.count === 0;
+    if (!result) {
+        throw new Error(`Договор с ${contractId} отсутствует`);
+    }
+
+    return parseDate(result.start_date);
 }
 
 export function getInflationIndexes(periods: Date[]): InflationIndex[] {

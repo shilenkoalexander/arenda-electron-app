@@ -17,6 +17,10 @@ export default class Optional<T> {
         return !!this.value;
     }
 
+    public isEmpty(): boolean {
+        return !this.value;
+    }
+
     public ifPresent(func: (value: T) => void) {
         if (this.isPresent()) {
             func(this.value as T);
@@ -28,6 +32,20 @@ export default class Optional<T> {
             return this.value as T;
         }
         return otherValue;
+    }
+
+    public orElseThrow(error: Error): T {
+        if (this.isPresent()) {
+            return this.value as T;
+        }
+        throw error;
+    }
+
+    public orElseThrowWithMessage(message: string): T {
+        if (this.isPresent()) {
+            return this.value as T;
+        }
+        throw new Error(message);
     }
 
     public map<B>(map: (value: T) => B): Optional<B> {
