@@ -1,4 +1,5 @@
-import { addMonths, format, isAfter, isBefore, isEqual, parse, startOfMonth } from 'date-fns';
+import { format, parse, startOfMonth } from 'date-fns';
+import Period from '@/backend/utils/period';
 
 export function parseDate(date: string): Date {
     return parse(date, 'yyyy-MM-dd', new Date());
@@ -39,25 +40,26 @@ export function parseMonth(date: string): Date {
     return parseDate(formatMonthStringToStartMonthDateString(date));
 }
 
-export function generatePeriodsArray(periodFrom: Date, periodTo: Date): Date[] {
-    periodFrom = startOfMonth(periodFrom);
-    periodTo = startOfMonth(periodTo);
+export function generatePeriodsArray(periodFrom: Period, periodTo: Period): Period[] {
+    const dateFrom = periodFrom.startOfMonth();
+    const dateTo = periodTo.startOfMonth();
 
-    if (isEqual(periodFrom, periodTo)) {
+    if (periodFrom.isSamePeriod(periodTo)) {
         return [periodFrom];
     }
 
-    if (isAfter(periodFrom, periodTo)) {
+    if (periodFrom.isAfter(periodTo)) {
         return [];
     }
 
     const periods = [];
     let currentMonth = periodFrom;
 
+    const endPeriod = periodTo.addMonths(1);
     do {
         periods.push(currentMonth);
-        currentMonth = addMonths(currentMonth, 1);
-    } while (isBefore(currentMonth, addMonths(periodTo, 1)));
+        currentMonth = currentMonth.addMonths(1);
+    } while (currentMonth.isBefore(endPeriod));
 
     return periods;
 }

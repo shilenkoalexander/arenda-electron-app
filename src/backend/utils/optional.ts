@@ -34,6 +34,13 @@ export default class Optional<T> {
         return otherValue;
     }
 
+    public orNull(): T | null {
+        if (this.isPresent()) {
+            return this.value as T;
+        }
+        return null;
+    }
+
     public orElseThrow(error: Error): T {
         if (this.isPresent()) {
             return this.value as T;
