@@ -76,8 +76,13 @@
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import Label from '@/components/Label.vue';
     import { FinancePeriod } from '@/types/finance';
-    import { getAvailablePeriods, getLastFinancePeriod } from '@/backend/repository/finance-repository';
-    import { formatDateStringToMonthString, parseMonth } from '@/utils/date-utils';
+    import {
+        getAvailablePeriods,
+        getFinancePeriod,
+        getLastFinancePeriod,
+    } from '@/backend/repository/finance-repository';
+    import { formatDateStringToMonthString } from '@/utils/date-utils';
+    import Period from '@/backend/utils/period';
 
     // todo: подумать как кэшировать данные в списке
 
@@ -102,7 +107,7 @@
 
         created() {
             this.availablePeriods = getAvailablePeriods(this.contractId);
-            this.item = getLastFinancePeriod(this.month ? parseMonth(this.month) : null, this.contractId);
+            this.item = getLastFinancePeriod(this.contractId);
 
             if (this.item) {
                 this.month = formatDateStringToMonthString(this.item.period);
@@ -112,7 +117,7 @@
         @Watch('month')
         onMonthChanged(newValue: string, oldValue: string) {
             if (oldValue !== newValue && oldValue !== '') {
-                this.item = getLastFinancePeriod(parseMonth(this.month), this.contractId);
+                this.item = getFinancePeriod(Period.ofString(this.month), this.contractId).orNull();
             }
         }
     }

@@ -15,9 +15,9 @@ import { getShortObjectDetailsByContractId, saveObject } from '@/backend/reposit
 import { AddObjectDto } from '@/types/objects';
 import { PaymentContractInfo } from '@/types/finance';
 import Optional from '@/backend/utils/optional';
-import { formatDateToDefaultFormat, formatToPeriod } from '@/utils/date-utils';
+import { formatDateToDefaultFormat } from '@/utils/date-utils';
 import { ContractExtension } from '@/backend/types/contract-types';
-import { endOfMonth } from 'date-fns';
+import Period from '@/backend/utils/period';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
     const query = `
@@ -137,26 +137,26 @@ export function getPaymentContractInfo(contractId: number): Optional<PaymentCont
 }
 
 export function getContractExtensionPaymentActivatesInPeriod(
-    period: Date,
+    period: Period,
     contractId: number,
 ): Optional<ContractExtension> {
     const result = db().queryFirstRow(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
-          and start_date between '${formatToPeriod(period)}' AND '${formatDateToDefaultFormat(endOfMonth(period))}'
+          and start_date between '${period.toSqlFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }
 
 export function getContractExtensionPaymentDeactivatesInPeriod(
-    period: Date,
+    period: Period,
     contractId: number,
 ): Optional<ContractExtension> {
     const result = db().queryFirstRow(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
-          and to_date between '${formatToPeriod(period)}' AND '${formatDateToDefaultFormat(endOfMonth(period))}'
+          and to_date between '${period.toSqlFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));

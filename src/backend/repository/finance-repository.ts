@@ -1,25 +1,18 @@
 import { FinancePeriod, InflationIndex } from '@/types/finance';
 import db from 'better-sqlite3-helper';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { formatDateStringToMonthString, formatToPeriod, parseDate, toPeriodsArray } from '@/utils/date-utils';
-import { toSqlArray } from '@/backend/utils/sql-util';
+import { formatDateStringToMonthString, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
+import Period, { toSqlArray } from '@/backend/utils/period';
 
-export function getLastFinancePeriod(period: Date | null, contractId: number): FinancePeriod {
-    let stringPeriod = '';
-
-    if (period) {
-        stringPeriod = formatToPeriod(period);
-    }
-
-    if (!period) {
-        const res = db().queryFirstRow(
-            `select max(period) as period
+export function getLastFinancePeriod(contractId: number): FinancePeriod {
+    const res = db().queryFirstRow(
+        `select max(period) as period
                  from finance_card
                  where id_contract = ${contractId}`,
-        ) as any;
-        stringPeriod = res.period;
-    }
+    ) as any;
+
+    const stringPeriod = res.period;
 
     const result = db().queryFirstRow(`
         select *
@@ -29,11 +22,11 @@ export function getLastFinancePeriod(period: Date | null, contractId: number): F
     return ResultMapperFactory.financePeriodMapper.map(result);
 }
 
-export function getFinancePeriod(period: Date, contractId: number): Optional<FinancePeriod> {
+export function getFinancePeriod(period: Period, contractId: number): Optional<FinancePeriod> {
     const result = db().queryFirstRow(`
         select *
         from finance_card
-        where period = '${formatToPeriod(period)}' and id_contract = ${contractId}
+        where period = '${period.toSqlFormat()}' and id_contract = ${contractId}
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.financePeriodMapper.map(value));
@@ -59,17 +52,17 @@ export function getAvailablePeriods(contractId: number): string[] {
     return result.map((value) => formatDateStringToMonthString(value.period));
 }
 
-export function isCalculated(period: Date, contractId: number): boolean {
+export function isCalculated(period: Period, contractId: number): boolean {
     const result = db().query(`
         select * from finance_card
-        where period = '${formatToPeriod(period)}' AND id_contract = ${contractId}
+        where period = '${period.toSqlFormat()}' AND id_contract = ${contractId}
     `);
 
     return result.length > 0;
 }
 
-export function getFinanceActionsSum(period: Date, contractId: number): FinancePeriod {
-    const periodString = formatToPeriod(period);
+export function getFinanceActionsSum(period: Period, contractId: number): FinancePeriod {
+    const periodString = period.toSqlFormat();
 
     const result = db().queryFirstRow(`
         select accrual.period, accruals, adjustments, payments, 0
@@ -99,10 +92,10 @@ export function getFinanceActionsSum(period: Date, contractId: number): FinanceP
     return ResultMapperFactory.financePeriodMapper.map(result);
 }
 
-export function getMonthDebt(period: Date, contractId: number): number {
+export function getMonthDebt(period: Period, contractId: number): number {
     const result = db().queryFirstRow(`
         select debt from finance_card
-        where period = '${formatToPeriod(period)}' and id_contract = ${contractId}
+        where period = '${period.toSqlFormat()}' and id_contract = ${contractId}
     `) as any;
 
     return result ? result.debt as number : 0;
@@ -121,11 +114,11 @@ export function getContractStartDate(contractId: number): Date {
     return parseDate(result.start_date);
 }
 
-export function getInflationIndexes(periods: Date[]): InflationIndex[] {
+export function getInflationIndexes(periods: Period[]): InflationIndex[] {
     const result = db().query(`
         select *
         from inflation_index
-        where period in ${toSqlArray(toPeriodsArray(periods))}
+        where period in ${toSqlArray(periods)}
     `);
 
     return result.map((value) => ResultMapperFactory.inflationIndexMapper.map(value));
