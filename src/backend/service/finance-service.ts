@@ -1,7 +1,6 @@
 import { formatDateToMonthString, generatePeriodsArray } from '@/utils/date-utils';
 import { differenceInDays, isSameMonth } from 'date-fns';
 import { getContractStartDate, getFinancePeriod, getInflationIndexes } from '@/backend/repository/finance-repository';
-import { FinancePeriod } from '@/types/finance';
 import {
     getContractExtensionPaymentActivatesInPeriod,
     getContractExtensionPaymentDeactivatesInPeriod,
@@ -79,8 +78,7 @@ function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period)
  * @param period
  * @param contractId
  */
-export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number { // убрать экспорт
-    // debugger;
+export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number {
     console.log('период ', period.toFriendlyFormat());
 
     if (isFirstCalculation(period, contractId)) { // если этот период - начало договора
@@ -94,13 +92,17 @@ export function getAccrualPerFullMonthByPeriod(period: Period, contractId: numbe
         return paymentContractInfo.payment * finalIndex; // то берем из договора
     }
 
-    const inflationIndex = getInflationIndex(period);
     const contractExtensionPaymentActivatesInPeriod = getContractExtensionPaymentActivatesInPeriod(period, contractId);
 
     if (contractExtensionPaymentActivatesInPeriod.isPresent()) { // если в этот месяц был активирован доп договор
-        console.log('активирован доп договор');
-        return getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId) * inflationIndex;
-        // то возвращаемся на один месяц назад и оттуда значение умножаем на индекс инфляции текущий
+        console.log('активирован доп соглашение');
+        const extension = contractExtensionPaymentActivatesInPeriod.get();
+        const extensionInflationIndex = getFinalInflationIndexByPeriods(
+            Period.ofDate(extension.paymentActualityDate).addMonths(1),
+            period,
+        );
+        return extension.rentPayment * extensionInflationIndex;
+        // то берем сумму из доп соглашения и умножаем на два индекса инфляции
     }
 
     const contractExtensionPaymentDeactivatesInPeriod = getContractExtensionPaymentDeactivatesInPeriod(
@@ -111,15 +113,19 @@ export function getAccrualPerFullMonthByPeriod(period: Period, contractId: numbe
         console.log('деактивирован доп договор');
         const contractExtension = contractExtensionPaymentDeactivatesInPeriod.get();
         // то идем в месяц перед началом доп соглашения
+        const finalIndex = getFinalInflationIndexByPeriods(
+            Period.ofDate(contractExtension.dateStart),
+            period,
+        );
         return getAccrualPerFullMonthByPeriod(
             Period.ofDate(contractExtension.dateStart).subMonths(1),
             contractId,
-        ) * inflationIndex;
+        ) * finalIndex;
     }
 
     console.log('получаем из периода');
     return getFinancePeriod(period, contractId)
-        .map((value) => value.accruals * inflationIndex)
+        .map((value) => value.accruals)
         .orElseThrowWithMessage(`Отсутствует информация о периоде ${period.toFriendlyFormat()}`);
 }
 
@@ -146,59 +152,21 @@ function getAccrualWhenFirstCalculation(period: Period, contractId: number): num
 function getAccrualWhenPrevMonthCalculated(
     period: Period,
     contractId: number,
-    prevFinancePeriod: FinancePeriod,
 ): number {
     console.log('Calculated prev month');
 
     const prevPeriod = period.subMonths(1);
 
-    if (isFirstCalculation(prevPeriod, contractId)) {
-        const paymentContractInfo = getPaymentContractInfo(contractId)
-            .orElseThrowWithMessage(`Отсутствует информация о договоре с id = ${contractId}`);
-        const finalInflationIndex = getFinalInflationIndexByPeriods(
-            Period.ofDate(paymentContractInfo.actualityDate).addMonths(1),
-            period,
-        );
-
-        return paymentContractInfo.payment * finalInflationIndex;
-    }
-
-    const prevMonthContractExtensionDeactivatesOptional = getContractExtensionPaymentDeactivatesInPeriod(
-        prevPeriod,
-        contractId,
-    );
-
-    if (prevMonthContractExtensionDeactivatesOptional.isPresent()) {
-        console.log('extension deactivates prev month');
-        const contractExtension = prevMonthContractExtensionDeactivatesOptional.get();
-        const extensionStartDatePeriod = Period.ofDate(contractExtension.dateStart);
-        const periodBeforeExtension = extensionStartDatePeriod.subMonths(1);
-        const financePeriodBeforeExtension = getFinancePeriod(periodBeforeExtension, contractId)
-            .orElseThrowWithMessage('Отсутствует информация о периоде до начала действия доп соглашения');
-        const finalInflationIndex = getFinalInflationIndexByPeriods(extensionStartDatePeriod, period);
-
-        return financePeriodBeforeExtension.accruals * finalInflationIndex;
-    }
-
+    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(prevPeriod, contractId);
     const inflationIndex = getInflationIndex(period);
-    const prevMonthContractExtensionActivatesOptional = getContractExtensionPaymentActivatesInPeriod(
-        prevPeriod,
-        contractId,
-    );
 
-    if (prevMonthContractExtensionActivatesOptional.isPresent()) {
-        const prevMonthContractExtension = prevMonthContractExtensionActivatesOptional.get();
-        return prevMonthContractExtension.rentPayment * inflationIndex;
-    }
-
-
-    return prevFinancePeriod.accruals * inflationIndex;
+    return prevFinancePeriodAccruals * inflationIndex;
 }
 
 function getAccrualWhenContractExtensionActivatesThisPeriod(
     period: Period,
     contractExtension: ContractExtension,
-    prevFinancePeriod: FinancePeriod,
+    contractId: number,
 ): number {
     console.log('When contract extension start');
     const prevPaymentDays = differenceInDays(contractExtension.dateStart, period.startOfMonth());
@@ -214,17 +182,19 @@ function getAccrualWhenContractExtensionActivatesThisPeriod(
         period,
     );
 
-    const prevAccrualWithInflationIndex = prevFinancePeriod.accruals * periodInflationIndex;
+    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId);
+
+    const prevAccrualWithInflationIndex = prevFinancePeriodAccruals * periodInflationIndex;
     const currAccrualWithInflationIndex = contractExtension.rentPayment * extensionInflationIndex;
 
-    console.log('Предыдущ за весь месяц начисление =', prevPaymentDays);
-    console.log('Следующее за весь месяц начисление =', currAccrualWithInflationIndex);
+    console.log('Предыдущ за весь месяц начисление =', prevAccrualWithInflationIndex.toFixed(4));
+    console.log('Следующее за весь месяц начисление =', currAccrualWithInflationIndex.toFixed(4));
 
     const accrualBeforeExtension = (prevAccrualWithInflationIndex / monthDaysCount) * prevPaymentDays;
     const accrualAfterExtension = (currAccrualWithInflationIndex / monthDaysCount) * currPaymentDays;
 
-    console.log('Предыдущ общее начисление =', accrualBeforeExtension);
-    console.log('Следующее общее начисление =', accrualAfterExtension);
+    console.log('Предыдущ общее начисление =', accrualBeforeExtension.toFixed(4));
+    console.log('Следующее общее начисление =', accrualAfterExtension.toFixed(4));
 
     return accrualBeforeExtension + accrualAfterExtension;
 }
@@ -245,20 +215,16 @@ function getAccrualWhenContractExtensionDeactivatesThisPeriod(
     const periodInflationIndex = getInflationIndex(period);
     const periodBeforeExtension = Period.ofDate(contractExtension.dateStart).subMonths(1);
 
-    const prevPeriod = period.subMonths(1);
-
-    const prevFinancePeriod = getFinancePeriod(prevPeriod, contractId)
-        .orElseThrowWithMessage(`Отсутствует информация о периоде ${prevPeriod.toFriendlyFormat()}`);
-    const financePeriodBeforeExtension = getFinancePeriod(periodBeforeExtension, contractId)
-        .orElseThrowWithMessage('Отсутствует информация о периоде до начала действия доп соглашения');
-
     const extensionInflationIndex = getFinalInflationIndexByPeriods(
         Period.ofDate(contractExtension.dateStart),
         period,
     );
 
-    const prevAccrualWithInflationIndex = prevFinancePeriod.accruals * periodInflationIndex;
-    const currAccrualWithInflationIndex = financePeriodBeforeExtension.accruals * extensionInflationIndex;
+    const beforeExtensionPeriodAccruals = getAccrualPerFullMonthByPeriod(periodBeforeExtension, contractId);
+    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId);
+
+    const prevAccrualWithInflationIndex = prevFinancePeriodAccruals * periodInflationIndex;
+    const currAccrualWithInflationIndex = beforeExtensionPeriodAccruals * extensionInflationIndex;
 
     console.log('Предыдущ за весь месяц начисление =', prevAccrualWithInflationIndex);
     console.log('Следующее за весь месяц начисление =', currAccrualWithInflationIndex);
@@ -281,13 +247,12 @@ export function calculate(period: Period, contractId: number): number {
     }
 
     const extensionActivatesThisPeriod = getContractExtensionPaymentActivatesInPeriod(period, contractId);
-    const financePeriodOptional = getFinancePeriod(period.subMonths(1), contractId);
 
     if (extensionActivatesThisPeriod.isPresent()) {
         return getAccrualWhenContractExtensionActivatesThisPeriod(
             period,
             extensionActivatesThisPeriod.get(),
-            financePeriodOptional.get(),
+            contractId,
         );
     }
 
@@ -301,9 +266,5 @@ export function calculate(period: Period, contractId: number): number {
         );
     }
 
-    if (financePeriodOptional.isPresent()) {
-        return getAccrualWhenPrevMonthCalculated(period, contractId, financePeriodOptional.get());
-    }
-
-    throw new Error('Ошибка расчета');
+    return getAccrualWhenPrevMonthCalculated(period, contractId);
 }
