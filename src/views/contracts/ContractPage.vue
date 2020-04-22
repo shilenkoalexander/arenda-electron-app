@@ -50,7 +50,7 @@
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
     import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import { getAccrualPerFullMonthByPeriod } from '@/backend/service/finance-service';
+    import { calculate } from '@/backend/service/finance-service';
     import Period from '@/backend/utils/period';
 
     @Component({
@@ -69,10 +69,10 @@
         created() {
             this.contractId = Number.parseInt(this.$route.params.id, 10);
             // recalculate('2020-01', '2020-04', 1, false);
-            // const payment = calculate('2020-05', 1);
-            const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
-            console.log('accrual =', accrualForCalculations.toFixed(2));
-            // console.log('payment =', payment.toFixed(2));
+            const payment = calculate(Period.ofMonthYear(8, 2020), 1);
+            // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
+            // console.log('accrual =', accrualForCalculations.toFixed(2));
+            console.log('payment =', payment.toFixed(4));
         }
     }
 </script>

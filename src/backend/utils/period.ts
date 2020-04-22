@@ -25,7 +25,7 @@ export default class Period {
     }
 
     static ofMonthYear(month: number, year: number) {
-        return new Period(new Date(year, month));
+        return new Period(new Date(year, month - 1));
     }
 
     private readonly date!: Date;
