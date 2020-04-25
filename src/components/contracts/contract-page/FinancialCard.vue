@@ -81,7 +81,6 @@
         getFinancePeriod,
         getLastFinancePeriod,
     } from '@/backend/repository/finance-repository';
-    import { formatDateStringToMonthString } from '@/utils/date-utils';
     import Period from '@/backend/utils/period';
 
     // todo: подумать как кэшировать данные в списке
@@ -110,7 +109,7 @@
             this.item = getLastFinancePeriod(this.contractId);
 
             if (this.item) {
-                this.month = formatDateStringToMonthString(this.item.period);
+                this.month = this.item.period.toDefaultFormat();
             }
         }
 

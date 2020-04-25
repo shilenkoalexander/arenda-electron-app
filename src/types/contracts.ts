@@ -101,4 +101,5 @@ export interface ContractPageMainInfo {
     tenantName: string;
     contractType: string;
     contractNumber: string;
+    calculationStartDate: Date;
 }

@@ -13,6 +13,7 @@ import { FinancePeriod, InflationIndex, PaymentContractInfo } from '@/types/fina
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { ContractExtension } from '@/backend/types/contract-types';
 import { parseDate } from '@/utils/date-utils';
+import Period from '@/backend/utils/period';
 import DataObject = BetterSqlite3Helper.DataObject;
 
 export abstract class ResultMapper<T> {
@@ -105,6 +106,7 @@ export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInf
             tenantName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
             contractNumber: value.contract_number,
             contractType: value.contract_type,
+            calculationStartDate: new Date(2020, 4, 28),
         };
     }
 }
@@ -112,7 +114,7 @@ export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInf
 export class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
     protected innerMap(value: DataObject): FinancePeriod {
         return {
-            period: value.period,
+            period: Period.ofString(value.period),
             accruals: Number.parseFloat(value.accruals),
             adjustments: Number.parseFloat(value.adjustments),
             payments: Number.parseFloat(value.payments),

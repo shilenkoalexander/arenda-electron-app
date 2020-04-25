@@ -1,21 +1,21 @@
 <template>
-    <v-card v-if="item">
+    <v-card>
         <v-container fluid class="px-5 fill-height">
             <v-row>
                 <v-col cols="3">
-                    <Label label="№ договора" :value="item.contractNumber"/>
+                    <Label label="№ договора" :value="mainInfo.contractNumber"/>
                 </v-col>
                 <v-col>
                     <Label
                             label="Арендатор"
-                            :value="item.tenantName"
+                            :value="mainInfo.tenantName"
                             to="/"
                     />
                 </v-col>
             </v-row>
             <v-row>
                 <v-col>
-                    <Label label="Вид договора" :value="item.contractType"/>
+                    <Label label="Вид договора" :value="mainInfo.contractType"/>
                 </v-col>
             </v-row>
             <!--<v-row>
@@ -42,10 +42,9 @@
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import Label from '@/components/Label.vue';
     import { ContractPageMainInfo } from '@/types/contracts';
-    import { getContractMainPageInfo } from '@/backend/repository/contract-repository';
 
     // todo : общая сумма платежа
-    // todo: поля "дата заключения" и "дата начала действия" - разные вещи
+    // todo: поля "дата заключения" и "дата начала действия" - разные вещи (еще дата начала расчета нужна)
 
     @Component({
         components: {
@@ -54,16 +53,10 @@
     })
     export default class ContractInfo extends Vue {
         @Prop({
-            type: Number,
+            type: Object,
             required: true,
         })
-        contractId!: number;
-
-        item: ContractPageMainInfo | null = null;
-
-        created() {
-            this.item = getContractMainPageInfo(this.contractId);
-        }
+        mainInfo!: ContractPageMainInfo;
     }
 </script>
 
