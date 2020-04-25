@@ -5,6 +5,7 @@ import {
     getFinancePeriod,
     getInflationIndexes,
     getMonthDebt,
+    getPeriodsAdjustments,
     getPeriodsPayments,
 } from '@/backend/repository/finance-repository';
 import {
@@ -275,12 +276,14 @@ export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, co
     const periods = generatePeriodsArray(periodFrom, periodTo);
 
     const periodsPayments = getPeriodsPayments(periods, contractId);
+    const periodsAdjustments = getPeriodsAdjustments(periods, contractId);
     const prevPeriodDebt = getMonthDebt(periodFrom.subMonths(1), contractId);
     let dept = prevPeriodDebt.orElse(0);
 
     periods.forEach((period) => {
         const accruals = calculateAccruals(period, contractId);
         const payments = periodsPayments.find((value) => value.period.isSamePeriod(period));
+        const adjustment = periodsAdjustments.find((value) => value.period.isSamePeriod(period));
         const paymentsSum = payments ? payments.sum : 0;
         dept += (accruals - paymentsSum);
         calculatedPeriods.push(
@@ -289,7 +292,7 @@ export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, co
                 accruals,
                 payments: paymentsSum,
                 debt: dept,
-                adjustments: 0,
+                adjustments: adjustment ? adjustment.adjustment : 0,
             },
         );
     });

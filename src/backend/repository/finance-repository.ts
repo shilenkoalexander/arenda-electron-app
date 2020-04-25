@@ -116,3 +116,20 @@ export function getPeriodsPayments(periods: Period[], contractId: number): Array
         sum: Number.parseFloat(value.sum),
     }));
 }
+
+export function getPeriodsAdjustments(
+    periods: Period[],
+    contractId: number,
+): Array<{ period: Period; adjustment: number }> {
+    const result = db().query(`
+        select period, adjustments
+        from finance_card
+        where id_contract = ${contractId} and period in ${toSqlArray(periods)}
+        group by period
+    `);
+
+    return result.map((value) => ({
+        period: Period.ofString(value.period),
+        adjustment: Number.parseFloat(value.adjustments),
+    }));
+}
