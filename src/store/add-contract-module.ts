@@ -29,21 +29,23 @@ export default class AddContractModule extends VuexModule {
     }
 
     get editingObject() {
-        return this.objects.filter((value) => value.index === this.editingObjectIndex)[0];
+        return this.objects.find((value) => value.index === this.editingObjectIndex);
     }
 
     @Mutation
     saveEditingObject(object: AddObjectDto) {
-        const editingObj = this.objects.filter((value) => value.index === this.editingObjectIndex)[0];
-        console.log(editingObj);
-        for (const field in object) {
-            if (
-                Object.prototype.hasOwnProperty.call(object, field)
-                && Object.prototype.hasOwnProperty.call(editingObj, field)
-            ) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                // @ts-ignore
-                editingObj[field] = object[field];
+        const editingObj = this.objects.find((value) => value.index === this.editingObjectIndex);
+        if (editingObj) {
+            console.log(editingObj);
+            for (const field in object) {
+                if (
+                    Object.prototype.hasOwnProperty.call(object, field)
+                    && Object.prototype.hasOwnProperty.call(editingObj, field)
+                ) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                    // @ts-ignore
+                    editingObj[field] = object[field];
+                }
             }
         }
 

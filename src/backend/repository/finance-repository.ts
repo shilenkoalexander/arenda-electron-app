@@ -61,44 +61,13 @@ export function isCalculated(period: Period, contractId: number): boolean {
     return result.length > 0;
 }
 
-export function getFinanceActionsSum(period: Period, contractId: number): FinancePeriod {
-    const periodString = period.toSqlFormat();
-
-    const result = db().queryFirstRow(`
-        select accrual.period, accruals, adjustments, payments, 0
-        from (
-                 select period, sum(sum) as accruals
-                 from finance_action
-                          inner join finance_action_type fat on finance_action.id_action_type = fat.id
-                 where period = ${periodString} and id_contract = ${contractId} and fat.name = 'ACCRUAL'
-                 group by period
-             ) as accrual
-                 inner join (
-            select period, sum(sum) as adjustments
-            from finance_action
-                     inner join finance_action_type fat on finance_action.id_action_type = fat.id
-            where period = ${periodString} and id_contract = ${contractId} and fat.name = 'ADJUSTMENT'
-            group by period
-        ) as adjustment on accrual.period = adjustment.period
-                 inner join (
-            select period, sum(sum) as payments
-            from finance_action
-                     inner join finance_action_type fat on finance_action.id_action_type = fat.id
-            where period = ${periodString} and id_contract = ${contractId} and fat.name = 'PAYMENT'
-            group by period
-        ) as payment on accrual.period = payment.period;
-    `) as any;
-
-    return ResultMapperFactory.financePeriodMapper.map(result);
-}
-
-export function getMonthDebt(period: Period, contractId: number): number {
+export function getMonthDebt(period: Period, contractId: number): Optional<number> {
     const result = db().queryFirstRow(`
         select debt from finance_card
         where period = '${period.toSqlFormat()}' and id_contract = ${contractId}
-    `) as any;
+    `);
 
-    return result ? result.debt as number : 0;
+    return Optional.of(result).map((value) => value.debt);
 }
 
 export function getContractStartDate(contractId: number): Date {
@@ -134,3 +103,16 @@ export function insertFinancePeriod(contractId: number, card: FinancePeriod) {
     });
 }
 
+export function getPeriodsPayments(periods: Period[], contractId: number): Array<{ period: Period; sum: number }> {
+    const result = db().query(`
+        select period, sum(sum) as sum
+        from payments
+        where id_contract = ${contractId} and period in ${toSqlArray(periods)}
+        group by period
+    `);
+
+    return result.map((value) => ({
+        period: Period.ofString(value.period),
+        sum: Number.parseFloat(value.sum),
+    }));
+}
