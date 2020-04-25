@@ -1,6 +1,12 @@
 import { formatDateToMonthString, generatePeriodsArray } from '@/utils/date-utils';
 import { differenceInDays, isSameMonth } from 'date-fns';
-import { getContractStartDate, getFinancePeriod, getInflationIndexes } from '@/backend/repository/finance-repository';
+import {
+    getContractStartDate,
+    getFinancePeriod,
+    getInflationIndexes,
+    getMonthDebt,
+    getPeriodsPayments,
+} from '@/backend/repository/finance-repository';
 import {
     getContractExtensionPaymentActivatesInPeriod,
     getContractExtensionPaymentDeactivatesInPeriod,
@@ -9,31 +15,20 @@ import {
 import { isEmpty, isNotEmpty } from '@/backend/utils/other-util';
 import { ContractExtension } from '@/backend/types/contract-types';
 import Period from '@/backend/utils/period';
+import { FinancePeriod } from '@/types/finance';
 
-/*export function recalculate(periodFrom: string, periodTo: string, contractId: number, save: boolean) {
-    const periodFromDate = parseMonth(periodFrom);
-    const periodToDate = parseMonth(periodTo);
+let calculatedPeriods: FinancePeriod[] = [];
 
-    if (isAfter(periodFromDate, periodToDate)) {
-        return;
+
+function getFinancePeriodFromLocalIfFound(period: Period, contractId: number): FinancePeriod {
+    const localFinancePeriod = calculatedPeriods.find((value) => period.isSamePeriod(value.period));
+
+    if (!localFinancePeriod) {
+        return getFinancePeriod(period, contractId)
+            .orElseThrowWithMessage(`Отсутствует информация о периоде ${period.toFriendlyFormat()}`);
     }
-
-    const periods = generatePeriodsArray(periodFromDate, periodToDate);
-    const financePeriods: FinancePeriod[] = [];
-    // let previousMonthFinancePeriod: FinancePeriod | null = null;
-
-    periods.forEach((value) => {
-        let previousMonthDept = -1;
-        if (isEqual(value, periodFromDate)) {
-            previousMonthDept = getMonthDebt(
-                subMonths(value, 1),
-                contractId,
-            );
-        }
-
-
-    });
-}*/
+    return localFinancePeriod;
+}
 
 function isFirstCalculation(period: Period, contractId: number) {
     const contractStartDate = getContractStartDate(contractId);
@@ -77,6 +72,7 @@ function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period)
  * и умножаем на все ии за период действия доп соглашения + текущий
  * @param period
  * @param contractId
+ * @param accrualsSource источник начислений
  */
 export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number {
     console.log('период ', period.toFriendlyFormat());
@@ -123,10 +119,7 @@ export function getAccrualPerFullMonthByPeriod(period: Period, contractId: numbe
         ) * finalIndex;
     }
 
-    console.log('получаем из периода');
-    return getFinancePeriod(period, contractId)
-        .map((value) => value.accruals)
-        .orElseThrowWithMessage(`Отсутствует информация о периоде ${period.toFriendlyFormat()}`);
+    return getFinancePeriodFromLocalIfFound(period, contractId).accruals;
 }
 
 function getAccrualWhenFirstCalculation(period: Period, contractId: number): number {
@@ -238,8 +231,7 @@ function getAccrualWhenContractExtensionDeactivatesThisPeriod(
     return accrualBeforeExtension + accrualAfterExtension;
 }
 
-// если первый платеж - нужно учитывать дату актуальности платы из договора и умножать на индексы инфляции
-export function calculate(period: Period, contractId: number): number {
+export function calculateAccruals(period: Period, contractId: number): number {
     console.log('period =', period.toDefaultFormat());
 
     if (isFirstCalculation(period, contractId)) {
@@ -267,4 +259,42 @@ export function calculate(period: Period, contractId: number): number {
     }
 
     return getAccrualWhenPrevMonthCalculated(period, contractId);
+}
+
+/**
+ * Метод расчета финансовых периодов по указанным периодам. Не сохраняет данные в базу.
+ * @param periodFrom
+ * @param periodTo
+ * @param contractId
+ */
+export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, contractId: number): FinancePeriod[] {
+    if (periodFrom.isAfter(periodTo)) {
+        return [];
+    }
+
+    const periods = generatePeriodsArray(periodFrom, periodTo);
+
+    const periodsPayments = getPeriodsPayments(periods, contractId);
+    const prevPeriodDebt = getMonthDebt(periodFrom.subMonths(1), contractId);
+    let dept = prevPeriodDebt.orElse(0);
+
+    periods.forEach((period) => {
+        const accruals = calculateAccruals(period, contractId);
+        const payments = periodsPayments.find((value) => value.period.isSamePeriod(period));
+        const paymentsSum = payments ? payments.sum : 0;
+        dept += (accruals - paymentsSum);
+        calculatedPeriods.push(
+            {
+                period,
+                accruals,
+                payments: paymentsSum,
+                debt: dept,
+                adjustments: 0,
+            },
+        );
+    });
+
+    const tempCalculatedPeriods = calculatedPeriods;
+    calculatedPeriods = [];
+    return tempCalculatedPeriods;
 }

@@ -30,8 +30,12 @@ export function formatDateToDefaultFormat(date: Date) {
 }
 
 export function formatMonthStringToStartMonthDateString(date: string): string {
-    if (date.match(new RegExp('\\d{4}-\\d{2}'))) {
+    if (date.match(new RegExp('^\\d{4}-\\d{2}$'))) {
         return date + '-01';
+    }
+
+    if (date.match(new RegExp('^\\d{4}-\\d{2}-\\d{2}$'))) {
+        return date;
     }
     throw new Error('Неправильный формат даты ' + date);
 }
@@ -41,9 +45,6 @@ export function parseMonth(date: string): Date {
 }
 
 export function generatePeriodsArray(periodFrom: Period, periodTo: Period): Period[] {
-    const dateFrom = periodFrom.startOfMonth();
-    const dateTo = periodTo.startOfMonth();
-
     if (periodFrom.isSamePeriod(periodTo)) {
         return [periodFrom];
     }

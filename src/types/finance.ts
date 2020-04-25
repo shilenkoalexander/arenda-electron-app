@@ -1,5 +1,7 @@
+import Period from '@/backend/utils/period';
+
 export interface FinancePeriod {
-    period: string;
+    period: Period;
     accruals: number; // начисления
     adjustments: number; // корректировки
     payments: number; // оплаты

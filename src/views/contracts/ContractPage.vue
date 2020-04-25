@@ -44,37 +44,42 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
-    import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
-    import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
-    import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
-    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import { calculate } from '@/backend/service/finance-service';
-    import Period from '@/backend/utils/period';
+import { Component, Vue } from 'vue-property-decorator';
+import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
+import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
+import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
+import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
+import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+import { calculateFinancePeriods } from '@/backend/service/finance-service';
+import Period from '@/backend/utils/period';
 
-    @Component({
-        components: {
-            ContractInfo,
-            ContractStatusCard,
-            ContractInfoActionsCard,
-            FinancialCard,
-            ObjectDetailsCard,
-        },
-    })
-    export default class ContractPage extends Vue {
-        tab = null;
-        contractId: number | null = null;
+@Component({
+    components: {
+        ContractInfo,
+        ContractStatusCard,
+        ContractInfoActionsCard,
+        FinancialCard,
+        ObjectDetailsCard,
+    },
+})
+export default class ContractPage extends Vue {
+    tab = null;
+    contractId: number | null = null;
 
-        created() {
-            this.contractId = Number.parseInt(this.$route.params.id, 10);
-            // recalculate('2020-01', '2020-04', 1, false);
-            const payment = calculate(Period.ofMonthYear(8, 2020), 1);
-            // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
-            // console.log('accrual =', accrualForCalculations.toFixed(2));
-            console.log('payment =', payment.toFixed(4));
-        }
+    created() {
+        this.contractId = Number.parseInt(this.$route.params.id, 10);
+        // recalculate('2020-01', '2020-04', 1, false);
+        // const payment = calculateAccruals(Period.ofMonthYear(8, 2020), 1);
+        // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
+        // console.log('accrual =', accrualForCalculations.toFixed(2));
+        const financePeriods = calculateFinancePeriods(
+            Period.ofMonthYear(4, 2020),
+            Period.ofMonthYear(8, 2020),
+            1,
+        );
+        financePeriods.forEach((value) => console.log(value));
     }
+}
 </script>
 
 <style scoped lang="scss">
