@@ -30,10 +30,10 @@
     @Component
     export default class FinancialList extends Vue {
         @Prop({
-            type: Object,
+            type: Array,
             required: true,
         })
-        items!: FinancePeriod;
+        items!: FinancePeriod[];
 
         headers = [
             { text: 'Период', value: 'date', sortable: false, width: '19%' },

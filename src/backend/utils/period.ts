@@ -24,8 +24,12 @@ export default class Period {
         return new Period(parseMonth(value));
     }
 
-    static ofMonthYear(month: number, year: number) {
+    static ofMonthYear(month: number, year: number): Period {
         return new Period(new Date(year, month - 1));
+    }
+
+    static currentPeriod(): Period {
+        return new Period(subMonths(new Date(), 1));
     }
 
     private readonly date!: Date;

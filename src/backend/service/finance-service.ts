@@ -7,6 +7,7 @@ import {
     getMonthDebt,
     getPeriodsAdjustments,
     getPeriodsPayments,
+    updateFinancePeriod,
 } from '@/backend/repository/finance-repository';
 import {
     getContractExtensionPaymentActivatesInPeriod,
@@ -284,15 +285,16 @@ export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, co
         const accruals = calculateAccruals(period, contractId);
         const payments = periodsPayments.find((value) => value.period.isSamePeriod(period));
         const adjustment = periodsAdjustments.find((value) => value.period.isSamePeriod(period));
-        const paymentsSum = payments ? payments.sum : 0;
-        dept += (accruals - paymentsSum);
+        const safePayments = payments ? payments.sum : 0;
+        const safeAdjustment = adjustment ? adjustment.adjustment : 0;
+        dept += (accruals - safePayments);
         calculatedPeriods.push(
             {
                 period,
-                accruals,
-                payments: paymentsSum,
+                accruals: accruals + safeAdjustment,
+                payments: safePayments,
                 debt: dept,
-                adjustments: adjustment ? adjustment.adjustment : 0,
+                adjustments: safeAdjustment,
             },
         );
     });
@@ -300,4 +302,16 @@ export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, co
     const tempCalculatedPeriods = calculatedPeriods;
     calculatedPeriods = [];
     return tempCalculatedPeriods;
+}
+
+export function saveNewAdjustment(contractId: number, sum: number, period: Period) {
+    const financePeriod = getFinancePeriod(period, contractId)
+        .orElseThrowWithMessage(
+            `Ошибка при сохранении корректировки. Данный период (${period.toFriendlyFormat()}) еще не рассчитан.`,
+        );
+
+    financePeriod.accruals = financePeriod.accruals - financePeriod.adjustments + sum;
+    financePeriod.adjustments = sum;
+
+    updateFinancePeriod(contractId, financePeriod);
 }

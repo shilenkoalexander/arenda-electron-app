@@ -1,9 +1,9 @@
 <template>
     <div>
         <v-tabs
-                v-model="tab"
-                background-color="primary lighten-1"
-                dark
+            v-model="tab"
+            background-color="primary lighten-1"
+            dark
         >
             <v-tab>Информация о договоре</v-tab>
             <v-tab>Информация об объектах</v-tab>
@@ -18,16 +18,18 @@
                         </v-col>
                         <v-col cols="4">
                             <ContractInfoActionsCard
-                                    class="fill-height"
-                                    @recalculate="onRecalculate"
+                                class="fill-height"
+                                @recalculate="onRecalculate"
                             />
                         </v-col>
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="6">
                             <FinancialCard
-                                    class="fill-height"
-                                    :contract-id="1"
+                                class="fill-height"
+                                :contract-id="1"
+                                :finance-periods="financePeriods"
+                                @update="updateFinancePeriods"
                             />
                         </v-col>
                         <v-col cols="4">
@@ -46,7 +48,7 @@
                 </v-container>
             </v-tab-item>
         </v-tabs-items>
-        <RecalculatePeriodsDialog ref="recalculatePeriodDialog"/>
+        <RecalculatePeriodsDialog ref="recalculatePeriodDialog" @update="updateFinancePeriods"/>
     </div>
 </template>
 
@@ -60,6 +62,8 @@ import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetail
 import RecalculatePeriodsDialog from '@/components/contracts/contract-page/RecalculatePeriodsDialog.vue';
 import { getContractMainPageInfo } from '@/backend/repository/contract-repository';
 import { ContractPageMainInfo } from '@/types/contracts';
+import { FinancePeriod } from '@/types/finance';
+import { getAllPeriods } from '@/backend/repository/finance-repository';
 
 @Component({
     components: {
@@ -75,18 +79,16 @@ export default class ContractPage extends Vue {
     tab = null;
     contractId: number | null = null;
     contractMainInfo: ContractPageMainInfo | null = null;
+    financePeriods: FinancePeriod[] = [];
 
     $refs!: {
-        recalculatePeriodDialog: HTMLFormElement;
+        recalculatePeriodDialog: RecalculatePeriodsDialog;
     };
 
     created() {
         this.contractId = Number.parseInt(this.$route.params.id, 10);
         this.contractMainInfo = getContractMainPageInfo(this.contractId);
-        // recalculate('2020-01', '2020-04', 1, false);
-        // const payment = calculateAccruals(Period.ofMonthYear(8, 2020), 1);
-        // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
-        // console.log('accrual =', accrualForCalculations.toFixed(2));
+        this.updateFinancePeriods();
     }
 
     onRecalculate() {
@@ -94,6 +96,11 @@ export default class ContractPage extends Vue {
             this.$refs.recalculatePeriodDialog.open(this.contractId, this.contractMainInfo.calculationStartDate);
         }
     }
+
+    updateFinancePeriods() {
+        this.financePeriods = getAllPeriods(this.contractId!);
+    }
+
 }
 </script>
 

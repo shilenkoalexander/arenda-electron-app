@@ -133,3 +133,25 @@ export function getPeriodsAdjustments(
         adjustment: Number.parseFloat(value.adjustments),
     }));
 }
+
+export function updateFinancePeriod(contractId: number, financePeriod: FinancePeriod) {
+    db().update(
+        'finance_card',
+        {
+            adjustments: financePeriod.adjustments,
+            accruals: financePeriod.accruals,
+            debt: financePeriod.debt,
+            payments: financePeriod.payments,
+        },
+        {
+            id_contract: contractId,
+            period: financePeriod.period.toSqlFormat(),
+        },
+    );
+}
+
+export function updateFinancePeriods(contractId: number, financePeriod: FinancePeriod[]) {
+    db().transaction(() => {
+        financePeriod.forEach((value) => updateFinancePeriod(contractId, value));
+    })();
+}

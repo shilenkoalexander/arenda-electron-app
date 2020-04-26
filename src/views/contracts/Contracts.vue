@@ -7,18 +7,20 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card v-if="item" class="fill-height">
-                    <ContractDetails :item="item"/>
-                </v-card>
+                <v-fade-transition mode="out-in">
+                    <v-card v-if="item" class="fill-height" :key="`contract-details-${item.contractInfo.id}`">
+                        <ContractDetails :item="item"/>
+                    </v-card>
+                </v-fade-transition>
             </v-col>
         </v-row>
         <v-btn
-                fixed
-                fab
-                right
-                bottom
-                color="primary"
-                to="/contract/add"
+            fixed
+            fab
+            right
+            bottom
+            color="primary"
+            to="/contract/add"
         >
             <v-icon>
                 mdi-plus
