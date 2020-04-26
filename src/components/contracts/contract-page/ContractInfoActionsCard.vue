@@ -16,6 +16,7 @@
                             block
                             color="primary lighten-1"
                             class="button-text"
+                            @click="onRecalculateClicked"
                     >
                         Перерасчет
                     </v-btn>
@@ -66,6 +67,10 @@
         components: {},
     })
     export default class ContractInfoActionsCard extends Vue {
+
+        onRecalculateClicked() {
+            this.$emit('recalculate');
+        }
 
     }
 </script>
