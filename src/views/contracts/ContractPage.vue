@@ -17,7 +17,10 @@
                             <ContractInfo :main-info="contractMainInfo" class="fill-height"/>
                         </v-col>
                         <v-col cols="4">
-                            <ContractInfoActionsCard class="fill-height"/>
+                            <ContractInfoActionsCard
+                                    class="fill-height"
+                                    @recalculate="onRecalculate"
+                            />
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -43,45 +46,55 @@
                 </v-container>
             </v-tab-item>
         </v-tabs-items>
-        <RecalculatePeriodsDialog :calculating-start-date="contractMainInfo.calculationStartDate"/>
+        <RecalculatePeriodsDialog ref="recalculatePeriodDialog"/>
     </div>
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
-    import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
-    import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
-    import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
-    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import RecalculatePeriodsDialog from '@/components/contracts/contract-page/RecalculatePeriodsDialog.vue';
-    import { getContractMainPageInfo } from '@/backend/repository/contract-repository';
-    import { ContractPageMainInfo } from '@/types/contracts';
+import { Component, Vue } from 'vue-property-decorator';
+import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
+import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
+import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
+import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
+import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+import RecalculatePeriodsDialog from '@/components/contracts/contract-page/RecalculatePeriodsDialog.vue';
+import { getContractMainPageInfo } from '@/backend/repository/contract-repository';
+import { ContractPageMainInfo } from '@/types/contracts';
 
-    @Component({
-        components: {
-            RecalculatePeriodsDialog,
-            ContractInfo,
-            ContractStatusCard,
-            ContractInfoActionsCard,
-            FinancialCard,
-            ObjectDetailsCard,
-        },
-    })
-    export default class ContractPage extends Vue {
-        tab = null;
-        contractId: number | null = null;
-        contractMainInfo: ContractPageMainInfo | null = null;
+@Component({
+    components: {
+        RecalculatePeriodsDialog,
+        ContractInfo,
+        ContractStatusCard,
+        ContractInfoActionsCard,
+        FinancialCard,
+        ObjectDetailsCard,
+    },
+})
+export default class ContractPage extends Vue {
+    tab = null;
+    contractId: number | null = null;
+    contractMainInfo: ContractPageMainInfo | null = null;
 
-        created() {
-            this.contractId = Number.parseInt(this.$route.params.id, 10);
-            this.contractMainInfo = getContractMainPageInfo(this.contractId);
-            // recalculate('2020-01', '2020-04', 1, false);
-            // const payment = calculateAccruals(Period.ofMonthYear(8, 2020), 1);
-            // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
-            // console.log('accrual =', accrualForCalculations.toFixed(2));
+    $refs!: {
+        recalculatePeriodDialog: HTMLFormElement;
+    };
+
+    created() {
+        this.contractId = Number.parseInt(this.$route.params.id, 10);
+        this.contractMainInfo = getContractMainPageInfo(this.contractId);
+        // recalculate('2020-01', '2020-04', 1, false);
+        // const payment = calculateAccruals(Period.ofMonthYear(8, 2020), 1);
+        // const accrualForCalculations = getAccrualPerFullMonthByPeriod(Period.ofMonthYear(8, 2020), 2);
+        // console.log('accrual =', accrualForCalculations.toFixed(2));
+    }
+
+    onRecalculate() {
+        if (this.contractMainInfo) {
+            this.$refs.recalculatePeriodDialog.open(this.contractId, this.contractMainInfo.calculationStartDate);
         }
     }
+}
 </script>
 
 <style scoped lang="scss">
