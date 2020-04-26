@@ -1,11 +1,12 @@
 <template>
     <v-text-field
-            v-model="localValue"
-            v-bind="$attrs"
-            :label="label"
-            outlined
-            dense
-            validate-on-blur
+        class="field"
+        v-model="localValue"
+        v-bind="$attrs"
+        :label="label"
+        outlined
+        dense
+        validate-on-blur
     />
 </template>
 
@@ -41,5 +42,13 @@
 </script>
 
 <style scoped>
+    .field input[type='number'] {
+        -moz-appearance: textfield !important;
+    }
+
+    .field input::-webkit-outer-spin-button,
+    .field input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+    }
 
 </style>

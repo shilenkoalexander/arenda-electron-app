@@ -22,6 +22,7 @@
       true,
       "single"
     ],
+    "no-non-null-assertion": false,
     "member-access": false,
     "no-console": false,
     "max-classes-per-file": false

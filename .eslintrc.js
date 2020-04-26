@@ -6,5 +6,6 @@ module.exports = {
     ],
     rules: {
         '@typescript-eslint/camelcase': 0,
+        '@typescript-eslint/no-non-null-assertion': 0,
     },
 };
