@@ -269,6 +269,8 @@ export function calculateAccruals(period: Period, contractId: number): number {
  * @param periodTo
  * @param contractId
  */
+// оплата должна быть в месяце + 1
+// в оплате и период и дата платежа. ввод периода опциональный. если не введен - берем дату - 1
 export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, contractId: number): FinancePeriod[] {
     if (periodFrom.isAfter(periodTo)) {
         return [];
