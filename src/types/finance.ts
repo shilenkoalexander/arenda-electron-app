@@ -19,3 +19,9 @@ export interface InflationIndex {
     period: string;
     date: string;
 }
+
+export interface Payment {
+    sum: number;
+    period: Period;
+    date: Date;
+}

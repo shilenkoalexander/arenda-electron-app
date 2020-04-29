@@ -1,7 +1,7 @@
-import { FinancePeriod, InflationIndex } from '@/types/finance';
+import { FinancePeriod, InflationIndex, Payment } from '@/types/finance';
 import db from 'better-sqlite3-helper';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { formatDateStringToMonthString, parseDate } from '@/utils/date-utils';
+import { formatDateStringToMonthString, formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
 
@@ -26,7 +26,7 @@ export function getFinancePeriod(period: Period, contractId: number): Optional<F
     const result = db().queryFirstRow(`
         select *
         from finance_card
-        where period = '${period.toSqlFormat()}' and id_contract = ${contractId}
+        where period = '${period.toDateFormat()}' and id_contract = ${contractId}
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.financePeriodMapper.map(value));
@@ -55,7 +55,7 @@ export function getAvailablePeriods(contractId: number): string[] {
 export function isCalculated(period: Period, contractId: number): boolean {
     const result = db().query(`
         select * from finance_card
-        where period = '${period.toSqlFormat()}' AND id_contract = ${contractId}
+        where period = '${period.toDateFormat()}' AND id_contract = ${contractId}
     `);
 
     return result.length > 0;
@@ -64,7 +64,7 @@ export function isCalculated(period: Period, contractId: number): boolean {
 export function getMonthDebt(period: Period, contractId: number): Optional<number> {
     const result = db().queryFirstRow(`
         select debt from finance_card
-        where period = '${period.toSqlFormat()}' and id_contract = ${contractId}
+        where period = '${period.toDateFormat()}' and id_contract = ${contractId}
     `);
 
     return Optional.of(result).map((value) => value.debt);
@@ -145,7 +145,7 @@ export function updateFinancePeriod(contractId: number, financePeriod: FinancePe
         },
         {
             id_contract: contractId,
-            period: financePeriod.period.toSqlFormat(),
+            period: financePeriod.period.toDateFormat(),
         },
     );
 }
@@ -154,4 +154,13 @@ export function updateFinancePeriods(contractId: number, financePeriod: FinanceP
     db().transaction(() => {
         financePeriod.forEach((value) => updateFinancePeriod(contractId, value));
     })();
+}
+
+export function savePayment(contractId: number, payment: Payment) {
+    db().insert('payments', {
+        id_contract: contractId,
+        date: formatDateToDefaultFormat(payment.date),
+        period: payment.period.toDateFormat(),
+        sum: payment.sum,
+    });
 }

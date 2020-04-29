@@ -29,6 +29,7 @@
                                 class="fill-height"
                                 :contract-id="1"
                                 :finance-periods="financePeriods"
+                                :calculation-start-date="contractMainInfo.calculationStartDate"
                                 @update="updateFinancePeriods"
                             />
                         </v-col>

@@ -40,70 +40,84 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
-    import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import Label from '@/components/Label.vue';
-    import { FinancePeriod } from '@/types/finance';
-    import EditableTextField from '@/components/EditableTextField.vue';
-    import Period from '@/backend/utils/period';
-    import EditAdjustmentDialog from '@/components/contracts/contract-page/dialogs/EditAdjustmentDialog.vue';
-    import AddPaymentDialog from '@/components/contracts/contract-page/dialogs/AddPaymentDialog.vue';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
+import DatePickerMenu from '@/components/DatePickerMenu.vue';
+import Label from '@/components/Label.vue';
+import { FinancePeriod } from '@/types/finance';
+import EditableTextField from '@/components/EditableTextField.vue';
+import Period from '@/backend/utils/period';
+import EditAdjustmentDialog from '@/components/contracts/contract-page/dialogs/EditAdjustmentDialog.vue';
+import AddPaymentDialog from '@/components/contracts/contract-page/dialogs/AddPaymentDialog.vue';
 
-    @Component({
-        components: {
-            AddPaymentDialog,
-            EditAdjustmentDialog,
-            EditableTextField,
-            Label,
-            FinancialList,
-            DatePickerMenu,
-        },
+@Component({
+    components: {
+        AddPaymentDialog,
+        EditAdjustmentDialog,
+        EditableTextField,
+        Label,
+        FinancialList,
+        DatePickerMenu,
+    },
+})
+export default class FinancialCard extends Vue {
+    @Prop({
+        type: Number,
+        required: true,
     })
-    export default class FinancialCard extends Vue {
-        @Prop({
-            type: Number,
-            required: true,
-        })
-        contractId!: number;
+    contractId!: number;
 
-        @Prop({
-            type: Array,
-            required: true,
-        })
-        financePeriods!: FinancePeriod[];
+    @Prop({
+        type: Array,
+        required: true,
+    })
+    financePeriods!: FinancePeriod[];
 
-        currentPeriod = Period.currentPeriod();
+    @Prop({
+        type: Date,
+        required: true,
+    })
+    calculationStartDate!: Date;
 
-        $refs!: {
-            form: HTMLFormElement;
-            editAdjustmentDialog: EditAdjustmentDialog;
-            addPaymentDialog: AddPaymentDialog;
-        };
+    currentPeriod = Period.currentPeriod();
 
-        get isAdjustmentEditable(): boolean {
-            return this.financePeriods.find(
-                (value) => value.period.isSamePeriod(this.currentPeriod),
-            ) !== undefined;
-        }
+    $refs!: {
+        form: HTMLFormElement;
+        editAdjustmentDialog: EditAdjustmentDialog;
+        addPaymentDialog: AddPaymentDialog;
+    };
 
-        onEditAdjustmentClicked() {
-            const currentFinancePeriod = this.financePeriods
-                .find((value) => value.period.isSamePeriod(this.currentPeriod));
+    get isAdjustmentEditable(): boolean {
+        return this.financePeriods.find(
+            (value) => value.period.isSamePeriod(this.currentPeriod),
+        ) !== undefined;
+    }
 
-            if (currentFinancePeriod) {
-                this.$refs.editAdjustmentDialog.open(this.contractId, currentFinancePeriod.adjustments);
-            }
-        }
+    get calculatedPeriods(): Period[] {
+        return this.financePeriods.map((value) => value.period);
+    }
 
-        onAddPaymentClicked() {
-            this.$refs.addPaymentDialog.open(this.contractId);
-        }
+    onEditAdjustmentClicked() {
+        const currentFinancePeriod = this.financePeriods
+            .find((value) => value.period.isSamePeriod(this.currentPeriod));
 
-        update() {
-            this.$emit('update');
+        if (currentFinancePeriod) {
+            this.$refs.editAdjustmentDialog.open(this.contractId, currentFinancePeriod.adjustments);
         }
     }
+
+    onAddPaymentClicked() {
+        this.$refs.addPaymentDialog.open(
+            this.contractId,
+            Period.ofDate(this.calculationStartDate),
+            this.calculatedPeriods,
+        );
+    }
+
+    update() {
+        this.$emit('update');
+    }
+}
 </script>
 
 <style scoped lang="scss">
