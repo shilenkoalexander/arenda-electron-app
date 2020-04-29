@@ -47,7 +47,7 @@ export default class Period {
         return formatMonthToFriendly(this.date);
     }
 
-    public toSqlFormat(): string {
+    public toDateFormat(): string {
         return formatDateToDefaultFormat(this.date);
     }
 
@@ -90,5 +90,5 @@ export default class Period {
 }
 
 export function toSqlArray(array: Period[]): string {
-    return `(${array.map((value) => `'${value.toSqlFormat()}'`).join(', ')})`;
+    return `(${array.map((value) => `'${value.toDateFormat()}'`).join(', ')})`;
 }

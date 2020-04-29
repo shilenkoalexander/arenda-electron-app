@@ -143,7 +143,7 @@ export function getContractExtensionPaymentActivatesInPeriod(
     const result = db().queryFirstRow(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
-          and start_date between '${period.toSqlFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
+          and start_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
@@ -156,7 +156,7 @@ export function getContractExtensionPaymentDeactivatesInPeriod(
     const result = db().queryFirstRow(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
-          and to_date between '${period.toSqlFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
+          and to_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));

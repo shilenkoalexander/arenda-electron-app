@@ -76,7 +76,7 @@
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import { formatDateToMonthString } from '@/utils/date-utils';
-    import { calculateFinancePeriods } from '@/backend/service/finance-service';
+    import { calculateFinancePeriods } from '@/backend/service/accruals-service';
     import Period from '@/backend/utils/period';
     import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
     import { FinancePeriod } from '@/types/finance';
