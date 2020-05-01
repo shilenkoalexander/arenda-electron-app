@@ -3,6 +3,7 @@ import {
     ContractPageMainInfo,
     ContractWithTenant,
     FullContractDetails,
+    FullContractExtension,
 } from '@/types/contracts';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
@@ -160,4 +161,16 @@ export function getContractExtensionPaymentDeactivatesInPeriod(
     `);
 
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+}
+
+
+export function getFullContractExtensions(contractId: number): FullContractExtension[] {
+    const result = db().query(`
+        select *
+        from contract_extensions
+        where id_contract = ${contractId}
+        order by start_date desc
+    `);
+
+    return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
 }

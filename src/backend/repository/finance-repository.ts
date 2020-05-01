@@ -1,7 +1,7 @@
-import { FinancePeriod, InflationIndex, Payment } from '@/types/finance';
+import { FinancePeriod, IndexingSign, InflationIndex, Payment } from '@/types/finance';
 import db from 'better-sqlite3-helper';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { formatDateStringToMonthString, formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
+import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
 
@@ -40,25 +40,6 @@ export function getAllPeriods(contractId: number): FinancePeriod[] {
     `);
 
     return result.map((value) => ResultMapperFactory.financePeriodMapper.map(value));
-}
-
-export function getAvailablePeriods(contractId: number): string[] {
-    const result = db().query(`
-        select period from finance_card
-        where id_contract = ${contractId}
-        group by period
-    `);
-
-    return result.map((value) => formatDateStringToMonthString(value.period));
-}
-
-export function isCalculated(period: Period, contractId: number): boolean {
-    const result = db().query(`
-        select * from finance_card
-        where period = '${period.toDateFormat()}' AND id_contract = ${contractId}
-    `);
-
-    return result.length > 0;
 }
 
 export function getMonthDebt(period: Period, contractId: number): Optional<number> {
@@ -163,4 +144,24 @@ export function savePayment(contractId: number, payment: Payment) {
         period: payment.period.toDateFormat(),
         sum: payment.sum,
     });
+}
+
+export function getPayments(contractId: number): Payment[] {
+    const result = db().query(`
+        select sum, period, date from payments
+        where id_contract = ${contractId}
+        order by period desc, date desc
+    `);
+
+    return result.map((value) => ResultMapperFactory.paymentMapper.map(value));
+}
+
+export function getIndexingSigns(contractId: number): IndexingSign[] {
+    const result = db().query(`
+        select * from indexing
+        where id_contract = ${contractId}
+        order by period desc
+    `);
+
+    return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));
 }

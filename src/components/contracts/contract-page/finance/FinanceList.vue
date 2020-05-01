@@ -1,11 +1,12 @@
 <template>
     <v-data-table
-            :headers="headers"
-            :items="items"
-            hide-default-footer
-            fixed-header
+        class="table"
+        :headers="headers"
+        :items="items"
+        hide-default-footer
+        fixed-header
     >
-        <template v-slot:item.date="{item}">
+        <template v-slot:item.period="{item}">
             {{ item.period.toFriendlyFormat() }}
         </template>
         <template v-slot:item.accruals="{item}">
@@ -28,7 +29,7 @@
     import { FinancePeriod } from '@/types/finance';
 
     @Component
-    export default class FinancialList extends Vue {
+    export default class FinanceList extends Vue {
         @Prop({
             type: Array,
             required: true,
@@ -36,7 +37,7 @@
         items!: FinancePeriod[];
 
         headers = [
-            { text: 'Период', value: 'date', sortable: false, width: '19%' },
+            { text: 'Период', value: 'period', sortable: false, width: '19%' },
             { text: 'Начислено', value: 'accruals', sortable: false, width: '16%' },
             { text: 'Корректировка', value: 'adjustments', sortable: false, width: '16%' },
             { text: 'Оплачено', value: 'payments', sortable: false, width: '16%' },
@@ -46,5 +47,8 @@
 </script>
 
 <style scoped>
-
+    .table {
+        max-height: 45vh;
+        overflow: auto;
+    }
 </style>

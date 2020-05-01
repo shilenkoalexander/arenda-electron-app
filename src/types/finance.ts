@@ -25,3 +25,9 @@ export interface Payment {
     period: Period;
     date: Date;
 }
+
+export interface IndexingSign {
+    period: Period;
+    indexing: boolean;
+}
+

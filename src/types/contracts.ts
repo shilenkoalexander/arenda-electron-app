@@ -81,12 +81,6 @@ export function getContactTypeValue(type: ContactType): string {
     });
 }
 
-export interface ContractExtension {
-    actionDate: string;
-    dateFrom: string;
-    dateTo: string;
-}
-
 export interface AddContractMainInfoDto {
     tenantId: number | null;
     contractNumber: string;
@@ -102,4 +96,12 @@ export interface ContractPageMainInfo {
     contractType: string;
     contractNumber: string;
     calculationStartDate: Date;
+}
+
+export interface FullContractExtension {
+    startDate: Date;
+    endDate: Date;
+    conclusionDate: Date;
+    payment: number;
+    paymentActualityDate: Date;
 }

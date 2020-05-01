@@ -50,13 +50,12 @@
                                 fixed-header
                         >
                             <template v-slot:item.actionDate="{item}">
-                                {{formatToFriendly(item.actionDate)}}
+                                {{formatToFriendly(item.startDate)}}
                             </template>
                             <template v-slot:item.dateFrom="{item}">
-                                {{formatToFriendly(item.dateFrom)}}
+                                {{formatToFriendly(item.endDate)}}
                             </template>
                             <template v-slot:item.dateTo="{item}">
-                                {{formatToFriendly(item.dateTo)}}
                             </template>
                         </v-data-table>
                     </v-col>
@@ -69,9 +68,10 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
-    import { ContractExtension, ContractStatus, getContractStatusValue } from '@/types/contracts';
+    import { ContractStatus, getContractStatusValue } from '@/types/contracts';
     import { formatToFriendly } from '@/utils/date-utils';
     import Label from '@/components/Label.vue';
+    import { ContractExtension } from '@/backend/types/contract-types';
 
     @Component({
         components: {
@@ -87,23 +87,7 @@
         showAllExtensions = false;
         formatToFriendly = formatToFriendly;
 
-        items: ContractExtension[] = [
-            {
-                actionDate: '2020-01-01',
-                dateFrom: '2020-01-01',
-                dateTo: '2020-01-01',
-            },
-            {
-                actionDate: '2020-01-01',
-                dateFrom: '2020-01-01',
-                dateTo: '2020-01-01',
-            },
-            {
-                actionDate: '2020-01-01',
-                dateFrom: '2020-01-01',
-                dateTo: '2020-01-01',
-            },
-        ];
+        items: ContractExtension[] = [];
 
         get statusIcon(): string {
             return getIconByStatus(ContractStatus.ACTIVE);

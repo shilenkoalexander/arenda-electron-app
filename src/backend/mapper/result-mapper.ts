@@ -5,11 +5,12 @@ import {
     ContractStatus,
     ContractWithTenant,
     FullContractDetails,
+    FullContractExtension,
 } from '@/types/contracts';
 import { $enum } from 'ts-enum-util';
 import { TenantType } from '@/types/tenants';
 import { ShortObjectDetails } from '@/types/objects';
-import { FinancePeriod, InflationIndex, PaymentContractInfo } from '@/types/finance';
+import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/types/finance';
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { ContractExtension } from '@/backend/types/contract-types';
 import { parseDate } from '@/utils/date-utils';
@@ -111,7 +112,7 @@ export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInf
     }
 }
 
-export class FinancialPeriodMapper extends ResultMapper<FinancePeriod> {
+export class FinancePeriodMapper extends ResultMapper<FinancePeriod> {
     protected innerMap(value: DataObject): FinancePeriod {
         return {
             period: Period.ofString(value.period),
@@ -150,6 +151,37 @@ export class PaymentContractInfoMapper extends ResultMapper<PaymentContractInfo>
             actualityDate: parseDate(value.payment_actuality_date),
             startDate: parseDate(value.start_date),
             payment: Number.parseFloat(value.total_payment),
+        };
+    }
+}
+
+export class PaymentMapper extends ResultMapper<Payment> {
+    protected innerMap(value: DataObject): Payment {
+        return {
+            sum: Number.parseFloat(value.sum),
+            period: Period.ofString(value.period),
+            date: parseDate(value.date),
+        };
+    }
+}
+
+export class IndexingSignMapper extends ResultMapper<IndexingSign> {
+    protected innerMap(value: DataObject): IndexingSign {
+        return {
+            period: Period.ofString(value.period),
+            indexing: value.indexing,
+        };
+    }
+}
+
+export class FullContractExtensionMapper extends ResultMapper<FullContractExtension> {
+    protected innerMap(value: DataObject): FullContractExtension {
+        return {
+            startDate: parseDate(value.start_date),
+            endDate: parseDate(value.to_date),
+            conclusionDate: parseDate(value.conclusion_date),
+            payment: Number.parseFloat(value.payment),
+            paymentActualityDate: parseDate(value.payment_actuality_date),
         };
     }
 }

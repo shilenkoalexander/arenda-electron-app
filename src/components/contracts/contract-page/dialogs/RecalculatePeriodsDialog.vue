@@ -45,7 +45,7 @@
                     </v-row>
                     <v-row class="finance-list-row">
                         <v-col v-if="financePeriods.length > 0">
-                            <FinancialList :items="financePeriods"/>
+                            <FinanceList :items="financePeriods"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -78,13 +78,13 @@
     import { formatDateToMonthString } from '@/utils/date-utils';
     import { calculateFinancePeriods } from '@/backend/service/accruals-service';
     import Period from '@/backend/utils/period';
-    import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
+    import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
     import { FinancePeriod } from '@/types/finance';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { updateFinancePeriods } from '@/backend/repository/finance-repository';
 
     @Component({
-        components: { ConfirmDialog, FinancialList, DatePickerMenu },
+        components: { ConfirmDialog, FinanceList, DatePickerMenu },
     })
     export default class RecalculatePeriodsDialog extends Vue {
         dialog = false;

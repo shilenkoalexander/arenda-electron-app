@@ -42,8 +42,6 @@ export interface FullObjectDetails {
     decisionMaker: string;
 }
 
-// todo заменить таблицы payments, accruals и остальные на одну
-
 export interface AddObjectDto {
     index: number;
     businessTypeId: number;
