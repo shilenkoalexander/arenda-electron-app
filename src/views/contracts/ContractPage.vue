@@ -25,7 +25,7 @@
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="6">
-                            <FinancialCard
+                            <FinanceCard
                                 class="fill-height"
                                 :contract-id="1"
                                 :finance-periods="financePeriods"
@@ -58,7 +58,7 @@
     import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
     import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
     import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
-    import FinancialCard from '@/components/contracts/contract-page/FinancialCard.vue';
+    import FinanceCard from '@/components/contracts/contract-page/finance/FinanceCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
     import RecalculatePeriodsDialog from '@/components/contracts/contract-page/dialogs/RecalculatePeriodsDialog.vue';
     import { getContractMainPageInfo } from '@/backend/repository/contract-repository';
@@ -72,7 +72,7 @@
             ContractInfo,
             ContractStatusCard,
             ContractInfoActionsCard,
-            FinancialCard,
+            FinanceCard,
             ObjectDetailsCard,
         },
     })

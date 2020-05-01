@@ -44,36 +44,35 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
-import { saveNewAdjustment } from '@/backend/service/finance-service';
-import FinancialList from '@/components/contracts/contract-page/FinancialList.vue';
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
-import { correctFloatRule } from '@/validation/common-rules';
-import EditableTextField from '@/components/EditableTextField.vue';
-import Period from '@/backend/utils/period';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import { saveNewAdjustment } from '@/backend/service/finance-service';
+    import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
+    import { correctFloatRule } from '@/validation/common-rules';
+    import EditableTextField from '@/components/EditableTextField.vue';
+    import Period from '@/backend/utils/period';
 
-@Component({
-    components: { ConfirmDialog, FinancialList, DatePickerMenu, EditableTextField },
-})
-export default class EditAdjustmentDialog extends Vue {
-    dialog = false;
+    @Component({
+        components: { ConfirmDialog, DatePickerMenu, EditableTextField },
+    })
+    export default class EditAdjustmentDialog extends Vue {
+        dialog = false;
 
-    adjustmentSum = '';
-    correctFloatRule = correctFloatRule;
+        adjustmentSum = '';
+        correctFloatRule = correctFloatRule;
 
-    currentPeriod = Period.currentPeriod();
-    contractId: number | null = null;
+        currentPeriod = Period.currentPeriod();
+        contractId: number | null = null;
 
-    $refs!: {
-        form: HTMLFormElement;
-    };
+        $refs!: {
+            form: HTMLFormElement;
+        };
 
-    onSaveAdjustmentClicked() {
-        if (this.$refs.form.validate() && this.contractId) {
-            const newAdjustment = Number.parseFloat(this.adjustmentSum);
-            saveNewAdjustment(this.contractId, newAdjustment, this.currentPeriod);
-            this.$emit('update');
-            this.dialog = false;
+        onSaveAdjustmentClicked() {
+            if (this.$refs.form.validate() && this.contractId) {
+                const newAdjustment = Number.parseFloat(this.adjustmentSum);
+                saveNewAdjustment(this.contractId, newAdjustment, this.currentPeriod);
+                this.$emit('update');
+                this.dialog = false;
         }
     }
 
