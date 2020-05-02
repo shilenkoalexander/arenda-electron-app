@@ -81,8 +81,11 @@
     import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
     import { FinancePeriod } from '@/types/finance';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
-    import { updateFinancePeriods } from '@/backend/repository/finance-repository';
+    import { replaceFinancePeriods } from '@/backend/repository/finance-repository';
 
+    // todo перерасчет нужен только для проверки возможного доп соглашения и задним числом тоже
+    // несколько доп соглашений тоже должно быть
+    // а еще проверить как там поживает replace в базе.
     @Component({
         components: { ConfirmDialog, FinanceList, DatePickerMenu },
     })
@@ -145,22 +148,24 @@
 
         saveRecalculatedPeriods() {
             if (this.contractId) {
-                updateFinancePeriods(this.contractId, this.financePeriods);
+                replaceFinancePeriods(this.contractId, this.financePeriods);
                 this.$emit('update');
                 this.close();
             }
         }
 
+
+        // todo: ограничить максимальную дату с учетом индексов инфляции (их наличия)
         open(contractId: number, calculatingStartDate: Date) {
             this.contractId = contractId;
             this.calculatingStartDate = calculatingStartDate;
 
             this.startMinDate = formatDateToMonthString(this.calculatingStartDate);
+            this.startMaxDate = Period.currentPeriod().toDefaultFormat();
             this.endMinDate = formatDateToMonthString(this.calculatingStartDate);
-            // startMaxDate = formatDateToMonthString(subMonths(new Date(), 1));
-            this.startMaxDate = formatDateToMonthString(new Date(2020, 7, 1));
-            this.endMaxDate = formatDateToMonthString(new Date(2020, 7, 1));
-            // endMaxDate = formatDateToMonthString(subMonths(new Date(), 1));
+            this.endMaxDate = Period.currentPeriod().toDefaultFormat();
+            // this.startMaxDate = formatDateToMonthString(new Date(2020, 7, 1));
+            // this.endMaxDate = formatDateToMonthString(new Date(2020, 7, 1));
 
             this.dialog = true;
         }

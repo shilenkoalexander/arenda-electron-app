@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import { saveNewAdjustment } from '@/backend/service/finance-service';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
@@ -67,22 +67,30 @@ import { Component, Vue } from 'vue-property-decorator';
             form: HTMLFormElement;
         };
 
+        @Watch('dialog')
+        onDialogChanged() {
+            if (!this.dialog) {
+                this.$refs.form.resetValidation();
+                this.adjustmentSum = '';
+            }
+        }
+
         onSaveAdjustmentClicked() {
             if (this.$refs.form.validate() && this.contractId) {
                 const newAdjustment = Number.parseFloat(this.adjustmentSum);
                 saveNewAdjustment(this.contractId, newAdjustment, this.currentPeriod);
                 this.$emit('update');
                 this.dialog = false;
+            }
         }
-    }
 
-    open(contractId: number, currentAdjustment: number) {
-        this.adjustmentSum = currentAdjustment.toFixed(2);
-        this.contractId = contractId;
-        this.dialog = true;
-    }
+        open(contractId: number, currentAdjustment: number) {
+            this.adjustmentSum = currentAdjustment.toFixed(2);
+            this.contractId = contractId;
+            this.dialog = true;
+        }
 
-}
+    }
 </script>
 
 <style scoped>

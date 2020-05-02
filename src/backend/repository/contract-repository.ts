@@ -118,7 +118,9 @@ export function getContractMainPageInfo(contractId: number): ContractPageMainInf
                        t.responsible_person,
                        t.organization_name,
                        c.contract_number,
-                       ct.name as contract_type
+                       ct.name as contract_type,
+                       c.calculation_start_date,
+                       c.validity
                 from contracts c
                          inner join tenants t on t.id = c.id_tenant
                          inner join contract_type ct on c.id_type = ct.id
@@ -174,3 +176,16 @@ export function getFullContractExtensions(contractId: number): FullContractExten
 
     return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
 }
+
+export function getActiveAndFutureContractExtensions(contractId: number): FullContractExtension[] {
+    const result = db().query(`
+        select *
+        from contract_extensions
+        where id_contract = ${contractId} and to_date >= current_date
+        order by start_date desc
+    `);
+
+    return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
+}
+
+

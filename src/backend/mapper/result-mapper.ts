@@ -107,7 +107,8 @@ export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInf
             tenantName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
             contractNumber: value.contract_number,
             contractType: value.contract_type,
-            calculationStartDate: new Date(2020, 3, 28),
+            calculationStartDate: parseDate(value.calculation_start_date),
+            validity: parseDate(value.validity),
         };
     }
 }

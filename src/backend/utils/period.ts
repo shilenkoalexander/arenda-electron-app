@@ -29,8 +29,8 @@ export default class Period {
     }
 
     static currentPeriod(): Period {
-        // return new Period(subMonths(new Date(), 1));
-        return Period.ofMonthYear(8, 2020);
+        return new Period(subMonths(new Date(), 1));
+        // return Period.ofMonthYear(8, 2020);
     }
 
     private readonly date!: Date;
