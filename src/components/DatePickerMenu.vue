@@ -11,19 +11,20 @@
     >
         <template v-slot:activator="{ on }">
             <v-text-field
-                    v-on="on"
-                    :value="formattedDate"
-                    :label="label"
-                    :color="color"
-                    outlined
-                    dense
-                    :clearable="clearable"
-                    :rules="rules"
-                    :hide-details="hideDetails"
-                    :loading="loading"
-                    append-icon="mdi-calendar"
-                    readonly
-                    @click:clear="clearDate"
+                v-on="on"
+                :value="formattedDate"
+                :label="label"
+                :color="color"
+                outlined
+                dense
+                :clearable="clearable"
+                :rules="rules"
+                :hide-details="hideDetails"
+                :disabled="disabled"
+                :loading="loading"
+                append-icon="mdi-calendar"
+                readonly
+                @click:clear="clearDate"
             />
         </template>
         <DatePicker v-model="localDateISO"
@@ -64,6 +65,9 @@
          */
         @Prop({ type: Boolean, default: false })
         clearable!: boolean;
+
+        @Prop({ type: Boolean, default: false })
+        disabled!: boolean;
 
         /**
          * Не позволяет изменить значение

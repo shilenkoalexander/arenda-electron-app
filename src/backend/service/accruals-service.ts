@@ -269,6 +269,7 @@ export function calculateAccruals(period: Period, contractId: number): number {
  */
 // оплата должна быть в месяце + 1
 // в оплате и период и дата платежа. ввод периода опциональный. если не введен - берем дату - 1
+// todo проверить стуацию когда доп соглаш закончилось и началось новое
 export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, contractId: number): FinancePeriod[] {
     if (periodFrom.isAfter(periodTo)) {
         return [];
@@ -287,11 +288,12 @@ export function calculateFinancePeriods(periodFrom: Period, periodTo: Period, co
         const adjustment = periodsAdjustments.find((value) => value.period.isSamePeriod(period));
         const safePayments = payments ? payments.sum : 0;
         const safeAdjustment = adjustment ? adjustment.adjustment : 0;
-        dept += (accruals - safePayments);
+        const totalAccruals = accruals + safeAdjustment;
+        dept += (totalAccruals - safePayments);
         calculatedPeriods.push(
             {
                 period,
-                accruals: accruals + safeAdjustment,
+                accruals: totalAccruals,
                 payments: safePayments,
                 debt: dept,
                 adjustments: safeAdjustment,

@@ -4,6 +4,7 @@ import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
+import { FullContractExtension } from '@/types/contracts';
 
 export function getLastFinancePeriod(contractId: number): FinancePeriod {
     const res = db().queryFirstRow(
@@ -131,9 +132,22 @@ export function updateFinancePeriod(contractId: number, financePeriod: FinancePe
     );
 }
 
-export function updateFinancePeriods(contractId: number, financePeriod: FinancePeriod[]) {
+export function replaceFinancePeriod(contractId: number, financePeriod: FinancePeriod) {
+    db().replace('finance_card',
+        {
+            id_contract: contractId,
+            period: financePeriod.period.toDateFormat(),
+            adjustments: financePeriod.adjustments.toFixed(2),
+            accruals: financePeriod.accruals.toFixed(2),
+            debt: financePeriod.debt.toFixed(2),
+            payments: financePeriod.payments.toFixed(2),
+        },
+    );
+}
+
+export function replaceFinancePeriods(contractId: number, financePeriod: FinancePeriod[]) {
     db().transaction(() => {
-        financePeriod.forEach((value) => updateFinancePeriod(contractId, value));
+        financePeriod.forEach((value) => replaceFinancePeriod(contractId, value));
     })();
 }
 
@@ -150,7 +164,7 @@ export function getPayments(contractId: number): Payment[] {
     const result = db().query(`
         select sum, period, date from payments
         where id_contract = ${contractId}
-        order by period desc, date desc
+        order by period desc, date desc, id desc
     `);
 
     return result.map((value) => ResultMapperFactory.paymentMapper.map(value));
@@ -164,4 +178,15 @@ export function getIndexingSigns(contractId: number): IndexingSign[] {
     `);
 
     return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));
+}
+
+export function saveContractExtension(contractId: number, contractExtension: FullContractExtension) {
+    db().insert('contract_extensions', {
+        id_contract: contractId,
+        start_date: formatDateToDefaultFormat(contractExtension.startDate),
+        to_date: formatDateToDefaultFormat(contractExtension.endDate),
+        conclusion_date: formatDateToDefaultFormat(contractExtension.conclusionDate),
+        payment_actuality_date: formatDateToDefaultFormat(contractExtension.paymentActualityDate),
+        payment: contractExtension.payment.toFixed(2),
+    });
 }

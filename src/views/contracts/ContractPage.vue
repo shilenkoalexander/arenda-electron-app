@@ -27,9 +27,10 @@
                         <v-col cols="6">
                             <FinanceCard
                                 class="fill-height"
-                                :contract-id="1"
+                                :contract-id="contractId"
                                 :finance-periods="financePeriods"
                                 :calculation-start-date="contractMainInfo.calculationStartDate"
+                                :validity="contractMainInfo.validity"
                                 @update="updateFinancePeriods"
                             />
                         </v-col>

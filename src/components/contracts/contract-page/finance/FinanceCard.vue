@@ -2,23 +2,32 @@
     <v-card class="finance-card">
         <v-container fluid class="px-5">
             <v-row class="pb-3">
-                <v-col cols="4">
+                <v-col cols="3">
                     <v-btn
                         color="primary"
                         block
                         @click="onAddPaymentClicked"
                     >
-                        Внести оплату
+                        Оплата
                     </v-btn>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     <v-btn
                         :disabled="!isAdjustmentEditable"
                         color="primary"
                         block
                         @click="onEditAdjustmentClicked"
                     >
-                        Внести корректировку
+                        Корректировка
+                    </v-btn>
+                </v-col>
+                <v-col cols="3">
+                    <v-btn
+                        color="primary"
+                        block
+                        @click="onAddContractExtensionClick"
+                    >
+                        Доп. соглашение
                     </v-btn>
                 </v-col>
             </v-row>
@@ -41,43 +50,30 @@
                         </v-tab>
 
                         <v-tab-item>
-                            <v-card
-                                flat
-                                tile
-                            >
+                            <v-card flat tile>
                                 <v-card-text>
-                                    <FinanceList v-if="financePeriods.length > 0" :items="financePeriods"/>
-                                    <p v-else class="mb-0">Записи отсутствуют</p>
+                                    <FinanceList :items="financePeriods"/>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
                         <v-tab-item>
-                            <v-card
-                                flat
-                                tile
-                            >
+                            <v-card flat tile>
                                 <v-card-text>
-                                    <PaymentsList :contract-id="contractId"/>
+                                    <PaymentsList :contract-id="contractId" ref="paymentsList"/>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
                         <v-tab-item>
-                            <v-card
-                                flat
-                                tile
-                            >
+                            <v-card flat tile>
                                 <v-card-text>
-                                    <IndexingList :contract-id="contractId"/>
+                                    <IndexingList :contract-id="contractId" ref="indexingList"/>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
                         <v-tab-item>
-                            <v-card
-                                flat
-                                tile
-                            >
+                            <v-card flat tile>
                                 <v-card-text>
-                                    <ContractExtensionsList :contract-id="contractId"/>
+                                    <ContractExtensionsList :contract-id="contractId" ref="contractExtensionsList"/>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
@@ -88,95 +84,120 @@
         </v-container>
         <EditAdjustmentDialog ref="editAdjustmentDialog" @update="update"/>
         <AddPaymentDialog ref="addPaymentDialog" @update="update"/>
+        <AddContractExtensionDialog ref="addContractExtensionDialog" @update="onContractExtensionsUpdate"/>
     </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
-import Label from '@/components/Label.vue';
-import { FinancePeriod } from '@/types/finance';
-import EditableTextField from '@/components/EditableTextField.vue';
-import Period from '@/backend/utils/period';
-import EditAdjustmentDialog from '@/components/contracts/contract-page/dialogs/EditAdjustmentDialog.vue';
-import AddPaymentDialog from '@/components/contracts/contract-page/dialogs/AddPaymentDialog.vue';
-import PaymentsList from '@/components/contracts/contract-page/finance/PaymentsList.vue';
-import IndexingList from '@/components/contracts/contract-page/finance/IndexingList.vue';
-import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import Label from '@/components/Label.vue';
+    import { FinancePeriod } from '@/types/finance';
+    import EditableTextField from '@/components/EditableTextField.vue';
+    import Period from '@/backend/utils/period';
+    import EditAdjustmentDialog from '@/components/contracts/contract-page/dialogs/EditAdjustmentDialog.vue';
+    import AddPaymentDialog from '@/components/contracts/contract-page/dialogs/AddPaymentDialog.vue';
+    import PaymentsList from '@/components/contracts/contract-page/finance/PaymentsList.vue';
+    import IndexingList from '@/components/contracts/contract-page/finance/IndexingList.vue';
+    import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
+    import AddContractExtensionDialog from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
 
-// todo добавить обновление таблиц. проверить lazy и кэш в табах
-@Component({
-    components: {
-        ContractExtensionsList,
-        IndexingList,
-        PaymentsList,
-        AddPaymentDialog,
-        EditAdjustmentDialog,
-        EditableTextField,
-        Label,
-        FinanceList,
-        DatePickerMenu,
-    },
-})
-export default class FinanceCard extends Vue {
-    @Prop({
-        type: Number,
-        required: true,
+    @Component({
+        components: {
+            AddContractExtensionDialog,
+            ContractExtensionsList,
+            IndexingList,
+            PaymentsList,
+            AddPaymentDialog,
+            EditAdjustmentDialog,
+            EditableTextField,
+            Label,
+            FinanceList,
+            DatePickerMenu,
+        },
     })
-    contractId!: number;
+    export default class FinanceCard extends Vue {
+        @Prop({
+            type: Number,
+            required: true,
+        })
+        contractId!: number;
 
-    @Prop({
-        type: Array,
-        required: true,
-    })
-    financePeriods!: FinancePeriod[];
+        @Prop({
+            type: Array,
+            required: true,
+        })
+        financePeriods!: FinancePeriod[];
 
-    @Prop({
-        type: Date,
-        required: true,
-    })
-    calculationStartDate!: Date;
+        @Prop({
+            type: Date,
+            required: true,
+        })
+        calculationStartDate!: Date;
 
-    currentPeriod = Period.currentPeriod();
+        @Prop({
+            type: Date,
+            required: true,
+        })
+        validity!: Date;
 
-    $refs!: {
-        form: HTMLFormElement;
-        editAdjustmentDialog: EditAdjustmentDialog;
-        addPaymentDialog: AddPaymentDialog;
-    };
+        currentPeriod = Period.currentPeriod();
 
-    get isAdjustmentEditable(): boolean {
-        return this.financePeriods.find(
-            (value) => value.period.isSamePeriod(this.currentPeriod),
-        ) !== undefined;
-    }
+        $refs!: {
+            form: HTMLFormElement;
+            editAdjustmentDialog: EditAdjustmentDialog;
+            addPaymentDialog: AddPaymentDialog;
+            paymentsList: PaymentsList;
+            contractExtensionsList: ContractExtensionsList;
+            indexingList: IndexingList;
+            addContractExtensionDialog: AddContractExtensionDialog;
+        };
 
-    get calculatedPeriods(): Period[] {
-        return this.financePeriods.map((value) => value.period);
-    }
+        get isAdjustmentEditable(): boolean {
+            return this.financePeriods.find(
+                (value) => value.period.isSamePeriod(this.currentPeriod),
+            ) !== undefined;
+        }
 
-    onEditAdjustmentClicked() {
-        const currentFinancePeriod = this.financePeriods
-            .find((value) => value.period.isSamePeriod(this.currentPeriod));
+        get calculatedPeriods(): Period[] {
+            return this.financePeriods.map((value) => value.period);
+        }
 
-        if (currentFinancePeriod) {
-            this.$refs.editAdjustmentDialog.open(this.contractId, currentFinancePeriod.adjustments);
+        onEditAdjustmentClicked() {
+            const currentFinancePeriod = this.financePeriods
+                .find((value) => value.period.isSamePeriod(this.currentPeriod));
+
+            if (currentFinancePeriod) {
+                this.$refs.editAdjustmentDialog.open(this.contractId, currentFinancePeriod.adjustments);
+            }
+        }
+
+        onAddPaymentClicked() {
+            this.$refs.addPaymentDialog.open(
+                this.contractId,
+                Period.ofDate(this.calculationStartDate),
+                this.calculatedPeriods,
+            );
+        }
+
+        onAddContractExtensionClick() {
+            this.$refs.addContractExtensionDialog.open(this.contractId, this.calculationStartDate, this.validity);
+        }
+
+        update() {
+            this.$emit('update');
+            if (this.$refs.paymentsList) {
+                this.$refs.paymentsList.update();
+            }
+        }
+
+        onContractExtensionsUpdate() {
+            if (this.$refs.contractExtensionsList) {
+                this.$refs.contractExtensionsList.update();
+            }
         }
     }
-
-    onAddPaymentClicked() {
-        this.$refs.addPaymentDialog.open(
-            this.contractId,
-            Period.ofDate(this.calculationStartDate),
-            this.calculatedPeriods,
-        );
-    }
-
-    update() {
-        this.$emit('update');
-    }
-}
 </script>
 
 <style scoped lang="scss">

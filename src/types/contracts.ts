@@ -96,6 +96,7 @@ export interface ContractPageMainInfo {
     contractType: string;
     contractNumber: string;
     calculationStartDate: Date;
+    validity: Date;
 }
 
 export interface FullContractExtension {

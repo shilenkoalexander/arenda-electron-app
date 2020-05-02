@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
@@ -86,16 +86,25 @@
         notEmptyRule = notEmptyRule;
 
         contractId: number | null = null;
-        currentPeriod = Period.currentPeriod();
 
         paymentDateMinDate = '';
-        paymentDateMaxDate = formatDateToDefaultFormat(new Date(2020, 8, 28));
+        paymentDateMaxDate = formatDateToDefaultFormat(new Date());
 
         calculatedPeriods: Period[] = [];
 
         $refs!: {
             form: HTMLFormElement;
         };
+
+        @Watch('dialog')
+        onDialogChanged() {
+            if (!this.dialog) {
+                this.$refs.form.resetValidation();
+                this.paymentSum = '';
+                this.paymentDate = '';
+                this.paymentPeriod = '';
+            }
+        }
 
         get allowedPeriods(): string[] {
             return this.calculatedPeriods.map((value) => value.toDefaultFormat());
@@ -105,10 +114,13 @@
             if (this.$refs.form.validate() && this.contractId) {
                 const paymentSum = Number.parseFloat(this.paymentSum);
 
+                const date = parseDate(this.paymentDate);
                 addPayment(this.contractId, {
                     sum: paymentSum,
-                    date: parseDate(this.paymentDate),
-                    period: this.paymentPeriod ? Period.ofString(this.paymentPeriod) : this.currentPeriod,
+                    date,
+                    period: this.paymentPeriod ?
+                        Period.ofString(this.paymentPeriod)
+                        : Period.ofDate(date).subMonths(1),
                 });
 
                 this.$emit('update');
