@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="elevation-1">
         <v-container fluid class="px-5">
             <v-row>
                 <v-col class="d-flex mt-2" align-self="center">

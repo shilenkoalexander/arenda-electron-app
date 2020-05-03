@@ -1,5 +1,5 @@
 <template>
-    <CenteredCard cols="11">
+    <CenteredCard lg="11">
         <v-container fluid class="pt-2 px-10">
             <v-row class="pt-2">
                 <v-col cols="8">

@@ -152,6 +152,17 @@ export function getContractExtensionPaymentActivatesInPeriod(
     return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }
 
+export function getContractExtensions(
+    contractId: number,
+): ContractExtension[] {
+    const result = db().query(`
+        select start_date, to_date, payment, payment_actuality_date from contract_extensions
+        where id_contract = ${contractId}
+    `);
+
+    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+}
+
 export function getContractExtensionPaymentDeactivatesInPeriod(
     period: Period,
     contractId: number,

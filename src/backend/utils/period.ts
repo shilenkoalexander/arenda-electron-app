@@ -72,6 +72,11 @@ export default class Period {
         return isSameMonth(this.date, period.getDate());
     }
 
+    public isSamePeriodByDate(date: Date): boolean {
+        // todo: проверить если месяц тот же а год разный
+        return isSameMonth(this.date, date);
+    }
+
     public isAfter(period: Period): boolean {
         return isAfter(this.date, period.getDate());
     }
@@ -91,4 +96,8 @@ export default class Period {
 
 export function toSqlArray(array: Period[]): string {
     return `(${array.map((value) => `'${value.toDateFormat()}'`).join(', ')})`;
+}
+
+export function isSamePeriods(date1: Date, date2: Date) {
+    return Period.ofDate(date1).isSamePeriod(Period.ofDate(date2));
 }

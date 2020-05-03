@@ -1,6 +1,6 @@
 <template>
     <v-data-table
-        class="table"
+        :height="height"
         :headers="headers"
         :items="items"
         hide-default-footer
@@ -25,30 +25,33 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { FinancePeriod } from '@/types/finance';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { FinancePeriod } from '@/types/finance';
 
-    @Component
-    export default class FinanceList extends Vue {
-        @Prop({
-            type: Array,
-            required: true,
-        })
-        items!: FinancePeriod[];
+@Component
+export default class FinanceList extends Vue {
+    @Prop({
+        type: String,
+        default: '38vh',
+    })
+    height!: string;
 
-        headers = [
-            { text: 'Период', value: 'period', sortable: false, width: '19%' },
-            { text: 'Начислено', value: 'accruals', sortable: false, width: '16%' },
-            { text: 'Корректировка', value: 'adjustments', sortable: false, width: '16%' },
-            { text: 'Оплачено', value: 'payments', sortable: false, width: '16%' },
-            { text: 'Долг', value: 'debt', sortable: false, width: '16%' },
-        ];
-    }
+    @Prop({
+        type: Array,
+        required: true,
+    })
+    items!: FinancePeriod[];
+
+    headers = [
+        { text: 'Период', value: 'period', sortable: false, width: '19%' },
+        { text: 'Начислено', value: 'accruals', sortable: false, width: '16%' },
+        { text: 'Корректировка', value: 'adjustments', sortable: false, width: '16%' },
+        { text: 'Оплачено', value: 'payments', sortable: false, width: '16%' },
+        { text: 'Долг', value: 'debt', sortable: false, width: '16%' },
+    ];
+}
 </script>
 
 <style scoped>
-    .table {
-        max-height: 45vh;
-        overflow: auto;
-    }
+
 </style>

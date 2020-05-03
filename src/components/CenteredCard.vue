@@ -1,8 +1,14 @@
 <template>
-    <v-container fluid>
-        <v-row justify="center">
-            <v-col :cols="cols">
-                <v-card>
+    <v-container fluid :class="{'pa-0': noGutters}">
+        <v-row justify="center" :class="{'pa-0': noGutters}">
+            <v-col :xs="xs" :lg="lg" :xl="xl">
+                <v-card
+                    :class="{
+                        'pa-0': noGutters,
+                        'elevation-0' : noElevation || transparent,
+                        'transparent': transparent
+                    }"
+                >
                     <slot></slot>
                 </v-card>
             </v-col>
@@ -17,12 +23,44 @@
     export default class CenteredCard extends Vue {
         @Prop({
             type: String,
-            default: '10',
+            default: '12',
         })
-        cols!: string;
+        xs!: string;
+
+        @Prop({
+            type: String,
+            default: null,
+        })
+        lg!: string | null;
+
+        @Prop({
+            type: String,
+            default: null,
+        })
+        xl!: string | null;
+
+        @Prop({
+            type: Boolean,
+            default: false,
+        })
+        noGutters!: boolean;
+
+        @Prop({
+            type: Boolean,
+            default: false,
+        })
+        noElevation!: boolean;
+
+        @Prop({
+            type: Boolean,
+            default: false,
+        })
+        transparent!: boolean;
     }
 </script>
 
 <style scoped>
-
+    .transparent {
+        background-color: transparent;
+    }
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <v-card>
-        <v-container fluid class="px-5 fill-height">
+    <v-card class="elevation-1 fill-height">
+        <v-container fluid class="px-5">
             <v-row>
                 <v-col cols="3">
                     <Label label="№ договора" :value="mainInfo.contractNumber"/>

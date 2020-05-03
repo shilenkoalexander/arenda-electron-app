@@ -1,9 +1,9 @@
 <template>
     <v-data-table
-        class="table"
         :headers="headers"
         :items="items"
         hide-default-footer
+        height="38vh"
         fixed-header
     >
         <template v-slot:item.period="{item}">
@@ -53,8 +53,5 @@
 </script>
 
 <style scoped>
-    .table {
-        max-height: 45vh;
-        overflow: auto;
-    }
+
 </style>
