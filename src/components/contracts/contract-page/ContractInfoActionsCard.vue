@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="elevation-1">
         <v-container fluid fill-height class="justify-center align-content-center px-8">
             <v-row>
                 <v-col cols="6">
@@ -27,7 +27,7 @@
                             color="primary lighten-1"
                             class="button-text"
                     >
-                        Какая то еще кнопка
+                        Кнопка
                     </v-btn>
                 </v-col>
                 <v-col cols="6">

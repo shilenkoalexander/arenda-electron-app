@@ -1,7 +1,7 @@
 <template>
     <v-dialog
         v-model="dialog"
-        width="50%"
+        width="60%"
     >
         <v-card>
             <v-card-title
@@ -13,39 +13,59 @@
 
             <v-card-text>
                 <v-container fluid>
-                    <v-row justify="center">
+                    <v-row justify="space-around">
                         <v-col cols="3">
-                            <DatePickerMenu
-                                v-model="startMonth"
-                                :min-date="startMinDate"
-                                :max-date="startMaxDate"
-                                label="Период с"
-                                without-days
-                            />
+                            <v-row>
+                                <DatePickerMenu
+                                    v-model="startMonth"
+                                    :min-date="startMinDate"
+                                    :max-date="startMaxDate"
+                                    label="Период с"
+                                    without-days
+                                />
+                            </v-row>
+                            <v-row>
+                                <DatePickerMenu
+                                    v-model="endMonth"
+                                    :min-date="endMinDate"
+                                    :max-date="endMaxDate"
+                                    label="Период по"
+                                    without-days
+                                />
+                            </v-row>
+                            <v-row>
+                                <v-btn
+                                    block
+                                    color="primary"
+                                    :disabled="!startMonth || !endMonth"
+                                    @click="onRecalculateClicked"
+                                >
+                                    Пересчитать
+                                </v-btn>
+                            </v-row>
                         </v-col>
-                        <v-col cols="3">
-                            <DatePickerMenu
-                                v-model="endMonth"
-                                :min-date="endMinDate"
-                                :max-date="endMaxDate"
-                                label="Период по"
-                                without-days
-                            />
-                        </v-col>
-                        <v-col cols="3">
-                            <v-btn
-                                block
-                                color="primary"
-                                :disabled="!startMonth || !endMonth"
-                                @click="onRecalculateClicked"
-                            >
-                                Пересчитать
-                            </v-btn>
+                        <v-col cols="8" class="pa-0">
+                            <v-row>
+                                <v-col class="title font-weight-regular py-0 pr-0" cols="6" offset="1">
+                                    Дополнительные соглашения
+                                </v-col>
+                                <v-col cols="1" offset="3" class="text-right pa-0">
+                                    <v-btn color="primary" icon @click="onAddExtensionClicked">
+                                        <v-icon>
+                                            mdi-plus
+                                        </v-icon>
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                            <v-row justify="center" class="mt-3">
+                                <ContractExtensionsList :items="contractExtensions" height="25vh"/>
+                            </v-row>
                         </v-col>
                     </v-row>
-                    <v-row class="finance-list-row">
-                        <v-col v-if="financePeriods.length > 0">
-                            <FinanceList :items="financePeriods"/>
+                    <v-divider class="mt-2"/>
+                    <v-row justify="center">
+                        <v-col cols="8" class="pt-0">
+                            <FinanceList :items="financePeriods" height="30vh"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -68,6 +88,7 @@
                 </v-container>
             </v-card-text>
             <ConfirmDialog ref="confirmDialog" @confirm="saveRecalculatedPeriods"/>
+            <AddContractExtensionDialog backdating ref="addContractExtensionDialog" @save="onSaveContractExtension"/>
         </v-card>
     </v-dialog>
 </template>
@@ -82,34 +103,38 @@
     import { FinancePeriod } from '@/types/finance';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { replaceFinancePeriods } from '@/backend/repository/finance-repository';
+    import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
+    import { FullContractExtension } from '@/types/contracts';
+    import AddContractExtensionDialog
+        from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
 
     // todo перерасчет нужен только для проверки возможного доп соглашения и задним числом тоже
     // несколько доп соглашений тоже должно быть
     // а еще проверить как там поживает replace в базе.
     @Component({
-        components: { ConfirmDialog, FinanceList, DatePickerMenu },
+        components: { AddContractExtensionDialog, ContractExtensionsList, ConfirmDialog, FinanceList, DatePickerMenu },
     })
     export default class RecalculatePeriodsDialog extends Vue {
         dialog = false;
 
         calculatingStartDate: Date | null = null;
+        contractValidity: Date | null = null;
         contractId: number | null = null;
 
         startMonth = '';
         endMonth = '';
 
         startMinDate = '';
-        // startMaxDate = formatDateToMonthString(subMonths(new Date(), 1));
         startMaxDate = '';
         endMinDate = '';
         endMaxDate = '';
 
-        // endMaxDate = formatDateToMonthString(subMonths(new Date(), 1));
-
         financePeriods: FinancePeriod[] = [];
+        contractExtensions: FullContractExtension[] = [];
 
         $refs!: {
             confirmDialog: ConfirmDialog;
+            addContractExtensionDialog: AddContractExtensionDialog;
         };
 
         @Watch('startMonth')
@@ -132,10 +157,23 @@
             }
         }
 
+        onSaveContractExtension(contractExtension: FullContractExtension) {
+            this.contractExtensions.push(contractExtension);
+            this.contractExtensions.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
+        }
+
         onSaveClicked() {
             this.$refs.confirmDialog.open(
                 'Вы действительно хотите сохранить данные? ' +
                 'Старые расчеты по этим периодам будут удалены.',
+            );
+        }
+
+        onAddExtensionClicked() {
+            this.$refs.addContractExtensionDialog.open(
+                this.contractId,
+                this.calculatingStartDate,
+                this.contractValidity,
             );
         }
 
@@ -156,9 +194,16 @@
 
 
         // todo: ограничить максимальную дату с учетом индексов инфляции (их наличия)
-        open(contractId: number, calculatingStartDate: Date) {
+        open(
+            contractId: number,
+            calculatingStartDate: Date,
+            contractValidity: Date,
+            currentExtensions: FullContractExtension[],
+        ) {
             this.contractId = contractId;
             this.calculatingStartDate = calculatingStartDate;
+            this.contractValidity = contractValidity;
+            this.contractExtensions = [...currentExtensions];
 
             this.startMinDate = formatDateToMonthString(this.calculatingStartDate);
             this.startMaxDate = Period.currentPeriod().toDefaultFormat();
@@ -173,8 +218,5 @@
 </script>
 
 <style scoped>
-    .finance-list-row {
-        height: 40vh;
-        overflow: auto;
-    }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
     <v-data-table
-        class="indexing-table"
+        height="38vh"
         :headers="headers"
         :items="items"
         hide-default-footer
@@ -46,8 +46,5 @@
 </script>
 
 <style scoped>
-    .indexing-table {
-        max-height: 45vh;
-        overflow: auto;
-    }
+
 </style>

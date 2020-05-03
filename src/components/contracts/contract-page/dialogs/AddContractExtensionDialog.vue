@@ -80,119 +80,130 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Watch } from 'vue-property-decorator';
-    import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
-    import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
-    import EditableTextField from '@/components/EditableTextField.vue';
-    import { parseDate } from '@/utils/date-utils';
-    import { getActiveAndFutureContractExtensions } from '@/backend/repository/contract-repository';
-    import { FullContractExtension } from '@/types/contracts';
-    import { addDays, isAfter, isBefore, startOfMonth, subDays } from 'date-fns';
-    import { addContractExtension } from '@/backend/service/finance-service';
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
+import DatePickerMenu from '@/components/DatePickerMenu.vue';
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
+import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
+import EditableTextField from '@/components/EditableTextField.vue';
+import { parseDate } from '@/utils/date-utils';
+import { getActiveAndFutureContractExtensions } from '@/backend/repository/contract-repository';
+import { FullContractExtension } from '@/types/contracts';
+import { addDays, isAfter, isBefore, startOfMonth, subDays } from 'date-fns';
 
-    @Component({
-        components: { ConfirmDialog, DatePickerMenu, EditableTextField },
+@Component({
+    components: { ConfirmDialog, DatePickerMenu, EditableTextField },
+})
+export default class AddContractExtensionDialog extends Vue {
+    @Prop({
+        type: Boolean,
+        default: false,
     })
-    export default class AddContractExtensionDialog extends Vue {
-        dialog = false;
+    backdating!: boolean;
 
-        paymentSum = '';
-        startDate = '';
-        endDate = '';
-        paymentActualityDate = '';
-        conclusionDate = '';
+    dialog = false;
 
-        correctFloatRule = correctFloatRule;
-        positiveNumberRule = positiveNumberRule;
-        notEmptyRule = notEmptyRule;
+    paymentSum = '';
+    startDate = '';
+    endDate = '';
+    paymentActualityDate = '';
+    conclusionDate = '';
 
-        contractId: number | null = null;
+    correctFloatRule = correctFloatRule;
+    positiveNumberRule = positiveNumberRule;
+    notEmptyRule = notEmptyRule;
 
-        contractStartCalculationDate: Date | null = null;
-        contractValidity: Date | null = null;
-        activeExtensions: FullContractExtension[] = [];
+    contractId: number | null = null;
 
-        $refs!: {
-            form: HTMLFormElement;
-        };
+    contractStartCalculationDate: Date | null = null;
+    contractValidity: Date | null = null;
+    activeExtensions: FullContractExtension[] = [];
 
-        @Watch('dialog')
-        onDialogChanged() {
-            if (!this.dialog) {
-                this.$refs.form.resetValidation();
-                this.paymentSum = '';
-                this.startDate = '';
-                this.endDate = '';
-                this.paymentActualityDate = '';
-                this.conclusionDate = '';
-            }
-        }
+    $refs!: {
+        form: HTMLFormElement;
+    };
 
-        @Watch('startDate')
-        onStartDateChanged() {
+    @Watch('dialog')
+    onDialogChanged() {
+        if (!this.dialog) {
+            this.$refs.form.resetValidation();
+            this.paymentSum = '';
+            this.startDate = '';
             this.endDate = '';
-        }
-
-        get nextExtensionStartDate(): Date {
-            let minDateAfterStart = this.contractValidity!;
-            const startDate = parseDate(this.startDate);
-
-            this.activeExtensions.forEach((ext) => {
-                if (isBefore(ext.startDate, minDateAfterStart) && isAfter(ext.startDate, startDate)) {
-                    minDateAfterStart = ext.startDate;
-                }
-            });
-
-            return minDateAfterStart;
-        }
-
-        startDateAllowed(value: string): boolean {
-            const date = parseDate(value);
-            if (isBefore(date, startOfMonth(new Date())) || isAfter(date, this.contractValidity!)) {
-                return false;
-            }
-
-            return !this.activeExtensions
-                .some((ext) =>
-                    isBefore(subDays(ext.startDate, 1), date)
-                    && isAfter(addDays(ext.endDate, 1), date),
-                );
-        }
-
-        endDateAllowed(value: string): boolean {
-            const date = parseDate(value);
-            const startDate = parseDate(this.startDate);
-
-            if (isBefore(date, startOfMonth(new Date())) || isAfter(date, this.contractValidity!)) {
-                return false;
-            }
-
-            return isBefore(date, this.nextExtensionStartDate) && isAfter(date, startDate);
-        }
-
-        open(contractId: number, contractStartCalculationDate: Date, contractValidity: Date) {
-            this.contractId = contractId;
-            this.activeExtensions = getActiveAndFutureContractExtensions(this.contractId);
-            this.contractStartCalculationDate = contractStartCalculationDate;
-            this.contractValidity = contractValidity;
-            this.dialog = true;
-        }
-
-        onSaveClicked() {
-            if (this.$refs.form.validate()) {
-                addContractExtension(this.contractId!, {
-                    payment: Number.parseFloat(this.paymentSum),
-                    paymentActualityDate: parseDate(this.paymentActualityDate),
-                    conclusionDate: parseDate(this.conclusionDate),
-                    endDate: parseDate(this.endDate),
-                    startDate: parseDate(this.startDate),
-                });
-                this.$emit('update');
-                this.dialog = false;
-            }
+            this.paymentActualityDate = '';
+            this.conclusionDate = '';
         }
     }
+
+    @Watch('startDate')
+    onStartDateChanged() {
+        this.endDate = '';
+    }
+
+    get nextExtensionStartDate(): Date {
+        let minDateAfterStart = this.contractValidity!;
+        const startDate = parseDate(this.startDate);
+
+        this.activeExtensions.forEach((ext) => {
+            if (isBefore(ext.startDate, minDateAfterStart) && isAfter(ext.startDate, startDate)) {
+                minDateAfterStart = ext.startDate;
+            }
+        });
+
+        return minDateAfterStart;
+    }
+
+    isOutOfContractValidityRange(date: Date): boolean {
+        if (this.backdating) {
+            return isBefore(date, this.contractStartCalculationDate!);
+        }
+        return isBefore(date, startOfMonth(new Date())) || isAfter(date, this.contractValidity!);
+    }
+
+    startDateAllowed(value: string): boolean {
+        const date = parseDate(value);
+        if (this.isOutOfContractValidityRange(date)) {
+            return false;
+        }
+
+        return !this.activeExtensions
+            .some((ext) =>
+                isBefore(subDays(ext.startDate, 1), date)
+                && isAfter(addDays(ext.endDate, 1), date),
+            );
+    }
+
+    endDateAllowed(value: string): boolean {
+        const date = parseDate(value);
+        const startDate = parseDate(this.startDate);
+
+        if (this.isOutOfContractValidityRange(date)) {
+            return false;
+        }
+
+        return isBefore(date, this.nextExtensionStartDate) && isAfter(date, startDate);
+    }
+
+    open(contractId: number, contractStartCalculationDate: Date, contractValidity: Date) {
+        this.contractId = contractId;
+        this.activeExtensions = getActiveAndFutureContractExtensions(this.contractId);
+        this.contractStartCalculationDate = contractStartCalculationDate;
+        this.contractValidity = contractValidity;
+        this.dialog = true;
+    }
+
+    onSaveClicked() {
+        if (this.$refs.form.validate()) {
+            this.$emit('save', {
+                payment: Number.parseFloat(this.paymentSum),
+                paymentActualityDate: parseDate(this.paymentActualityDate),
+                conclusionDate: parseDate(this.conclusionDate),
+                endDate: parseDate(this.endDate),
+                startDate: parseDate(this.startDate),
+            });
+            this.dialog = false;
+        }
+    }
+}
 </script>
 
 <style scoped>
