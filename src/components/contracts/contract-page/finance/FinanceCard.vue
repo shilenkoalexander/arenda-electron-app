@@ -195,7 +195,12 @@ export default class FinanceCard extends Vue {
     }
 
     onAddContractExtensionClick() {
-        this.$refs.addContractExtensionDialog.open(this.contractId, this.calculationStartDate, this.validity);
+        this.$refs.addContractExtensionDialog.open(
+            this.contractId,
+            this.calculationStartDate,
+            this.validity,
+            this.contractExtensions,
+        );
     }
 
     update() {

@@ -1,4 +1,4 @@
-import { formatDateToMonthString, generatePeriodsArray } from '@/utils/date-utils';
+import { generatePeriodsArray } from '@/utils/date-utils';
 import { differenceInDays, isSameMonth } from 'date-fns';
 import {
     getContractStartCalculationDate,
@@ -14,6 +14,7 @@ import { ContractExtension } from '@/backend/types/contract-types';
 import Period, { isSamePeriods } from '@/backend/utils/period';
 import { FinancePeriod } from '@/types/finance';
 import Optional from '@/backend/utils/optional';
+import { FullContractExtension } from '@/types/contracts';
 
 let calculatedPeriods: FinancePeriod[] = [];
 let localContractExtensions: ContractExtension[] = [];
@@ -96,7 +97,6 @@ function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period)
  * и умножаем на все ии за период действия доп соглашения + текущий
  * @param period
  * @param contractId
- * @param accrualsSource источник начислений
  */
 export function getAccrualPerFullMonthByPeriod(period: Period, contractId: number): number {
     console.log('период ', period.toFriendlyFormat());
@@ -151,198 +151,69 @@ export function getAccrualPerFullMonthByPeriod(period: Period, contractId: numbe
     return getFinancePeriodFromLocalIfFound(period, contractId).accruals;
 }
 
-function getAccrualWhenFirstCalculation(period: Period, contractId: number): number {
-    console.log('Never Calculated');
-    const paymentContractInfo = getPaymentContractInfo(contractId)
-        .orElseThrowWithMessage(`Отсутствует информация о договоре с id = ${contractId}`);
-    const finalIndex = getFinalInflationIndexByPeriods(
-        Period.ofDate(paymentContractInfo.actualityDate).addMonths(1),
-        period,
-    );
-
-    if (!isSameMonth(paymentContractInfo.startDate, period.getDate())) {
-        throw new Error(`Дата начала действия договора (${formatDateToMonthString(paymentContractInfo.startDate)}) ` +
-            `не совпадает с периодом расчета (${period})`);
-    }
-
-    const calculatedDaysCount = differenceInDays(period.endOfMonth(), paymentContractInfo.startDate) + 1;
-    const daysInMonth = period.getDaysInMonth();
-
-    return (paymentContractInfo.payment * finalIndex) / daysInMonth * calculatedDaysCount;
-}
-
-function getAccrualWhenPrevMonthCalculated(
-    period: Period,
-    contractId: number,
-): number {
-    console.log('Calculated prev month');
-
-    const prevPeriod = period.subMonths(1);
-
-    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(prevPeriod, contractId);
-    const inflationIndex = getInflationIndex(period);
-
-    return prevFinancePeriodAccruals * inflationIndex;
-}
-
-function getAccrualWhenContractExtensionActivatesThisPeriod(
-    period: Period,
-    contractExtension: ContractExtension,
-    contractId: number,
-): number {
-    console.log('When contract extension start');
-    const prevPaymentDays = differenceInDays(contractExtension.dateStart, period.startOfMonth());
-    const currPaymentDays = differenceInDays(period.endOfMonth(), contractExtension.dateStart) + 1;
-
-    console.log('Дней до =', prevPaymentDays);
-    console.log('Дней после =', currPaymentDays);
-
-    const monthDaysCount = period.getDaysInMonth();
-    const periodInflationIndex = getInflationIndex(period);
-    const extensionInflationIndex = getFinalInflationIndexByPeriods(
-        Period.ofDate(contractExtension.paymentActualityDate).addMonths(1),
-        period,
-    );
-
-    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId);
-
-    const prevAccrualWithInflationIndex = prevFinancePeriodAccruals * periodInflationIndex;
-    const currAccrualWithInflationIndex = contractExtension.rentPayment * extensionInflationIndex;
-
-    console.log('Предыдущ за весь месяц начисление =', prevAccrualWithInflationIndex.toFixed(4));
-    console.log('Следующее за весь месяц начисление =', currAccrualWithInflationIndex.toFixed(4));
-
-    const accrualBeforeExtension = (prevAccrualWithInflationIndex / monthDaysCount) * prevPaymentDays;
-    const accrualAfterExtension = (currAccrualWithInflationIndex / monthDaysCount) * currPaymentDays;
-
-    console.log('Предыдущ общее начисление =', accrualBeforeExtension.toFixed(4));
-    console.log('Следующее общее начисление =', accrualAfterExtension.toFixed(4));
-
-    return accrualBeforeExtension + accrualAfterExtension;
-}
-
-function getAccrualWhenContractExtensionDeactivatesThisPeriod(
-    period: Period,
-    contractId: number,
-    contractExtension: ContractExtension,
-): number {
-    console.log('When contract extension end');
-    const prevPaymentDays = differenceInDays(contractExtension.dateEnd, period.startOfMonth()) + 1;
-    const currPaymentDays = differenceInDays(period.endOfMonth(), contractExtension.dateEnd);
-
-    console.log('Дней до =', prevPaymentDays);
-    console.log('Дней после =', currPaymentDays);
-
-    const monthDaysCount = period.getDaysInMonth();
-    const periodInflationIndex = getInflationIndex(period);
-    const periodBeforeExtension = Period.ofDate(contractExtension.dateStart).subMonths(1);
-
-    const extensionInflationIndex = getFinalInflationIndexByPeriods(
-        Period.ofDate(contractExtension.dateStart),
-        period,
-    );
-
-    const beforeExtensionPeriodAccruals = getAccrualPerFullMonthByPeriod(periodBeforeExtension, contractId);
-    const prevFinancePeriodAccruals = getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId);
-
-    const prevAccrualWithInflationIndex = prevFinancePeriodAccruals * periodInflationIndex;
-    const currAccrualWithInflationIndex = beforeExtensionPeriodAccruals * extensionInflationIndex;
-
-    console.log('Предыдущ за весь месяц начисление =', prevAccrualWithInflationIndex);
-    console.log('Следующее за весь месяц начисление =', currAccrualWithInflationIndex);
-
-    const accrualBeforeExtension = (prevAccrualWithInflationIndex / monthDaysCount) * prevPaymentDays;
-    const accrualAfterExtension = (currAccrualWithInflationIndex / monthDaysCount) * currPaymentDays;
-
-    console.log('Предыдущ общее начисление =', accrualBeforeExtension);
-    console.log('Следующее общее начисление =', accrualAfterExtension);
-
-    return accrualBeforeExtension + accrualAfterExtension;
-}
-
-function getAccrualsByExtension(payment: number, daysCount: number, monthDaysCount: number) {
+function getAccrualsByDaysCount(payment: number, daysCount: number, monthDaysCount: number) {
     return (payment / monthDaysCount) * daysCount;
 }
 
 // todo: проверить когда начинается и заканчивается доп соглашение в одном месяце, в разных, в одном и разных)
 // todo: разобраться с ошибками электрона в консоси
 // todo: как то придумать ограничение на фронте по датам перерасчета если расчета в принципе не было, а время прошло
-export function calc(period: Period, contractId: number): number {
-    if (isFirstCalculation(period, contractId)) {
-        return getAccrualWhenFirstCalculation(period, contractId);
-    }
-
-    // debugger;
-
+export function calculateAccruals(period: Period, contractId: number): number {
     const extensionsDuringPeriod = getContractExtensionsByPeriod(period);
-    const monthDaysCount = period.getDaysInMonth();
-    const periodInflationIndex = getInflationIndex(period);
+    const contractStartDate = getContractStartCalculationDate(contractId);
+    const isStartContractPeriod = isSameMonth(contractStartDate, period.getDate());
+
+    let prevAccrualsPeriod;
+    let calculateMonthDaysCount;
+    let periodInflationIndex = 1;
+
+    if (isStartContractPeriod) {
+        calculateMonthDaysCount = differenceInDays(period.endOfMonth(), contractStartDate) + 1;
+        prevAccrualsPeriod = period;
+    } else {
+        calculateMonthDaysCount = period.getDaysInMonth();
+        prevAccrualsPeriod = period.subMonths(1);
+        periodInflationIndex = getInflationIndex(period);
+    }
 
     let extensionsTotalDaysCount = 0;
     let periodTotalAccruals = 0;
 
     extensionsDuringPeriod.forEach((value) => {
         let extensionDuration = 0;
-        let inflationIndex = 1;
+
         if (isSamePeriods(value.dateStart, value.dateEnd)) {
-            extensionDuration = differenceInDays(value.dateEnd, value.dateStart);
+            extensionDuration = differenceInDays(value.dateEnd, value.dateStart) + 1;
         } else if (period.isSamePeriodByDate(value.dateStart)) {
             extensionDuration = differenceInDays(period.endOfMonth(), value.dateStart) + 1;
-            inflationIndex = periodInflationIndex;
         } else if (period.isSamePeriodByDate(value.dateEnd)) {
-            extensionDuration = differenceInDays(period.endOfMonth(), value.dateEnd);
-            inflationIndex = periodInflationIndex;
+            extensionDuration = differenceInDays(value.dateEnd, period.startOfMonth()) + 1;
         }
 
-        console.log('extensionDuration', extensionDuration);
+        const inflationIndex = getFinalInflationIndexByPeriods(
+            Period.ofDate(value.paymentActualityDate).addMonths(1),
+            period,
+        );
 
-        periodTotalAccruals += getAccrualsByExtension(
+        periodTotalAccruals += getAccrualsByDaysCount(
             value.rentPayment,
             extensionDuration,
-            monthDaysCount,
+            period.getDaysInMonth(),
         ) * inflationIndex;
-
-        console.log('periodTotalAccruals', periodTotalAccruals);
 
         extensionsTotalDaysCount += extensionDuration;
     });
 
-    const accrualWithoutExtensions = getAccrualPerFullMonthByPeriod(period.subMonths(1), contractId);
-    const daysWithoutExtensions = monthDaysCount - extensionsTotalDaysCount;
-    const currentPeriodAccrualsWithoutExtensions = ((accrualWithoutExtensions * periodInflationIndex) / monthDaysCount)
-        * daysWithoutExtensions;
+
+    const accrualWithoutExtensions = getAccrualPerFullMonthByPeriod(prevAccrualsPeriod, contractId);
+    const daysWithoutExtensions = calculateMonthDaysCount - extensionsTotalDaysCount;
+    const currentPeriodAccrualsWithoutExtensions = getAccrualsByDaysCount(
+        accrualWithoutExtensions,
+        daysWithoutExtensions,
+        period.getDaysInMonth(),
+    ) * periodInflationIndex;
 
     return currentPeriodAccrualsWithoutExtensions + periodTotalAccruals;
-}
-
-export function calculateAccruals(period: Period, contractId: number): number {
-    console.log('period =', period.toDefaultFormat());
-
-    if (isFirstCalculation(period, contractId)) {
-        return getAccrualWhenFirstCalculation(period, contractId);
-    }
-
-    const extensionActivatesThisPeriod = getContractExtensionActivatesInPeriod(period);
-
-    if (extensionActivatesThisPeriod.isPresent()) {
-        return getAccrualWhenContractExtensionActivatesThisPeriod(
-            period,
-            extensionActivatesThisPeriod.get(),
-            contractId,
-        );
-    }
-
-    const extensionDeactivatesThisPeriod = getContractExtensionDeactivatesInPeriod(period);
-
-    if (extensionDeactivatesThisPeriod.isPresent()) {
-        return getAccrualWhenContractExtensionDeactivatesThisPeriod(
-            period,
-            contractId,
-            extensionDeactivatesThisPeriod.get(),
-        );
-    }
-
-    return getAccrualWhenPrevMonthCalculated(period, contractId);
 }
 
 /**
@@ -361,18 +232,23 @@ export function calculateFinancePeriods(
     periodFrom: Period,
     periodTo: Period,
     contractId: number,
-    contractExtensions?: ContractExtension[],
+    contractExtensions?: FullContractExtension[],
 ): FinancePeriod[] {
     if (periodFrom.isAfter(periodTo)) {
         return [];
     }
 
     if (contractExtensions) {
-        localContractExtensions = [...contractExtensions];
+        localContractExtensions = contractExtensions.map((value) => ({
+            dateStart: value.startDate,
+            dateEnd: value.endDate,
+            paymentActualityDate: value.paymentActualityDate,
+            rentPayment: value.payment,
+        }));
+    } else {
+        const allContractExtensions = getContractExtensions(contractId);
+        localContractExtensions.push(...allContractExtensions);
     }
-
-    const allContractExtensions = getContractExtensions(contractId);
-    localContractExtensions.push(...allContractExtensions);
 
     const periods = generatePeriodsArray(periodFrom, periodTo);
     const periodsPayments = getPeriodsPayments(periods, contractId);
@@ -381,7 +257,7 @@ export function calculateFinancePeriods(
     let dept = prevPeriodDebt.orElse(0);
 
     periods.forEach((period) => {
-        const accruals = calc(period, contractId);
+        const accruals = calculateAccruals(period, contractId);
         const payments = periodsPayments.find((value) => value.period.isSamePeriod(period));
         const adjustment = periodsAdjustments.find((value) => value.period.isSamePeriod(period));
         const safePayments = payments ? payments.sum : 0;
