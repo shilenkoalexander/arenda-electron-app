@@ -52,9 +52,9 @@ export function getMonthDebt(period: Period, contractId: number): Optional<numbe
     return Optional.of(result).map((value) => value.debt);
 }
 
-export function getContractStartDate(contractId: number): Date {
+export function getContractStartCalculationDate(contractId: number): Date {
     const result = db().queryFirstRow(`
-        select start_date from contracts
+        select calculation_start_date from contracts
         where id = ${contractId}
     `);
 
@@ -62,7 +62,7 @@ export function getContractStartDate(contractId: number): Date {
         throw new Error(`Договор с ${contractId} отсутствует`);
     }
 
-    return parseDate(result.start_date);
+    return parseDate(result.calculation_start_date);
 }
 
 export function getInflationIndexes(periods: Period[]): InflationIndex[] {

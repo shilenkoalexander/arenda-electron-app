@@ -14,6 +14,7 @@
       "spaces",
       4
     ],
+    "import-spacing": false,
     "interface-name": false,
     "no-consecutive-blank-lines": false,
     "object-literal-sort-keys": false,

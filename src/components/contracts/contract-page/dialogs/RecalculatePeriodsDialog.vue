@@ -1,12 +1,12 @@
 <template>
     <v-dialog
-        v-model="dialog"
-        width="60%"
+            v-model="dialog"
+            width="60%"
     >
         <v-card>
             <v-card-title
-                class="headline primary white--text py-3"
-                primary-title
+                    class="headline primary white--text py-3"
+                    primary-title
             >
                 Перерасчет
             </v-card-title>
@@ -17,28 +17,28 @@
                         <v-col cols="3">
                             <v-row>
                                 <DatePickerMenu
-                                    v-model="startMonth"
-                                    :min-date="startMinDate"
-                                    :max-date="startMaxDate"
-                                    label="Период с"
-                                    without-days
+                                        v-model="startMonth"
+                                        :min-date="startMinDate"
+                                        :max-date="startMaxDate"
+                                        label="Период с"
+                                        without-days
                                 />
                             </v-row>
                             <v-row>
                                 <DatePickerMenu
-                                    v-model="endMonth"
-                                    :min-date="endMinDate"
-                                    :max-date="endMaxDate"
-                                    label="Период по"
-                                    without-days
+                                        v-model="endMonth"
+                                        :min-date="endMinDate"
+                                        :max-date="endMaxDate"
+                                        label="Период по"
+                                        without-days
                                 />
                             </v-row>
                             <v-row>
                                 <v-btn
-                                    block
-                                    color="primary"
-                                    :disabled="!startMonth || !endMonth"
-                                    @click="onRecalculateClicked"
+                                        block
+                                        color="primary"
+                                        :disabled="!startMonth || !endMonth"
+                                        @click="onRecalculateClicked"
                                 >
                                     Пересчитать
                                 </v-btn>
@@ -71,10 +71,10 @@
                     <v-row justify="center">
                         <v-col cols="3">
                             <v-btn
-                                :disabled="financePeriods.length < 1"
-                                color="error"
-                                block
-                                @click="onSaveClicked"
+                                    :disabled="financePeriods.length < 1"
+                                    color="error"
+                                    block
+                                    @click="onSaveClicked"
                             >
                                 Сохранить
                             </v-btn>
@@ -152,7 +152,7 @@
                 this.financePeriods = calculateFinancePeriods(
                     Period.ofString(this.startMonth),
                     Period.ofString(this.endMonth),
-                    this.contractId,
+                    this.contractId!,
                 );
             }
         }
@@ -186,7 +186,7 @@
 
         saveRecalculatedPeriods() {
             if (this.contractId) {
-                replaceFinancePeriods(this.contractId, this.financePeriods);
+                replaceFinancePeriods(this.contractId!, this.financePeriods);
                 this.$emit('update');
                 this.close();
             }
