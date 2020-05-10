@@ -65,11 +65,12 @@ export function getContractStartCalculationDate(contractId: number): Date {
     return parseDate(result.calculation_start_date);
 }
 
-export function getInflationIndexes(periods: Period[]): InflationIndex[] {
+export function getInflationIndexesByPeriods(periods: Period[], desc = false): InflationIndex[] {
     const result = db().query(`
         select *
         from inflation_index
         where period in ${toSqlArray(periods)}
+        order by period ${desc ? 'desc' : ''}
     `);
 
     return result.map((value) => ResultMapperFactory.inflationIndexMapper.map(value));
@@ -170,11 +171,11 @@ export function getPayments(contractId: number): Payment[] {
     return result.map((value) => ResultMapperFactory.paymentMapper.map(value));
 }
 
-export function getIndexingSigns(contractId: number): IndexingSign[] {
+export function getIndexingSigns(contractId: number, desc = false): IndexingSign[] {
     const result = db().query(`
         select * from indexing
         where id_contract = ${contractId}
-        order by period desc
+        order by period ${desc ? 'desc' : ''}
     `);
 
     return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));

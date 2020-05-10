@@ -2,8 +2,8 @@ import { generatePeriodsArray } from '@/utils/date-utils';
 import { differenceInDays, isSameMonth } from 'date-fns';
 import {
     getContractStartCalculationDate,
-    getFinancePeriod,
-    getInflationIndexes,
+    getFinancePeriod, getIndexingSigns,
+    getInflationIndexesByPeriods,
     getMonthDebt,
     getPeriodsAdjustments,
     getPeriodsPayments,
@@ -12,12 +12,13 @@ import { getContractExtensions, getPaymentContractInfo } from '@/backend/reposit
 import { isEmpty, isNotEmpty } from '@/backend/utils/other-util';
 import { ContractExtension } from '@/backend/types/contract-types';
 import Period, { isSamePeriods } from '@/backend/utils/period';
-import { FinancePeriod } from '@/types/finance';
+import { FinancePeriod, InflationIndex } from '@/types/finance';
 import Optional from '@/backend/utils/optional';
 import { FullContractExtension } from '@/types/contracts';
 
 let calculatedPeriods: FinancePeriod[] = [];
 let localContractExtensions: ContractExtension[] = [];
+let inflationIndexes: InflationIndex[] = [];
 
 function getContractExtensionsByPeriod(period: Period): ContractExtension[] {
     return localContractExtensions
@@ -61,27 +62,25 @@ function isFirstCalculation(period: Period, contractId: number) {
 }
 
 function getInflationIndex(period: Period): number {
-    const inflationIndexes = getInflationIndexes([period]);
+    const index = inflationIndexes
+        .find((value) => period.isSamePeriod(Period.ofString(value.period)));
 
-    if (isEmpty(inflationIndexes)) {
+    if (!index) {
         throw new Error(`Отсутствует индекс инфляции для периода ${period.toFriendlyFormat()}`);
     }
 
-    return inflationIndexes[0].index;
+    return index.index;
 }
 
 function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period): number {
     const indexNeedDates = generatePeriodsArray(startPeriod, endPeriod);
 
-    if (isEmpty(indexNeedDates)) {
-        return 1;
-    }
-
-    const inflationIndexes = getInflationIndexes(indexNeedDates);
+    const indexes = inflationIndexes
+        .filter((value) => indexNeedDates.includes(Period.ofString(value.period)));
     let finalIndex = 1;
 
     if (isNotEmpty(inflationIndexes)) {
-        finalIndex = inflationIndexes
+        finalIndex = indexes
             .map((value) => value.index)
             .reduce((previousValue, currentValue) => previousValue * currentValue);
     }
@@ -158,7 +157,7 @@ function getAccrualsByDaysCount(payment: number, daysCount: number, monthDaysCou
 // todo: проверить когда начинается и заканчивается доп соглашение в одном месяце, в разных, в одном и разных)
 // todo: разобраться с ошибками электрона в консоси
 // todo: как то придумать ограничение на фронте по датам перерасчета если расчета в принципе не было, а время прошло
-export function calculateAccruals(period: Period, contractId: number): number {
+function calculateAccruals(period: Period, contractId: number): number {
     const extensionsDuringPeriod = getContractExtensionsByPeriod(period);
     const contractStartDate = getContractStartCalculationDate(contractId);
     const isStartContractPeriod = isSameMonth(contractStartDate, period.getDate());
@@ -216,6 +215,19 @@ export function calculateAccruals(period: Period, contractId: number): number {
     return currentPeriodAccrualsWithoutExtensions + periodTotalAccruals;
 }
 
+function getInflationIndexesConsideringIndexing(periods: Period[], contractId: number): InflationIndex[] {
+    const indexes = getInflationIndexesByPeriods(periods);
+    const indexingSigns = getIndexingSigns(contractId);
+
+    if (isEmpty(indexingSigns)) {
+        return indexes;
+    }
+
+    return [];
+
+
+}
+
 /**
  * Метод расчета финансовых периодов по указанным периодам. Не сохраняет данные в базу.
  * @param periodFrom
@@ -251,6 +263,7 @@ export function calculateFinancePeriods(
     }
 
     const periods = generatePeriodsArray(periodFrom, periodTo);
+    inflationIndexes = getInflationIndexesByPeriods(periods);
     const periodsPayments = getPeriodsPayments(periods, contractId);
     const periodsAdjustments = getPeriodsAdjustments(periods, contractId);
     const prevPeriodDebt = getMonthDebt(periodFrom.subMonths(1), contractId);
@@ -277,5 +290,8 @@ export function calculateFinancePeriods(
 
     const tempCalculatedPeriods = calculatedPeriods;
     calculatedPeriods = [];
+    localContractExtensions = [];
+    inflationIndexes = [];
+
     return tempCalculatedPeriods;
 }

@@ -40,7 +40,7 @@
         }
 
         public update() {
-            this.items = getIndexingSigns(this.contractId);
+            this.items = getIndexingSigns(this.contractId, true);
         }
     }
 </script>
