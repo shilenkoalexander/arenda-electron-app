@@ -27,7 +27,7 @@
   "devDependencies": {
     "@mdi/font": "^4.9.95",
     "@types/better-sqlite3": "^5.4.0",
-    "@types/node": "^13.7.1",
+    "@types/node": "12.12.38",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-typescript": "^4.1.0",
