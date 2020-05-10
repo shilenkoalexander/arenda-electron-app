@@ -204,7 +204,7 @@ export default class FinanceCard extends Vue {
     }
 
     update() {
-        this.$emit('update-period');
+        this.$emit('update-periods');
         if (this.$refs.paymentsList) {
             this.$refs.paymentsList.update();
         }

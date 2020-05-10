@@ -47,6 +47,8 @@
                                 <DatePickerMenu
                                         v-model="conclusionDate"
                                         :rules="[notEmptyRule]"
+                                        :max-date="startDate"
+                                        :disabled="!startDate"
                                         label="Дата подписания"
                                 />
                             </v-col>
@@ -80,18 +82,14 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
     import EditableTextField from '@/components/EditableTextField.vue';
     import { parseDate } from '@/utils/date-utils';
-    import {
-        getActiveAndFutureContractExtensions,
-        getFullContractExtensions,
-    } from '@/backend/repository/contract-repository';
     import { FullContractExtension } from '@/types/contracts';
-    import { addDays, isAfter, isBefore, startOfMonth, subDays } from 'date-fns';
+    import { addDays, isAfter, isBefore, isEqual, startOfMonth, subDays } from 'date-fns';
 
     @Component({
         components: { ConfirmDialog, DatePickerMenu, EditableTextField },
@@ -183,7 +181,8 @@
                 return false;
             }
 
-            return isBefore(date, this.nextExtensionStartDate) && isAfter(date, startDate);
+            return isBefore(date, this.nextExtensionStartDate)
+                && (isAfter(date, startDate) || isEqual(date, startDate));
         }
 
         open(

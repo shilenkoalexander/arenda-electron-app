@@ -14,7 +14,7 @@ export function saveNewAdjustment(contractId: number, sum: number, period: Perio
             `Ошибка при сохранении корректировки. Данный период (${period.toFriendlyFormat()}) еще не рассчитан.`,
         );
 
-    financePeriod.accruals -= financePeriod.adjustments + sum;
+    financePeriod.accruals = financePeriod.accruals - financePeriod.adjustments + sum;
     financePeriod.adjustments = sum;
     financePeriod.debt += sum;
 
