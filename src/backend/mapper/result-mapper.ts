@@ -178,6 +178,7 @@ export class IndexingSignMapper extends ResultMapper<IndexingSign> {
 export class FullContractExtensionMapper extends ResultMapper<FullContractExtension> {
     protected innerMap(value: DataObject): FullContractExtension {
         return {
+            id: Number.parseInt(value.id, 10),
             startDate: parseDate(value.start_date),
             endDate: parseDate(value.to_date),
             conclusionDate: parseDate(value.conclusion_date),

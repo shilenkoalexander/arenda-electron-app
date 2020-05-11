@@ -27,3 +27,7 @@ export function queryWithPagination<T>(
         content: items.map((value) => resultMapper.map(value)),
     };
 }
+
+export function executeInTransaction(action: () => void) {
+    db().transaction(action)();
+}
