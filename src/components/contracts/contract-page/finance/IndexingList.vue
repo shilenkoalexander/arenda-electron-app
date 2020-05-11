@@ -23,24 +23,18 @@
     @Component
     export default class IndexingList extends Vue {
         @Prop({
-            type: Number,
+            type: Array,
             required: true,
         })
-        contractId!: number;
-
-        items: IndexingSign[] = [];
+        items!: IndexingSign[];
 
         headers = [
             { text: 'Период', value: 'period', sortable: false },
             { text: 'Индексация', value: 'indexing', sortable: false },
         ];
 
-        created() {
-            this.update();
-        }
-
-        public update() {
-            this.items = getIndexingSigns(this.contractId, true);
+        update() {
+            this.$emit('update-indexing');
         }
     }
 </script>
