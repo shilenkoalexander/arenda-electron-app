@@ -4,7 +4,7 @@ import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
-import { FullContractExtension } from '@/types/contracts';
+import { EditableContractExtension, FullContractExtension } from '@/types/contracts';
 
 export function getLastFinancePeriod(contractId: number): FinancePeriod {
     const res = db().queryFirstRow(
@@ -150,6 +150,36 @@ export function replaceFinancePeriods(contractId: number, financePeriod: Finance
     db().transaction(() => {
         financePeriod.forEach((value) => replaceFinancePeriod(contractId, value));
     })();
+}
+
+export function replaceContractExtension(contractId: number, extension: EditableContractExtension) {
+    const dbFormatExtension = {
+        id_contract: contractId,
+        start_date: formatDateToDefaultFormat(extension.startDate),
+        to_date: formatDateToDefaultFormat(extension.endDate),
+        conclusion_date: formatDateToDefaultFormat(extension.conclusionDate),
+        payment: extension.payment.toFixed(2),
+        payment_actuality_date: formatDateToDefaultFormat(extension.paymentActualityDate),
+    };
+
+    if (extension.isNew) {
+        db().insert('contract_extensions', dbFormatExtension);
+        return;
+    }
+
+    db().update('contract_extensions', dbFormatExtension, {
+        id: extension.id,
+    });
+}
+
+export function replaceContractExtensions(contractId: number, extensions: EditableContractExtension[]) {
+    db().transaction(() => {
+        extensions.forEach((value) => replaceContractExtension(contractId, value));
+    })();
+}
+
+export function deleteContractExtension(id: number) {
+    db().exec(`delete from contract_extensions where id = ${id}`);
 }
 
 export function savePayment(contractId: number, payment: Payment) {

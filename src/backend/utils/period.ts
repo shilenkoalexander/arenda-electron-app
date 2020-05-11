@@ -1,5 +1,5 @@
 import {
-    formatDateToDefaultFormat,
+    formatDateToDefaultFormat, formatDateToFriendly,
     formatDateToMonthString,
     formatMonthToFriendly,
     parseMonth,
@@ -93,6 +93,10 @@ export default class Period {
         return Period.ofDate(subMonths(this.date, amount));
     }
 }
+
+Date.prototype.toString = function() {
+    return formatDateToFriendly(this);
+};
 
 export function toSqlArray(array: Period[]): string {
     return `(${array.map((value) => `'${value.toDateFormat()}'`).join(', ')})`;

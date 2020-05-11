@@ -1,12 +1,14 @@
 import {
-    getFinancePeriod,
+    deleteContractExtension,
+    getFinancePeriod, replaceContractExtensions, replaceFinancePeriods,
     saveContractExtension,
     savePayment,
     updateFinancePeriod,
 } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
-import { Payment } from '@/types/finance';
-import { FullContractExtension } from '@/types/contracts';
+import { FinancePeriod, Payment } from '@/types/finance';
+import { EditableContractExtension, FullContractExtension } from '@/types/contracts';
+import { executeInTransaction } from '@/backend/repository/repository';
 
 export function saveNewAdjustment(contractId: number, sum: number, period: Period) {
     const financePeriod = getFinancePeriod(period, contractId)
@@ -35,4 +37,17 @@ export function addPayment(contractId: number, payment: Payment) {
 
 export function addContractExtension(contractId: number, contractExtension: FullContractExtension) {
     saveContractExtension(contractId, contractExtension);
+}
+
+export function saveRecalculatedData(
+    contractId: number,
+    periods: FinancePeriod[],
+    contractExtensions: EditableContractExtension[],
+    deletedExtensionsId: number[],
+) {
+    executeInTransaction(() => {
+        replaceFinancePeriods(contractId, periods);
+        replaceContractExtensions(contractId, contractExtensions);
+        deletedExtensionsId.forEach((value) => deleteContractExtension(value));
+    });
 }

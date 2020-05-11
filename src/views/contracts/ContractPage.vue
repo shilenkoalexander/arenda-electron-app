@@ -54,7 +54,7 @@
                 </v-tab-item>
             </CenteredCard>
         </v-tabs-items>
-        <RecalculatePeriodsDialog ref="recalculatePeriodDialog" @update="updateFinancePeriods"/>
+        <RecalculatePeriodsDialog ref="recalculatePeriodDialog" @update="updateAll"/>
     </div>
 </template>
 
@@ -117,6 +117,11 @@ export default class ContractPage extends Vue {
 
     updateContractExtensions() {
         this.contractExtensions = getFullContractExtensions(this.contractId!);
+    }
+
+    updateAll() {
+        this.updateFinancePeriods();
+        this.updateContractExtensions();
     }
 
 }

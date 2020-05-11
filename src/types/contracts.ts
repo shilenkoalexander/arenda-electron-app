@@ -100,9 +100,15 @@ export interface ContractPageMainInfo {
 }
 
 export interface FullContractExtension {
+    id: number;
     startDate: Date;
     endDate: Date;
     conclusionDate: Date;
     payment: number;
     paymentActualityDate: Date;
+}
+
+export interface EditableContractExtension extends FullContractExtension {
+    isNew: boolean;
+    isDeleted: boolean;
 }
