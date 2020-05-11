@@ -15,6 +15,7 @@ import Period, { isSamePeriods } from '@/backend/utils/period';
 import { FinancePeriod, InflationIndex } from '@/types/finance';
 import Optional from '@/backend/utils/optional';
 import { FullContractExtension } from '@/types/contracts';
+import logger from 'vuex/dist/logger';
 
 let calculatedPeriods: FinancePeriod[] = [];
 let localContractExtensions: ContractExtension[] = [];
@@ -73,13 +74,16 @@ function getInflationIndex(period: Period): number {
 }
 
 function getFinalInflationIndexByPeriods(startPeriod: Period, endPeriod: Period): number {
-    const indexNeedDates = generatePeriodsArray(startPeriod, endPeriod);
+    const indexNeedPeriods = generatePeriodsArray(startPeriod, endPeriod);
 
     const indexes = inflationIndexes
-        .filter((value) => indexNeedDates.includes(Period.ofString(value.period)));
+        .filter(
+            (index) => indexNeedPeriods
+                .some((needPeriod) => needPeriod.isSamePeriod(Period.ofString(index.period))),
+        );
     let finalIndex = 1;
 
-    if (isNotEmpty(inflationIndexes)) {
+    if (isNotEmpty(indexes)) {
         finalIndex = indexes
             .map((value) => value.index)
             .reduce((previousValue, currentValue) => previousValue * currentValue);
@@ -159,15 +163,15 @@ function getAccrualsByDaysCount(payment: number, daysCount: number, monthDaysCou
 // todo: как то придумать ограничение на фронте по датам перерасчета если расчета в принципе не было, а время прошло
 function calculateAccruals(period: Period, contractId: number): number {
     const extensionsDuringPeriod = getContractExtensionsByPeriod(period);
-    const contractStartDate = getContractStartCalculationDate(contractId);
-    const isStartContractPeriod = isSameMonth(contractStartDate, period.getDate());
+    const contractStartCalculationDate = getContractStartCalculationDate(contractId);
+    const isStartContractPeriod = isSameMonth(contractStartCalculationDate, period.getDate());
 
     let prevAccrualsPeriod;
     let calculateMonthDaysCount;
     let periodInflationIndex = 1;
 
     if (isStartContractPeriod) {
-        calculateMonthDaysCount = differenceInDays(period.endOfMonth(), contractStartDate) + 1;
+        calculateMonthDaysCount = differenceInDays(period.endOfMonth(), contractStartCalculationDate) + 1;
         prevAccrualsPeriod = period;
     } else {
         calculateMonthDaysCount = period.getDaysInMonth();
@@ -215,6 +219,7 @@ function calculateAccruals(period: Period, contractId: number): number {
     return currentPeriodAccrualsWithoutExtensions + periodTotalAccruals;
 }
 
+// todo добавить в базу индексацию по умолчанию - true при добавлении контракта
 function getInflationIndexesConsideringIndexing(periods: Period[], contractId: number): InflationIndex[] {
     const indexes = getInflationIndexesByPeriods(periods);
     const indexingSigns = getIndexingSigns(contractId);
@@ -223,9 +228,22 @@ function getInflationIndexesConsideringIndexing(periods: Period[], contractId: n
         return indexes;
     }
 
-    return [];
+    let lastSignIndex = 0;
+    indexes.forEach((index) => {
+        const indexPeriod = Period.ofString(index.period);
+        for (let j = lastSignIndex; j < indexingSigns.length + 1; j++) {
+            if (j === indexingSigns.length || indexingSigns[j].period.isAfter(indexPeriod)) {
+                if (!indexingSigns[j - 1].indexing) {
+                    index.index = 1;
+                }
+                lastSignIndex = j;
+                break;
+            }
+        }
+    });
 
-
+    console.log(indexes);
+    return indexes;
 }
 
 /**
@@ -263,7 +281,7 @@ export function calculateFinancePeriods(
     }
 
     const periods = generatePeriodsArray(periodFrom, periodTo);
-    inflationIndexes = getInflationIndexesByPeriods(periods);
+    inflationIndexes = getInflationIndexesConsideringIndexing(periods, contractId);
     const periodsPayments = getPeriodsPayments(periods, contractId);
     const periodsAdjustments = getPeriodsAdjustments(periods, contractId);
     const prevPeriodDebt = getMonthDebt(periodFrom.subMonths(1), contractId);
