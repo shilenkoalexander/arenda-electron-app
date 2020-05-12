@@ -178,6 +178,42 @@ export function replaceContractExtensions(contractId: number, extensions: Editab
     })();
 }
 
+// todo сделать метод для query first row который будет возвращать optional
+export function getLastIndexingSign(contractId: number): Optional<IndexingSign> {
+    const result = db().queryFirstRow(`
+            select * from indexing
+            where id_contract = ${contractId}
+            order by period desc
+            limit 1
+    `);
+
+    return Optional.of(result).map((value) => ResultMapperFactory.indexingSignMapper.map(value));
+}
+
+export function removeIndexingSign(id: number) {
+    db().exec(`delete from indexing where id = ${id}`);
+}
+
+export function updateIndexingSign(id: number, newIndexingValue: boolean) {
+    db().update('indexing', {
+            indexing: newIndexingValue,
+        },
+        {
+            id,
+        });
+}
+
+export function addIndexingSign(contractId: number, period: Period, indexing: boolean) {
+    db().insert(
+        'indexing',
+        {
+            id_contract: contractId.toFixed(2),
+            period: period.toDateFormat(),
+            indexing: indexing ? 1 : 0,
+        },
+    );
+}
+
 export function deleteContractExtension(id: number) {
     db().exec(`delete from contract_extensions where id = ${id}`);
 }

@@ -27,6 +27,7 @@ export interface Payment {
 }
 
 export interface IndexingSign {
+    id: number;
     period: Period;
     indexing: boolean;
 }

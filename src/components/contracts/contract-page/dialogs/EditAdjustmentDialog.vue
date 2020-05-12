@@ -60,7 +60,7 @@
         adjustmentSum = '';
         correctFloatRule = correctFloatRule;
 
-        currentPeriod = Period.currentPeriod();
+        currentPeriod = Period.currentCalculativePeriod();
         contractId: number | null = null;
 
         $refs!: {

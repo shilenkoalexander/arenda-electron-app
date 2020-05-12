@@ -270,7 +270,7 @@ export default class RecalculatePeriodsDialog extends Vue {
         ));
 
         const calculatingStartDateString = formatDateToMonthString(this.calculatingStartDate);
-        const currentPeriodString = Period.currentPeriod().toDefaultFormat();
+        const currentPeriodString = Period.currentCalculativePeriod().toDefaultFormat();
 
         this.startMinDate = calculatingStartDateString;
         this.startMaxDate = currentPeriodString;

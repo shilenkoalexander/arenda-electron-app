@@ -1,14 +1,21 @@
 import {
+    addIndexingSign,
     deleteContractExtension,
-    getFinancePeriod, replaceContractExtensions, replaceFinancePeriods,
+    getFinancePeriod,
+    getIndexingSigns,
+    getLastIndexingSign,
+    removeIndexingSign,
+    replaceContractExtensions,
+    replaceFinancePeriods,
     saveContractExtension,
     savePayment,
-    updateFinancePeriod,
+    updateFinancePeriod, updateIndexingSign,
 } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
 import { FinancePeriod, Payment } from '@/types/finance';
 import { EditableContractExtension, FullContractExtension } from '@/types/contracts';
 import { executeInTransaction } from '@/backend/repository/repository';
+import { isEmpty } from '@/backend/utils/other-util';
 
 export function saveNewAdjustment(contractId: number, sum: number, period: Period) {
     const financePeriod = getFinancePeriod(period, contractId)
@@ -50,4 +57,28 @@ export function saveRecalculatedData(
         replaceContractExtensions(contractId, contractExtensions);
         deletedExtensionsId.forEach((value) => deleteContractExtension(value));
     });
+}
+
+export function inverseIndexingSign(contractId: number) {
+    const lastIndexingSign = getIndexingSigns(contractId, true);
+
+    if (isEmpty(lastIndexingSign)) {
+        throw new Error(`Признаки индексации для id_contract = ${contractId} отсутствуют в базе.`
+            + `Проверьте целостность данных`);
+    }
+
+    const currentPeriod = Period.currentPeriod();
+    const newIndexingValue = !lastIndexingSign[0].indexing;
+
+    if (lastIndexingSign[0].period.isSamePeriod(currentPeriod)) {
+        if (lastIndexingSign.length > 1) {
+            removeIndexingSign(lastIndexingSign[0].id);
+            return;
+        }
+
+        updateIndexingSign(lastIndexingSign[0].id, newIndexingValue);
+        return;
+    }
+
+    addIndexingSign(contractId, currentPeriod, newIndexingValue);
 }
