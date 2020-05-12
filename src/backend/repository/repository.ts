@@ -3,6 +3,14 @@ import db from 'better-sqlite3-helper';
 import { toLimit, toOrderBy } from '@/backend/utils/sql-util';
 import { OrderMapper } from '@/backend/mapper/order-mapper';
 import { ResultMapper } from '@/backend/mapper/result-mapper';
+import BetterSqlite3Helper from 'better-sqlite3-helper';
+import DataObject = BetterSqlite3Helper.DataObject;
+import Optional from '@/backend/utils/optional';
+
+
+export function findFirst(query: string): Optional<DataObject> {
+    return Optional.of(db().queryFirstRow(query));
+}
 
 export function queryWithPagination<T>(
     query: string,
@@ -10,10 +18,10 @@ export function queryWithPagination<T>(
     resultMapper: ResultMapper<T>,
     orderMapper: OrderMapper,
 ): Page<T> {
-    const count = db().queryFirstRow(`
+    const count = findFirst(`
         select count(*) as totalItems
         from (${query}) as q;
-    `) as any;
+    `).orElseThrowWithMessage(`База дала йобу и вернула undefined на count(*) запрос`);
 
     const items = db().query(`
         ${query}
