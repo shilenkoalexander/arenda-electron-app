@@ -1,5 +1,6 @@
 import {
     AddContractMainInfoDto,
+    ContractExtension,
     ContractPageMainInfo,
     ContractWithTenant,
     FullContractDetails,
@@ -7,7 +8,7 @@ import {
 } from '@/backend/types/contract-types';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
-import { findFirst, queryWithPagination } from '@/backend/repository/repository';
+import { executeInTransaction, findFirst, queryWithPagination } from '@/backend/repository/repository';
 import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
 import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
 import db from 'better-sqlite3-helper';
@@ -16,8 +17,7 @@ import { getShortObjectDetailsByContractId, saveObject } from '@/backend/reposit
 import { AddObjectDto } from '@/backend/types/objects-types';
 import { PaymentContractInfo } from '@/backend/types/finance-types';
 import Optional from '@/backend/utils/optional';
-import { formatDateToDefaultFormat } from '@/utils/date-utils';
-import { ContractExtension } from '@/backend/types/contract-types';
+import { insertIndexingSign } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
@@ -97,18 +97,22 @@ export function getContractTypes(): InputItem[] {
     }));
 }
 
+// todo добавить даты всякие
 export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: AddObjectDto[]) {
-    const contractId = db().insert('contracts', {
-        id_tenant: contractInfo.tenantId,
-        id_status: 1,
-        id_type: contractInfo.contractTypeId,
-        contract_number: contractInfo.contractNumber,
-        start_date: contractInfo.startDate,
-        validity: contractInfo.validity,
-    });
-    db().transaction(() => {
+    executeInTransaction(() => {
+        const contractId = db().insert('contracts', {
+            id_tenant: contractInfo.tenantId,
+            id_status: 1,
+            id_type: contractInfo.contractTypeId,
+            contract_number: contractInfo.contractNumber,
+            start_date: contractInfo.startDate,
+            validity: contractInfo.validity,
+        });
+
+        // todo: тут поменять на calculationStartDate
+        insertIndexingSign(contractId, Period.ofString(contractInfo.startDate), true);
         objects.forEach((object) => saveObject(contractId, object));
-    })();
+    });
 }
 
 export function getContractMainPageInfo(contractId: number): Optional<ContractPageMainInfo> {
@@ -138,19 +142,6 @@ export function getPaymentContractInfo(contractId: number): Optional<PaymentCont
     return result.map((value) => ResultMapperFactory.paymentContractInfoMapper.map(value));
 }
 
-export function getContractExtensionPaymentActivatesInPeriod(
-    period: Period,
-    contractId: number,
-): Optional<ContractExtension> {
-    const result = findFirst(`
-        select start_date, to_date, payment, payment_actuality_date from contract_extensions
-        where id_contract = ${contractId}
-          and start_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
-    `);
-
-    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
-}
-
 export function getContractExtensions(
     contractId: number,
 ): ContractExtension[] {
@@ -162,20 +153,6 @@ export function getContractExtensions(
     return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }
 
-export function getContractExtensionPaymentDeactivatesInPeriod(
-    period: Period,
-    contractId: number,
-): Optional<ContractExtension> {
-    const result = findFirst(`
-        select start_date, to_date, payment, payment_actuality_date from contract_extensions
-        where id_contract = ${contractId}
-          and to_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
-    `);
-
-    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
-}
-
-
 export function getFullContractExtensions(contractId: number): FullContractExtension[] {
     const result = db().query(`
         select *
@@ -186,16 +163,3 @@ export function getFullContractExtensions(contractId: number): FullContractExten
 
     return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
 }
-
-export function getActiveAndFutureContractExtensions(contractId: number): FullContractExtension[] {
-    const result = db().query(`
-        select *
-        from contract_extensions
-        where id_contract = ${contractId} and to_date >= current_date
-        order by start_date desc
-    `);
-
-    return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
-}
-
-
