@@ -1,6 +1,6 @@
 {
-  "name": "arenda-electron-app",
-  "version": "0.1.0",
+  "name": "arenda",
+  "version": "0.1.0-beta",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
