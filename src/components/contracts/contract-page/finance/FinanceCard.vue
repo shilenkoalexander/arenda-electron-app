@@ -94,6 +94,7 @@
         <EditAdjustmentDialog ref="editAdjustmentDialog" @update="update"/>
         <AddPaymentDialog ref="addPaymentDialog" @update="update"/>
         <AddContractExtensionDialog ref="addContractExtensionDialog" @save="onSaveContractExtension"/>
+        <ConfirmDialog ref="inverseIndexingSignDialog" @confirm="onInverseIndexingSignConfirm"/>
     </v-card>
 </template>
 
@@ -113,12 +114,13 @@
     import AddContractExtensionDialog
         from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
     import { FullContractExtension } from '@/types/contracts';
-    import { addContractExtension } from '@/backend/service/finance-service';
+    import { addContractExtension, inverseIndexingSign } from '@/backend/service/finance-service';
     import { getIndexingSigns } from '@/backend/repository/finance-repository';
-    import logger from 'vuex/dist/logger';
+    import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
 
     @Component({
         components: {
+            ConfirmDialog,
             AddContractExtensionDialog,
             ContractExtensionsList,
             IndexingList,
@@ -163,7 +165,7 @@
         contractExtensions!: FullContractExtension[];
 
         indexingSigns: IndexingSign[] = [];
-        currentPeriod = Period.currentPeriod();
+        currentPeriod = Period.currentCalculativePeriod();
 
         $refs!: {
             form: HTMLFormElement;
@@ -173,6 +175,7 @@
             contractExtensionsList: ContractExtensionsList;
             indexingList: IndexingList;
             addContractExtensionDialog: AddContractExtensionDialog;
+            inverseIndexingSignDialog: ConfirmDialog;
         };
 
         get isAdjustmentEditable(): boolean {
@@ -190,7 +193,6 @@
         }
 
         created() {
-            // this.updateContractExtensions();
             this.updateIndexingSigns();
         }
 
@@ -221,7 +223,14 @@
         }
 
         onIndexingChangeClick() {
-            console.log('empty');
+            this.$refs.inverseIndexingSignDialog.open(
+                `Вы уверены, что хотите ${this.indexingSigns[0].indexing ? 'отключить' : 'включить'} индексацию?`,
+            );
+        }
+
+        onInverseIndexingSignConfirm() {
+            inverseIndexingSign(this.contractId);
+            this.updateIndexingSigns();
         }
 
         update() {

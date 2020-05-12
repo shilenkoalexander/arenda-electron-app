@@ -169,6 +169,7 @@ export class PaymentMapper extends ResultMapper<Payment> {
 export class IndexingSignMapper extends ResultMapper<IndexingSign> {
     protected innerMap(value: DataObject): IndexingSign {
         return {
+            id: Number.parseInt(value.id, 10),
             period: Period.ofString(value.period),
             indexing: value.indexing,
         };

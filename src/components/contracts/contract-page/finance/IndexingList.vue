@@ -18,7 +18,6 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { IndexingSign } from '@/types/finance';
-    import { getIndexingSigns } from '@/backend/repository/finance-repository';
 
     @Component
     export default class IndexingList extends Vue {
@@ -29,7 +28,7 @@
         items!: IndexingSign[];
 
         headers = [
-            { text: 'Период', value: 'period', sortable: false },
+            { text: 'Период с', value: 'period', sortable: false },
             { text: 'Индексация', value: 'indexing', sortable: false },
         ];
 
