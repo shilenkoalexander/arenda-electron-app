@@ -90,7 +90,7 @@
         FullContractDetails,
         getContactTypeValue,
         getContractStatusValue,
-    } from '@/types/contracts';
+    } from '@/backend/types/contract-types';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import { formatToFriendly } from '@/utils/date-utils';
     import ContractDetailsHeader from '@/components/contracts/ContractDetailsHeader.vue';

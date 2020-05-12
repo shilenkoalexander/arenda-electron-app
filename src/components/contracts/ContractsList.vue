@@ -59,7 +59,7 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { getAllContracts } from '@/backend/repository/contract-repository';
-    import { ContractWithTenant } from '@/types/contracts';
+    import { ContractWithTenant } from '@/backend/types/contract-types';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import ContractsFilter from '@/components/contracts/ContractsFilter.vue';

@@ -1,4 +1,3 @@
-import { ContractFilterMode } from '@/types/contracts';
 <template>
     <v-container fluid class="py-3 pt-2 pb-3">
         <v-row>
@@ -47,10 +46,10 @@ import { ContractFilterMode } from '@/types/contracts';
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { enumToComboBoxItems } from '@/utils/enum-utils';
-    import { ContractFilterMode, ContractStatus, getContractStatusValue } from '@/types/contracts';
     import { $enum } from 'ts-enum-util';
     import { ContractsFilterInfo } from '@/backend/filter/filter';
     import { InputItem } from '@/types/common';
+    import { ContractFilterMode, ContractStatus, getContractStatusValue } from '@/backend/types/contract-types';
 
     @Component
     export default class ContractsFilter extends Vue {

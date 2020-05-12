@@ -4,7 +4,7 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/types/contracts';
+} from '@/backend/types/contract-types';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
 import { queryWithPagination } from '@/backend/repository/repository';
@@ -13,8 +13,8 @@ import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filt
 import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
-import { AddObjectDto } from '@/types/objects';
-import { PaymentContractInfo } from '@/types/finance';
+import { AddObjectDto } from '@/backend/types/objects-types';
+import { PaymentContractInfo } from '@/backend/types/finance-types';
 import Optional from '@/backend/utils/optional';
 import { formatDateToDefaultFormat } from '@/utils/date-utils';
 import { ContractExtension } from '@/backend/types/contract-types';

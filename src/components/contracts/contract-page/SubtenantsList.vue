@@ -30,7 +30,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { Subtenant } from '@/types/tenants';
+    import { Subtenant } from '@/backend/types/tenants-types';
 
     @Component({
         components: {},

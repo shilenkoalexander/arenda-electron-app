@@ -123,10 +123,10 @@ import { formatDateToMonthString } from '@/utils/date-utils';
 import { calculateFinancePeriods } from '@/backend/service/accruals-service';
 import Period from '@/backend/utils/period';
 import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
-import { FinancePeriod } from '@/types/finance';
+import { FinancePeriod } from '@/backend/types/finance-types';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
 import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
-import { EditableContractExtension, FullContractExtension } from '@/types/contracts';
+import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
 import AddContractExtensionDialog
     from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
 import { saveRecalculatedData } from '@/backend/service/finance-service';
@@ -209,9 +209,9 @@ export default class RecalculatePeriodsDialog extends Vue {
 
     onAddExtensionClicked() {
         this.$refs.addContractExtensionDialog.open(
-            this.contractId,
-            this.calculatingStartDate,
-            this.contractValidity,
+            this.contractId!,
+            this.calculatingStartDate!,
+            this.contractValidity!,
             this.contractExtensions,
         );
     }
@@ -238,9 +238,9 @@ export default class RecalculatePeriodsDialog extends Vue {
 
     editExtension(id: number) {
         this.$refs.addContractExtensionDialog.open(
-            this.contractId,
-            this.calculatingStartDate,
-            this.contractValidity,
+            this.contractId!,
+            this.calculatingStartDate!,
+            this.contractValidity!,
             this.contractExtensions,
             id,
         );

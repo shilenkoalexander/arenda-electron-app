@@ -1,4 +1,4 @@
-import { Contact } from '@/types/contracts';
+import { Contact } from '@/backend/types/contract-types';
 import db from 'better-sqlite3-helper';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 

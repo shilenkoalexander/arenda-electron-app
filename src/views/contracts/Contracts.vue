@@ -36,7 +36,7 @@
     import ContractsList from '@/components/contracts/ContractsList.vue';
     import ContractDetails from '@/components/contracts/ContractDetails.vue';
     import { getContractDetails } from '@/backend/repository/contract-repository';
-    import { FullContractDetails } from '@/types/contracts';
+    import { FullContractDetails } from '@/backend/types/contract-types';
 
     @Component({
         components: {

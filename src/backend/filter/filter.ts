@@ -1,4 +1,4 @@
-import { ContractFilterMode, ContractStatus } from '@/types/contracts';
+import { ContractFilterMode, ContractStatus } from '@/backend/types/contract-types';
 
 export interface ContractsFilterInfo {
     status: ContractStatus | null;

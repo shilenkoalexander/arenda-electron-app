@@ -4,9 +4,9 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/types/contracts';
-import { ShortObjectDetails } from '@/types/objects';
-import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/types/finance';
+} from '@/backend/types/contract-types';
+import { ShortObjectDetails } from '@/backend/types/objects-types';
+import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/backend/types/finance-types';
 import {
     ContactMapper,
     ContractExtensionMapper,

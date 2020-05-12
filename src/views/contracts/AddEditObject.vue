@@ -155,9 +155,9 @@
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import { AssociativeArrayItem, InputItem } from '@/types/common';
     import Label from '@/components/Label.vue';
-    import { Subtenant } from '@/types/tenants';
+    import { Subtenant } from '@/backend/types/tenants-types';
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
-    import { AddObjectDto } from '@/types/objects';
+    import { AddObjectDto } from '@/backend/types/objects-types';
     import { getAreas, getBusinessTypes } from '@/backend/repository/directory-repository';
     import AddContractModule from './../../store/add-contract-module';
     import { getModule } from 'vuex-module-decorators';

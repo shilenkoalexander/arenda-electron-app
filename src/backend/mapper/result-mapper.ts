@@ -6,11 +6,11 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/types/contracts';
+} from '@/backend/types/contract-types';
 import { $enum } from 'ts-enum-util';
-import { TenantType } from '@/types/tenants';
-import { ShortObjectDetails } from '@/types/objects';
-import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/types/finance';
+import { TenantType } from '@/backend/types/tenants-types';
+import { ShortObjectDetails } from '@/backend/types/objects-types';
+import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/backend/types/finance-types';
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { ContractExtension } from '@/backend/types/contract-types';
 import { parseDate } from '@/utils/date-utils';

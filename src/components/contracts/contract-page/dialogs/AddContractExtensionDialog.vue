@@ -88,7 +88,7 @@ import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
 import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
 import EditableTextField from '@/components/EditableTextField.vue';
 import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
-import { FullContractExtension } from '@/types/contracts';
+import { FullContractExtension } from '@/backend/types/contract-types';
 import { addDays, isAfter, isBefore, isEqual, startOfMonth, subDays } from 'date-fns';
 
 @Component({

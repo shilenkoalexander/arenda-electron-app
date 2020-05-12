@@ -1,5 +1,5 @@
 import db from 'better-sqlite3-helper';
-import { AddObjectDto, ShortObjectDetails } from '@/types/objects';
+import { AddObjectDto, ShortObjectDetails } from '@/backend/types/objects-types';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 
 export function getObjectInformationByObjectId(id: number): Record<string, string> {

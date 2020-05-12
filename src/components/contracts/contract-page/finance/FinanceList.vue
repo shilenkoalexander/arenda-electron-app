@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { FinancePeriod } from '@/types/finance';
+import { FinancePeriod } from '@/backend/types/finance-types';
 
 @Component
 export default class FinanceList extends Vue {

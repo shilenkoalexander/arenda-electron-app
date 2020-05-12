@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { BasicObjectInfo } from '@/types/objects';
+import { BasicObjectInfo } from '@/backend/types/objects-types';
 import { CURRENCY } from '@/utils/finance-util';
 import { getModule } from 'vuex-module-decorators';
 import AddContractModule from '@/store/add-contract-module';
