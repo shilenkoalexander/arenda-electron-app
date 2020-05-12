@@ -20,7 +20,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { Payment } from '@/types/finance';
+    import { Payment } from '@/backend/types/finance-types';
     import { getPayments } from '@/backend/repository/finance-repository';
     import { formatDateToFriendly } from '@/utils/date-utils';
 

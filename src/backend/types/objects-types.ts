@@ -1,4 +1,4 @@
-import { Subtenant } from '@/types/tenants';
+import { Subtenant } from '@/backend/types/tenants-types';
 import { AssociativeArrayItem } from '@/types/common';
 
 export interface ShortObjectDetails {

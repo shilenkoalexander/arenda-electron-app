@@ -37,7 +37,7 @@
     import { Component, Vue } from 'vue-property-decorator';
     import EditableTextField from '@/components/EditableTextField.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { Subtenant } from '@/types/tenants';
+    import { Subtenant } from '@/backend/types/tenants-types';
     import { InputItem } from '@/types/common';
     import { getBusinessTypes } from '@/backend/repository/directory-repository';
 

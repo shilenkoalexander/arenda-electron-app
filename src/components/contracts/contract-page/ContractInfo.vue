@@ -41,7 +41,7 @@
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import Label from '@/components/Label.vue';
-    import { ContractPageMainInfo } from '@/types/contracts';
+    import { ContractPageMainInfo } from '@/backend/types/contract-types';
     import { formatToFriendlyByDate } from '@/utils/date-utils';
 
     // todo : общая сумма платежа

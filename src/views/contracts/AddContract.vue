@@ -102,10 +102,10 @@
     import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
     import { getContractTypes, saveNewContract } from '@/backend/repository/contract-repository';
     import CenteredCard from '@/components/CenteredCard.vue';
-    import { AddObjectDto, BasicObjectInfo } from '@/types/objects';
+    import { AddObjectDto, BasicObjectInfo } from '@/backend/types/objects-types';
     import { getModule } from 'vuex-module-decorators';
     import AddContractModule from '@/store/add-contract-module';
-    import { AddContractMainInfoDto } from '@/types/contracts';
+    import { AddContractMainInfoDto } from '@/backend/types/contract-types';
 
 
     @Component({

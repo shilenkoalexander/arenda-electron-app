@@ -12,8 +12,8 @@ import {
     updateFinancePeriod, updateIndexingSign,
 } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
-import { FinancePeriod, Payment } from '@/types/finance';
-import { EditableContractExtension, FullContractExtension } from '@/types/contracts';
+import { FinancePeriod, Payment } from '@/backend/types/finance-types';
+import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
 import { executeInTransaction } from '@/backend/repository/repository';
 import { isEmpty } from '@/backend/utils/other-util';
 

@@ -12,9 +12,9 @@ import { getContractExtensions, getPaymentContractInfo } from '@/backend/reposit
 import { isEmpty, isNotEmpty } from '@/backend/utils/other-util';
 import { ContractExtension } from '@/backend/types/contract-types';
 import Period, { isSamePeriods } from '@/backend/utils/period';
-import { FinancePeriod, InflationIndex } from '@/types/finance';
+import { FinancePeriod, InflationIndex } from '@/backend/types/finance-types';
 import Optional from '@/backend/utils/optional';
-import { FullContractExtension } from '@/types/contracts';
+import { FullContractExtension } from '@/backend/types/contract-types';
 import logger from 'vuex/dist/logger';
 
 let calculatedPeriods: FinancePeriod[] = [];
