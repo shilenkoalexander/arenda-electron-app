@@ -5,32 +5,16 @@ import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
 import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
-
-export function getLastFinancePeriod(contractId: number): FinancePeriod {
-    const res = db().queryFirstRow(
-        `select max(period) as period
-                 from finance_card
-                 where id_contract = ${contractId}`,
-    ) as any;
-
-    const stringPeriod = res.period;
-
-    const result = db().queryFirstRow(`
-        select *
-        from finance_card
-        where period = '${stringPeriod}' and id_contract = ${contractId}`);
-
-    return ResultMapperFactory.financePeriodMapper.map(result);
-}
+import { findFirst } from './repository';
 
 export function getFinancePeriod(period: Period, contractId: number): Optional<FinancePeriod> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select *
         from finance_card
         where period = '${period.toDateFormat()}' and id_contract = ${contractId}
     `);
 
-    return Optional.of(result).map((value) => ResultMapperFactory.financePeriodMapper.map(value));
+    return result.map((value) => ResultMapperFactory.financePeriodMapper.map(value));
 }
 
 export function getAllPeriods(contractId: number): FinancePeriod[] {
@@ -44,25 +28,22 @@ export function getAllPeriods(contractId: number): FinancePeriod[] {
 }
 
 export function getMonthDebt(period: Period, contractId: number): Optional<number> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select debt from finance_card
         where period = '${period.toDateFormat()}' and id_contract = ${contractId}
     `);
 
-    return Optional.of(result).map((value) => value.debt);
+    return result.map((value) => value.debt);
 }
 
 export function getContractStartCalculationDate(contractId: number): Date {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select calculation_start_date from contracts
         where id = ${contractId}
     `);
 
-    if (!result) {
-        throw new Error(`Договор с ${contractId} отсутствует`);
-    }
-
-    return parseDate(result.calculation_start_date);
+    return result.map((value) => parseDate(value.calculation_start_date))
+        .orElseThrowWithMessage(`Договор с ${contractId} отсутствует`);
 }
 
 export function getInflationIndexesByPeriods(periods: Period[], desc = false): InflationIndex[] {
@@ -178,16 +159,15 @@ export function replaceContractExtensions(contractId: number, extensions: Editab
     })();
 }
 
-// todo сделать метод для query first row который будет возвращать optional
 export function getLastIndexingSign(contractId: number): Optional<IndexingSign> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
             select * from indexing
             where id_contract = ${contractId}
             order by period desc
             limit 1
     `);
 
-    return Optional.of(result).map((value) => ResultMapperFactory.indexingSignMapper.map(value));
+    return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));
 }
 
 export function removeIndexingSign(id: number) {

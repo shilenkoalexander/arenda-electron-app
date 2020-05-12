@@ -7,7 +7,7 @@ import {
 } from '@/backend/types/contract-types';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
-import { queryWithPagination } from '@/backend/repository/repository';
+import { findFirst, queryWithPagination } from '@/backend/repository/repository';
 import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
 import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
 import db from 'better-sqlite3-helper';
@@ -75,7 +75,7 @@ export function getContractDetails(id: number): FullContractDetails {
         where c.id = ${id}
     `;
 
-    const contractInfo = db().queryFirstRow(query) as any;
+    const contractInfo = findFirst(query).orElseThrowWithMessage(`Отсутствует информация о контракте с id = ${id}`);
     const contacts = getContactsByTenantId(contractInfo.tenant_id);
     const objectsInfo = getShortObjectDetailsByContractId(id);
 
@@ -89,8 +89,7 @@ export function getContractDetails(id: number): FullContractDetails {
 }
 
 export function getContractTypes(): InputItem[] {
-    const result = db().query(`select *
-                               from contract_type`);
+    const result = db().query(`select * from contract_type`);
 
     return result.map((value) => ({
         text: value.name,
@@ -112,8 +111,8 @@ export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: A
     })();
 }
 
-export function getContractMainPageInfo(contractId: number): ContractPageMainInfo {
-    const result = db().queryFirstRow(
+export function getContractMainPageInfo(contractId: number): Optional<ContractPageMainInfo> {
+    const result = findFirst(
         `select t.id as tenant_id,
                        t.responsible_person,
                        t.organization_name,
@@ -126,30 +125,30 @@ export function getContractMainPageInfo(contractId: number): ContractPageMainInf
                          inner join contract_type ct on c.id_type = ct.id
                 where c.id = ${contractId}`);
 
-    return ResultMapperFactory.contractPageMainInfoMapper.map(result);
+    return result.map((value) => ResultMapperFactory.contractPageMainInfoMapper.map(value));
 }
 
 export function getPaymentContractInfo(contractId: number): Optional<PaymentContractInfo> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select total_payment, payment_actuality_date, start_date
         from contracts
         where id = ${contractId}
     `);
 
-    return Optional.of(result).map((value) => ResultMapperFactory.paymentContractInfoMapper.map(value));
+    return result.map((value) => ResultMapperFactory.paymentContractInfoMapper.map(value));
 }
 
 export function getContractExtensionPaymentActivatesInPeriod(
     period: Period,
     contractId: number,
 ): Optional<ContractExtension> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
           and start_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
-    return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }
 
 export function getContractExtensions(
@@ -167,13 +166,13 @@ export function getContractExtensionPaymentDeactivatesInPeriod(
     period: Period,
     contractId: number,
 ): Optional<ContractExtension> {
-    const result = db().queryFirstRow(`
+    const result = findFirst(`
         select start_date, to_date, payment, payment_actuality_date from contract_extensions
         where id_contract = ${contractId}
           and to_date between '${period.toDateFormat()}' AND '${formatDateToDefaultFormat(period.endOfMonth())}'
     `);
 
-    return Optional.of(result).map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
 }
 
 
