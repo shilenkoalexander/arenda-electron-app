@@ -1,15 +1,15 @@
 import {
-    addIndexingSign,
     deleteContractExtension,
     getFinancePeriod,
     getIndexingSigns,
-    getLastIndexingSign,
+    insertIndexingSign,
     removeIndexingSign,
     replaceContractExtensions,
     replaceFinancePeriods,
     saveContractExtension,
     savePayment,
-    updateFinancePeriod, updateIndexingSign,
+    updateFinancePeriod,
+    updateIndexingSign,
 } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
 import { FinancePeriod, Payment } from '@/backend/types/finance-types';
@@ -80,5 +80,5 @@ export function inverseIndexingSign(contractId: number) {
         return;
     }
 
-    addIndexingSign(contractId, currentPeriod, newIndexingValue);
+    insertIndexingSign(contractId, currentPeriod, newIndexingValue);
 }

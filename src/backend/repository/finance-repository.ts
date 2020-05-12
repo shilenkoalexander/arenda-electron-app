@@ -183,7 +183,7 @@ export function updateIndexingSign(id: number, newIndexingValue: boolean) {
         });
 }
 
-export function addIndexingSign(contractId: number, period: Period, indexing: boolean) {
+export function insertIndexingSign(contractId: number, period: Period, indexing: boolean) {
     db().insert(
         'indexing',
         {
