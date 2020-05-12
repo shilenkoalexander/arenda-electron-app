@@ -38,6 +38,7 @@
                                     v-model="paymentPeriod"
                                     :allowed-dates="allowedPeriods"
                                     without-days
+                                    clearable
                                     label="Период оплаты"
                                 />
                             </v-col>

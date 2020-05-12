@@ -1,6 +1,7 @@
 import {
     Contact,
     ContactType,
+    ContractExtension,
     ContractPageMainInfo,
     ContractStatus,
     ContractWithTenant,
@@ -8,11 +9,16 @@ import {
     FullContractExtension,
 } from '@/backend/types/contract-types';
 import { $enum } from 'ts-enum-util';
-import { TenantType } from '@/backend/types/tenants-types';
-import { ShortObjectDetails } from '@/backend/types/objects-types';
-import { FinancePeriod, IndexingSign, InflationIndex, Payment, PaymentContractInfo } from '@/backend/types/finance-types';
+import { Subtenant, TenantType } from '@/backend/types/tenants-types';
+import { FullObjectDetails, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
+import {
+    FinancePeriod,
+    IndexingSign,
+    InflationIndex,
+    Payment,
+    PaymentContractInfo,
+} from '@/backend/types/finance-types';
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
-import { ContractExtension } from '@/backend/types/contract-types';
 import { parseDate } from '@/utils/date-utils';
 import Period from '@/backend/utils/period';
 import DataObject = BetterSqlite3Helper.DataObject;
@@ -96,6 +102,30 @@ export class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
             address: value.address,
             endDate: value.end_date,
             objectIndividualInformation: value.objectIndividualInformation,
+        };
+    }
+}
+
+export class FullObjectDetailsMapper extends ResultMapper<FullObjectDetails> {
+    protected innerMap(value: DataObject): FullObjectDetails {
+        return {
+            id: value.id,
+            businessType: value.business_type,
+            area: value.area,
+            address: value.address,
+            onBalance: value.on_balance,
+            payment: Number.parseFloat(value.payment),
+            rentalRate: value.rental_rate,
+            startDate: parseDate(value.start_date),
+            endDate: parseDate(value.end_date),
+            expertReviewSum: value.expert_review_sum,
+            expertReviewDate: parseDate(value.expert_review_date),
+            objectType: value.object_type,
+            decisionDate: parseDate(value.decision_date),
+            decisionNumber: value.decision_number,
+            decisionMaker: value.decision_maker,
+            objectIndividualInformation: null,
+            subtenants: null,
         };
     }
 }
@@ -185,6 +215,29 @@ export class FullContractExtensionMapper extends ResultMapper<FullContractExtens
             conclusionDate: parseDate(value.conclusion_date),
             payment: Number.parseFloat(value.payment),
             paymentActualityDate: parseDate(value.payment_actuality_date),
+        };
+    }
+}
+
+export class ObjectInformationMapper extends ResultMapper<ObjectInformation> {
+    protected innerMap(value: DataObject): ObjectInformation {
+        return {
+            objectId: value.id_object,
+            name: value.name,
+            value: value.value,
+        };
+    }
+}
+
+export class SubtenantMapper extends ResultMapper<Subtenant> {
+    protected innerMap(value: DataObject): Subtenant {
+        return {
+            objectId: value.id_object,
+            name: value.full_name,
+            businessType: value.business_type,
+            square: Number.parseFloat(value.square),
+            startDate: parseDate(value.start_date),
+            endDate: parseDate(value.end_date),
         };
     }
 }

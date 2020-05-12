@@ -1,4 +1,4 @@
-import { Subtenant } from '@/backend/types/tenants-types';
+import { AddSubtenantDto, Subtenant } from '@/backend/types/tenants-types';
 import { AssociativeArrayItem } from '@/types/common';
 
 export interface ShortObjectDetails {
@@ -31,15 +31,21 @@ export interface FullObjectDetails {
     onBalance: string;
     payment: number;
     rentalRate: number;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
     expertReviewSum: number;
-    expertReviewDate: string;
-    subtenants: Subtenant[];
+    expertReviewDate: Date;
+    subtenants: Subtenant[] | null;
     objectType: string;
-    decisionDate: string;
+    decisionDate: Date;
     decisionNumber: string;
     decisionMaker: string;
+}
+
+export interface ObjectInformation {
+    objectId: number;
+    name: string;
+    value: string;
 }
 
 export interface AddObjectDto {
@@ -55,7 +61,7 @@ export interface AddObjectDto {
     endDate: string;
     expertReviewSum: number;
     expertReviewDate: string;
-    subtenants: Subtenant[];
+    subtenants: AddSubtenantDto[];
     objectType: string;
     decisionDate: string;
     decisionNumber: string;
