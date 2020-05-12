@@ -71,6 +71,7 @@ import { ContractPageMainInfo, FullContractExtension } from '@/types/contracts';
 import { FinancePeriod } from '@/types/finance';
 import { getAllPeriods } from '@/backend/repository/finance-repository';
 import CenteredCard from '@/components/CenteredCard.vue';
+import logger from 'vuex/dist/logger';
 
 @Component({
     components: {
@@ -97,7 +98,7 @@ export default class ContractPage extends Vue {
     created() {
         this.contractId = Number.parseInt(this.$route.params.id, 10);
         this.contractMainInfo = getContractMainPageInfo(this.contractId);
-        this.updateFinancePeriods();
+        this.updateAll();
     }
 
     onRecalculate() {
