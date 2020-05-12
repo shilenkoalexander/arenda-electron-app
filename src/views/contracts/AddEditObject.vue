@@ -155,7 +155,7 @@
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import { AssociativeArrayItem, InputItem } from '@/types/common';
     import Label from '@/components/Label.vue';
-    import { Subtenant } from '@/backend/types/tenants-types';
+    import { AddSubtenantDto } from '@/backend/types/tenants-types';
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
     import { AddObjectDto } from '@/backend/types/objects-types';
     import { getAreas, getBusinessTypes } from '@/backend/repository/directory-repository';
@@ -186,7 +186,7 @@
         expertReviewSum = '';
         expertReviewDate = '';
         objectIndividualInformation: AssociativeArrayItem[] = [];
-        subtenants: Subtenant[] = [];
+        subtenants: AddSubtenantDto[] = [];
 
         decisionDate = '';
         decisionMaker = '';
@@ -252,7 +252,7 @@
             this.objectIndividualInformation = this.objectIndividualInformation.filter((value) => value.key !== key);
         }
 
-        onSubtenantAdd(subtenant: Subtenant) {
+        onSubtenantAdd(subtenant: AddSubtenantDto) {
             this.subtenants.push(subtenant);
         }
 

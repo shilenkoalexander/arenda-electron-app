@@ -12,12 +12,12 @@
                         <v-row>
                             <v-col cols="3">
                                 <Label label="Дата начала"
-                                       :value="item.startDate"
+                                       :value="formatToFriendly(item.startDate)"
                                 />
                             </v-col>
                             <v-col cols="3">
                                 <Label label="Срок действия"
-                                       :value="item.endDate"/>
+                                       :value="formatToFriendly(item.endDate)"/>
                             </v-col>
                             <v-col cols="6">
                                 <Label label="Район" :value="item.area"/>
@@ -100,9 +100,9 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
     import { FullObjectDetails } from '@/backend/types/objects-types';
-    import { formatToFriendly } from '@/utils/date-utils';
+    import { formatDateToFriendly } from '@/utils/date-utils';
     import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
     import InfoBlock from '@/components/InfoBlock.vue';
     import Label from '@/components/Label.vue';
@@ -117,55 +117,15 @@
         },
     })
     export default class ObjectDetailsCard extends Vue {
-        item: FullObjectDetails = {
-            id: 1,
-            address: 'ул. Пушкина дом Колотушкина',
-            area: 'Центрально-Городской',
-            businessType: 'Размещение аптек, которые реализуют готовые лекарства',
-            decisionDate: '2020-01-01',
-            decisionMaker: 'Юрьев Сергей Валентинович',
-            decisionNumber: '123654',
-            startDate: '2020-01-01',
-            endDate: '2020-01-01',
-            objectType: 'Одноэтажное здание',
-            payment: 300.3,
-            onBalance: 'ЖК Пушкинский ДонецкМакеевка',
-            rentalRate: 10,
-            expertReviewDate: '2020-01-01',
-            expertReviewSum: 1526.33,
-            subtenants: [
-                {
-                    name: 'Садогурский Барух Джавович',
-                    businessTypeId: 1,
-                    startDate: formatToFriendly('2020-01-01'),
-                    endDate: formatToFriendly('2020-01-01'),
-                    square: 300.3,
-                },
-                {
-                    name: 'Садогурский Барух Джавович',
-                    businessTypeId: 1,
-                    startDate: formatToFriendly('2020-01-01'),
-                    endDate: formatToFriendly('2020-01-01'),
-                    square: 300.3,
-                },
-            ],
-            objectIndividualInformation: [
-                {
-                    key: 'Площадь',
-                    value: '326.3',
-                },
-                {
-                    key: 'Количество комнат',
-                    value: '3',
-                },
-                {
-                    key: 'Количество окон',
-                    value: '10',
-                },
-            ],
-        };
+        @Prop({
+            type: Object,
+            required: true,
+        })
+        item!: FullObjectDetails;
 
-        formatToFriendly = formatToFriendly;
+        formatToFriendly(date: Date): string {
+            return formatDateToFriendly(date);
+        }
     }
 </script>
 

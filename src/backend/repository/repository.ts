@@ -3,10 +3,10 @@ import db from 'better-sqlite3-helper';
 import { toLimit, toOrderBy } from '@/backend/utils/sql-util';
 import { OrderMapper } from '@/backend/mapper/order-mapper';
 import { ResultMapper } from '@/backend/mapper/result-mapper';
-import BetterSqlite3Helper from 'better-sqlite3-helper';
-import DataObject = BetterSqlite3Helper.DataObject;
 import Optional from '@/backend/utils/optional';
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import DataObject = db.DataObject;
 
 export function findFirst(query: string): Optional<DataObject> {
     return Optional.of(db().queryFirstRow(query));

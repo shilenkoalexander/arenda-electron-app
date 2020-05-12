@@ -37,7 +37,7 @@
     import { Component, Vue } from 'vue-property-decorator';
     import EditableTextField from '@/components/EditableTextField.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { Subtenant } from '@/backend/types/tenants-types';
+    import { AddSubtenantDto } from '@/backend/types/tenants-types';
     import { InputItem } from '@/types/common';
     import { getBusinessTypes } from '@/backend/repository/directory-repository';
 
@@ -67,7 +67,7 @@
                 square: Number.parseFloat(this.square),
                 startDate: this.startDate,
                 endDate: this.endDate,
-            } as Subtenant);
+            } as AddSubtenantDto);
 
             this.name = '';
             this.businessTypeId = null;

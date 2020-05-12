@@ -11,3 +11,10 @@ export function toOrderBy(pagination: Pagination, mapper: OrderMapper): string {
 export function toLimit(page: number, size: number): string {
     return `LIMIT ${(page - 1) * size}, ${size}`;
 }
+
+export function toArrayString(array: any[], inQuotes = false): string {
+    if (inQuotes) {
+        array = array.map((value) => `'${value}'`);
+    }
+    return `(${array.join(', ')})`;
+}

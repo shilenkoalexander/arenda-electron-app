@@ -20,10 +20,19 @@ export function getTenantValue(type: TenantType): string {
     });
 }
 
-export interface Subtenant {
+export interface AddSubtenantDto {
     name: string;
     square: number;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
     businessTypeId: number;
+}
+
+export interface Subtenant {
+    objectId: number;
+    name: string;
+    square: number;
+    startDate: Date;
+    endDate: Date;
+    businessType: string;
 }
