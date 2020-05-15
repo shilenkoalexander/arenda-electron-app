@@ -5,7 +5,7 @@ import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
 import Optional from '@/backend/utils/optional';
 import Period, { toSqlArray } from '@/backend/utils/period';
 import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
-import { findFirst } from './repository';
+import { executeInTransaction, findFirst, selectArray } from './repository';
 
 export function getFinancePeriod(period: Period, contractId: number): Optional<FinancePeriod> {
     const result = findFirst(`
@@ -18,13 +18,13 @@ export function getFinancePeriod(period: Period, contractId: number): Optional<F
 }
 
 export function getAllPeriods(contractId: number): FinancePeriod[] {
-    const result = db().query(`
-        select * from finance_card
-        where id_contract = ${contractId}
-        order by period desc
-    `);
-
-    return result.map((value) => ResultMapperFactory.financePeriodMapper.map(value));
+    return selectArray(`
+            select * from finance_card
+            where id_contract = ${contractId}
+            order by period desc
+        `,
+        ResultMapperFactory.financePeriodMapper,
+    );
 }
 
 export function getMonthDebt(period: Period, contractId: number): Optional<number> {
@@ -47,14 +47,14 @@ export function getContractStartCalculationDate(contractId: number): Date {
 }
 
 export function getInflationIndexesByPeriods(periods: Period[], desc = false): InflationIndex[] {
-    const result = db().query(`
-        select *
-        from inflation_index
-        where period in ${toSqlArray(periods)}
-        order by period ${desc ? 'desc' : ''}
-    `);
-
-    return result.map((value) => ResultMapperFactory.inflationIndexMapper.map(value));
+    return selectArray(`
+            select *
+            from inflation_index
+            where period in ${toSqlArray(periods)}
+            order by period ${desc ? 'desc' : ''}
+        `,
+        ResultMapperFactory.inflationIndexMapper,
+    );
 }
 
 export function insertFinancePeriod(contractId: number, card: FinancePeriod) {
@@ -67,6 +67,7 @@ export function insertFinancePeriod(contractId: number, card: FinancePeriod) {
     });
 }
 
+// todo тип и маппер добавить
 export function getPeriodsPayments(periods: Period[], contractId: number): Array<{ period: Period; sum: number }> {
     const result = db().query(`
         select period, sum(sum) as sum
@@ -128,9 +129,9 @@ export function replaceFinancePeriod(contractId: number, financePeriod: FinanceP
 }
 
 export function replaceFinancePeriods(contractId: number, financePeriod: FinancePeriod[]) {
-    db().transaction(() => {
+    executeInTransaction(() => {
         financePeriod.forEach((value) => replaceFinancePeriod(contractId, value));
-    })();
+    });
 }
 
 export function replaceContractExtension(contractId: number, extension: EditableContractExtension) {
@@ -154,20 +155,9 @@ export function replaceContractExtension(contractId: number, extension: Editable
 }
 
 export function replaceContractExtensions(contractId: number, extensions: EditableContractExtension[]) {
-    db().transaction(() => {
+    executeInTransaction(() => {
         extensions.forEach((value) => replaceContractExtension(contractId, value));
-    })();
-}
-
-export function getLastIndexingSign(contractId: number): Optional<IndexingSign> {
-    const result = findFirst(`
-            select * from indexing
-            where id_contract = ${contractId}
-            order by period desc
-            limit 1
-    `);
-
-    return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));
+    });
 }
 
 export function removeIndexingSign(id: number) {
@@ -208,23 +198,23 @@ export function savePayment(contractId: number, payment: Payment) {
 }
 
 export function getPayments(contractId: number): Payment[] {
-    const result = db().query(`
-        select sum, period, date from payments
-        where id_contract = ${contractId}
-        order by period desc, date desc, id desc
-    `);
-
-    return result.map((value) => ResultMapperFactory.paymentMapper.map(value));
+    return selectArray(`
+            select sum, period, date from payments
+            where id_contract = ${contractId}
+            order by period desc, date desc, id desc
+        `,
+        ResultMapperFactory.paymentMapper,
+    );
 }
 
 export function getIndexingSigns(contractId: number, desc = false): IndexingSign[] {
-    const result = db().query(`
-        select * from indexing
-        where id_contract = ${contractId}
-        order by period ${desc ? 'desc' : ''}
-    `);
-
-    return result.map((value) => ResultMapperFactory.indexingSignMapper.map(value));
+    return selectArray(`
+            select * from indexing
+            where id_contract = ${contractId}
+            order by period ${desc ? 'desc' : ''}
+        `,
+        ResultMapperFactory.indexingSignMapper,
+    );
 }
 
 export function saveContractExtension(contractId: number, contractExtension: FullContractExtension) {

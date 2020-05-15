@@ -39,3 +39,8 @@ export function queryWithPagination<T>(
 export function executeInTransaction(action: () => void) {
     db().transaction(action)();
 }
+
+export function selectArray<T>(query: string, mapper: ResultMapper<T>): T[] {
+    const result = db().query(query);
+    return result.map((value) => mapper.map(value));
+}
