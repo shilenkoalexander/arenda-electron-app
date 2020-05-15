@@ -8,7 +8,7 @@ import {
 } from '@/backend/types/contract-types';
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
-import { executeInTransaction, findFirst, queryWithPagination } from '@/backend/repository/repository';
+import { executeInTransaction, findFirst, queryWithPagination, selectArray } from '@/backend/repository/repository';
 import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
 import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
 import db from 'better-sqlite3-helper';
@@ -88,8 +88,10 @@ export function getContractDetails(id: number): FullContractDetails {
     );
 }
 
+// todo маппер сделать для этого
 export function getContractTypes(): InputItem[] {
-    const result = db().query(`select * from contract_type`);
+    const result = db().query(`select *
+                               from contract_type`);
 
     return result.map((value) => ({
         text: value.name,
@@ -145,21 +147,22 @@ export function getPaymentContractInfo(contractId: number): Optional<PaymentCont
 export function getContractExtensions(
     contractId: number,
 ): ContractExtension[] {
-    const result = db().query(`
-        select start_date, to_date, payment, payment_actuality_date from contract_extensions
-        where id_contract = ${contractId}
-    `);
-
-    return result.map((value) => ResultMapperFactory.contractExtensionMapper.map(value));
+    return selectArray(`
+            select start_date, to_date, payment, payment_actuality_date
+            from contract_extensions
+            where id_contract = ${contractId}
+        `,
+        ResultMapperFactory.contractExtensionMapper,
+    );
 }
 
 export function getFullContractExtensions(contractId: number): FullContractExtension[] {
-    const result = db().query(`
-        select *
-        from contract_extensions
-        where id_contract = ${contractId}
-        order by start_date desc
-    `);
-
-    return result.map((value) => ResultMapperFactory.fullContractExtensionMapper.map(value));
+    return selectArray(`
+            select *
+            from contract_extensions
+            where id_contract = ${contractId}
+            order by start_date desc
+        `,
+        ResultMapperFactory.fullContractExtensionMapper,
+    );
 }

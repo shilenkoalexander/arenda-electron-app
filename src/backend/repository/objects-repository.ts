@@ -3,6 +3,7 @@ import { AddObjectDto, FullObjectDetails, ObjectInformation, ShortObjectDetails 
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { toArrayString } from '@/backend/utils/sql-util';
 import { Subtenant } from '@/backend/types/tenants-types';
+import { executeInTransaction, selectArray } from '@/backend/repository/repository';
 
 export function getObjectInformationByObjectId(id: number): Record<string, string> {
     const result = db().query(`select * from objects_information where id_object = ${id}`);
@@ -38,34 +39,34 @@ export function getShortObjectDetailsByContractId(contractId: number): ShortObje
 }
 
 export function getSubtenantsByObjectsIds(ids: number[]): Subtenant[] {
-    const result = db().query(`
-        select
-            id_object,
-            full_name,
-            square,
-            start_date,
-            end_date,
-            bt.name as business_type
-        from subtenants
-        inner join business_types bt on subtenants.id_business_type = bt.id
-        where id_object in ${toArrayString(ids)}
-    `);
-
-    return result.map((value) => ResultMapperFactory.subtenantMapper.map(value));
+    return selectArray(`
+            select
+                id_object,
+                full_name,
+                square,
+                start_date,
+                end_date,
+                bt.name as business_type
+            from subtenants
+            inner join business_types bt on subtenants.id_business_type = bt.id
+            where id_object in ${toArrayString(ids)}
+        `,
+        ResultMapperFactory.subtenantMapper,
+    );
 }
 
 export function getObjectInformationByObjectsId(ids: number[]): ObjectInformation[] {
-    const result = db().query(`
-        select * from objects_information
-        where id_object in ${toArrayString(ids)}
-    `);
-
-    return result.map((value) => ResultMapperFactory.objectInformationMapper.map(value));
+    return selectArray(`
+            select * from objects_information
+            where id_object in ${toArrayString(ids)}
+        `,
+        ResultMapperFactory.objectInformationMapper,
+    );
 }
 
 export function getFullObjectsDetailsByContractId(contractId: number): FullObjectDetails[] {
-    const result = db().query(`
-        select o.id,
+    return selectArray(`
+            select o.id,
                bt.name as business_type,
                ar.name as area,
                address,
@@ -80,18 +81,18 @@ export function getFullObjectsDetailsByContractId(contractId: number): FullObjec
                decision_date,
                decision_number,
                decision_maker
-        from objects o
-                 inner join areas ar on o.id_area = ar.id
-                 inner join business_types bt on o.id_business_type = bt.id
-        where id_contract = ${contractId};
-    `);
-
-    return result.map((value) => ResultMapperFactory.fullObjectDetailsMapper.map(value));
+            from objects o
+                     inner join areas ar on o.id_area = ar.id
+                     inner join business_types bt on o.id_business_type = bt.id
+            where id_contract = ${contractId}
+        `,
+        ResultMapperFactory.fullObjectDetailsMapper,
+    );
 }
 
 // todo удалить name из базы. end date надо ли validity (upd. не надо. и так норм)
 export function saveObject(contractId: number, object: AddObjectDto) {
-    db().transaction(() => {
+    executeInTransaction(() => {
         const objectId = db().insert('objects', {
             id_contract: contractId,
             id_business_type: object.businessTypeId,
@@ -127,5 +128,5 @@ export function saveObject(contractId: number, object: AddObjectDto) {
                 id_business_type: value.businessTypeId,
             });
         });
-    })();
+    });
 }
