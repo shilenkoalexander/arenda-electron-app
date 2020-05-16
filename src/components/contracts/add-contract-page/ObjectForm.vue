@@ -27,7 +27,10 @@
                     <v-col cols="3">
                         <DatePickerMenu v-model="endDate" label="Срок действия"/>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="2">
+                        <EditableTextField v-model="square" label="Площадь" type="number"/>
+                    </v-col>
+                    <v-col cols="4">
                         <v-autocomplete
                                 v-model="areaId"
                                 :items="areas"
@@ -70,10 +73,10 @@
                         <Header value="Арендная информация"/>
                     </v-col>
                     <v-col cols="6">
-                        <EditableTextField v-model="payment" label="Арендная плата"/>
+                        <EditableTextField v-model="payment" label="Арендная плата" type="number"/>
                     </v-col>
                     <v-col cols="6">
-                        <EditableTextField v-model="rentalRate" label="Арендная ставка"/>
+                        <EditableTextField v-model="rentalRate" label="Арендная ставка" type="number"/>
                     </v-col>
                 </v-row>
                 <v-row class="mt-25px">
@@ -81,7 +84,7 @@
                         <Header value="Экспертная оценка"/>
                     </v-col>
                     <v-col cols="6">
-                        <EditableTextField v-model="expertReviewSum" label="Стоимость"/>
+                        <EditableTextField v-model="expertReviewSum" label="Стоимость" type="number"/>
                     </v-col>
                     <v-col cols="6">
                         <DatePickerMenu v-model="expertReviewDate" label="Дата"/>
@@ -194,6 +197,18 @@
         })
         editingObject!: EditObjectDto;
 
+        @Prop({
+            type: Date,
+            required: true,
+        })
+        contractStartDate!: Date;
+
+        @Prop({
+            type: Date,
+            required: true,
+        })
+        contractValidity!: Date;
+
         address = '';
         startDate = '';
         endDate = '';
@@ -207,6 +222,7 @@
         expertReviewDate = '';
         objectIndividualInformation: ObjectInformation[] = [];
         subtenants: EditSubtenantDto[] = [];
+        square = '';
 
         decisionDate = '';
         decisionMaker = '';
@@ -231,6 +247,9 @@
             this.areas = getAreas();
             this.businessTypes = getBusinessTypes();
 
+            this.startDate = formatDateToDefaultFormat(this.contractStartDate);
+            this.endDate = formatDateToDefaultFormat(this.contractValidity);
+
             if (this.editingObject) {
                 this.address = this.editingObject.address;
                 this.startDate = formatDateToDefaultFormat(this.editingObject.startDate);
@@ -243,8 +262,8 @@
                 this.rentalRate = this.editingObject.rentalRate.toString(10);
                 this.expertReviewSum = this.editingObject.expertReviewSum.toString(10);
                 this.expertReviewDate = formatDateToDefaultFormat(this.editingObject.expertReviewDate);
-                this.objectIndividualInformation = this.editingObject.objectIndividualInformation;
-                this.subtenants = this.editingObject.subtenants;
+                this.objectIndividualInformation = [...this.editingObject.objectIndividualInformation];
+                this.subtenants = [...this.editingObject.subtenants];
                 this.decisionDate = formatDateToDefaultFormat(this.editingObject.decisionDate);
                 this.decisionMaker = this.editingObject.decisionMaker;
                 this.decisionNumber = this.editingObject.decisionNumber;
@@ -262,6 +281,7 @@
             }
 
             this.objectIndividualInformation.push({
+                id: null,
                 objectId: this.editingObject ? this.editingObject.id : null,
                 name: this.name.trim(),
                 value: this.value.trim(),
@@ -285,6 +305,7 @@
             }
 
             const newObject = {
+                id: this.editingObject ? this.editingObject.id : null,
                 address: this.address,
                 startDate: parseDate(this.startDate),
                 endDate: parseDate(this.endDate),
@@ -294,6 +315,7 @@
                 rentalRate: Number.parseFloat(this.rentalRate),
                 onBalance: this.onBalance,
                 objectType: this.objectType,
+                square: this.square ? Number.parseFloat(this.square) : null,
                 decisionDate: parseDate(this.decisionDate),
                 decisionMaker: this.decisionMaker,
                 decisionNumber: this.decisionNumber,
@@ -314,8 +336,8 @@
 
         clear() {
             this.address = '';
-            this.startDate = '';
-            this.endDate = '';
+            this.startDate = formatDateToDefaultFormat(this.contractStartDate);
+            this.endDate = formatDateToDefaultFormat(this.contractValidity);
             this.areaId = null;
             this.businessTypeId = null;
             this.objectType = '';

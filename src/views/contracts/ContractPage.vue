@@ -44,7 +44,14 @@
                     </v-container>
                 </v-tab-item>
                 <v-tab-item>
-                    <ContractPageObjects class="back" :contract-id="contractId"/>
+                    <!-- Заменить calculationStartDate на startDate -->
+                    <ContractPageObjects
+                            v-if="contractMainInfo"
+                            class="back"
+                            :contract-id="contractId"
+                            :contract-start-date="contractMainInfo.calculationStartDate"
+                            :contract-validity="contractMainInfo.validity"
+                    />
                 </v-tab-item>
             </CenteredCard>
         </v-tabs-items>

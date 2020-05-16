@@ -15,44 +15,55 @@
             </v-col>
         </v-row>
         <v-btn
-            fixed
-            fab
-            right
-            bottom
-            color="primary"
-            @click="$router.push('/contracts/add')"
+                fixed
+                fab
+                right
+                bottom
+                color="primary"
+                @click="onContractAddClicked"
         >
             <v-icon>
                 mdi-plus
             </v-icon>
         </v-btn>
+        <NewContractDialog ref="newContractDialog"/>
     </v-container>
 </template>
 
 <script lang="ts">
-    import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
-    import ContractsActionPanel from '@/components/contracts/ContractsActionPanel.vue';
-    import { Component, Vue } from 'vue-property-decorator';
-    import ContractsList from '@/components/contracts/ContractsList.vue';
-    import ContractDetails from '@/components/contracts/ContractDetails.vue';
-    import { getContractDetails } from '@/backend/repository/contract-repository';
-    import { FullContractDetails } from '@/backend/types/contract-types';
+import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
+import ContractsActionPanel from '@/components/contracts/ContractsActionPanel.vue';
+import { Component, Vue } from 'vue-property-decorator';
+import ContractsList from '@/components/contracts/ContractsList.vue';
+import ContractDetails from '@/components/contracts/ContractDetails.vue';
+import { getContractDetails } from '@/backend/repository/contract-repository';
+import { FullContractDetails } from '@/backend/types/contract-types';
+import NewContractDialog from '@/components/contracts/edit-contract/NewContractDialog.vue';
 
-    @Component({
-        components: {
-            ContractsFilter,
-            ContractsActionPanel,
-            ContractsList,
-            ContractDetails,
-        },
-    })
-    export default class Contracts extends Vue {
-        item: FullContractDetails | null = null;
+@Component({
+    components: {
+        NewContractDialog,
+        ContractsFilter,
+        ContractsActionPanel,
+        ContractsList,
+        ContractDetails,
+    },
+})
+export default class Contracts extends Vue {
+    item: FullContractDetails | null = null;
 
-        showContractDetails(id: number) {
-            this.item = getContractDetails(id);
-        }
+    $refs!: {
+        newContractDialog: NewContractDialog;
+    };
+
+    showContractDetails(id: number) {
+        this.item = getContractDetails(id);
     }
+
+    onContractAddClicked() {
+        this.$refs.newContractDialog.open();
+    }
+}
 </script>
 
 <style scoped lang="scss">

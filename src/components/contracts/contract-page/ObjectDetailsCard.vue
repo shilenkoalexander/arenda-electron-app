@@ -103,9 +103,9 @@
                             </v-col>
                             <v-col cols="12"
                                    v-for="info in item.objectIndividualInformation"
-                                   :key="info.key"
+                                   :key="info.name"
                             >
-                                <Label :label="info.key" :value="info.value"/>
+                                <Label :label="info.name" :value="info.value"/>
                             </v-col>
                         </v-row>
                     </InfoBlock>

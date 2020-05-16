@@ -29,6 +29,7 @@ export interface FullObjectDetails {
     address: string;
     onBalance: string;
     payment: number;
+    square: number | null;
     rentalRate: number;
     startDate: Date;
     endDate: Date;
@@ -51,6 +52,7 @@ export interface EditObjectDto extends FullObjectDetails {
 }
 
 export interface ObjectInformation {
+    id: number | null;
     objectId: number | null;
     name: string;
     value: string;
