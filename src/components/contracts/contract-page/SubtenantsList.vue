@@ -17,7 +17,7 @@
                     <td>{{ item.square.toFixed(2) }}</td>
                     <td>{{ formatToFriendly(item.startDate) }}</td>
                     <td>{{ formatToFriendly(item.endDate) }}</td>
-                    <td>{{ item.businessType }}</td>
+                    <td>{{ item.businessType.name }}</td>
                 </tr>
                 </tbody>
             </template>

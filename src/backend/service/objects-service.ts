@@ -1,20 +1,16 @@
-import { FullObjectDetails, ObjectInformation } from '@/backend/types/objects-types';
+import { EditObjectDto, FullObjectDetailsWithSubtenants } from '@/backend/types/objects-types';
 import {
+    getFullObjectDetailsByObjectId,
     getFullObjectsDetailsByContractId,
+    getObjectInformationByObjectId,
     getObjectInformationByObjectsId,
+    getSubtenantsByObjectId,
     getSubtenantsByObjectsIds,
 } from '@/backend/repository/objects-repository';
-import { AssociativeArrayItem } from '@/types/common';
 import { isEmpty } from '@/backend/utils/other-util';
+import Optional from '@/backend/utils/optional';
 
-export function objectInformationToAssociativeArrayItem(objectInformation: ObjectInformation): AssociativeArrayItem {
-    return {
-        key: objectInformation.name,
-        value: objectInformation.value,
-    };
-}
-
-export function getFullObjectsDetails(contractId: number): FullObjectDetails[] {
+export function getFullObjectsDetails(contractId: number): FullObjectDetailsWithSubtenants[] {
     const fullObjectsDetails = getFullObjectsDetailsByContractId(contractId);
 
     if (isEmpty(fullObjectsDetails)) {
@@ -28,10 +24,18 @@ export function getFullObjectsDetails(contractId: number): FullObjectDetails[] {
 
     fullObjectsDetails.forEach((object) => {
         object.objectIndividualInformation = objectInfos
-            .filter((objectInformation) => objectInformation.objectId === object.id)
-            .map(objectInformationToAssociativeArrayItem);
+            .filter((objectInformation) => objectInformation.objectId === object.id);
         object.subtenants = subtenants.filter((subtenant) => subtenant.objectId === object.id);
     });
 
     return fullObjectsDetails;
+}
+
+export function getFullObjectForEditing(objectId: number): Optional<EditObjectDto> {
+    return getFullObjectDetailsByObjectId(objectId)
+        .map((value) => ({
+            ...value,
+            subtenants: getSubtenantsByObjectId(objectId),
+            objectIndividualInformation: getObjectInformationByObjectId(objectId),
+        }));
 }

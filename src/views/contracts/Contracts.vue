@@ -20,7 +20,7 @@
             right
             bottom
             color="primary"
-            to="/contract/add"
+            @click="$router.push('/contracts/add')"
         >
             <v-icon>
                 mdi-plus
@@ -51,7 +51,6 @@
 
         showContractDetails(id: number) {
             this.item = getContractDetails(id);
-            console.log(this.item);
         }
     }
 </script>

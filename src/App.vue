@@ -3,7 +3,7 @@
         <Toolbar/>
         <v-content class="back">
             <v-fade-transition mode="out-in">
-                <router-view/>
+                <router-view :key="$route.path"/>
             </v-fade-transition>
         </v-content>
     </v-app>
@@ -29,6 +29,10 @@
 <style lang="scss">
     .app {
         font-family: "Roboto", monospace;
+    }
+
+    html {
+        overflow-y: auto!important;
     }
 
     .v-menu__content {

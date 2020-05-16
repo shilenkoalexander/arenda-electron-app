@@ -1,9 +1,9 @@
-import { AddSubtenantDto, Subtenant } from '@/backend/types/tenants-types';
-import { AssociativeArrayItem } from '@/types/common';
+import { EditSubtenantDto, SubtenantWithObjectId } from '@/backend/types/tenants-types';
+import { Directory } from '@/backend/types/common-types';
 
 export interface ShortObjectDetails {
     id: number;
-    objectIndividualInformation: Record<string, string> | null;
+    objectIndividualInformation: ObjectInformation[];
     address: string;
     onBalance: string;
     payment: number;
@@ -23,10 +23,9 @@ export interface BasicObjectInfo {
 }
 
 export interface FullObjectDetails {
-    id: number;
-    businessType: string;
-    area: string;
-    objectIndividualInformation: AssociativeArrayItem[] | null;
+    businessType: Directory;
+    area: Directory;
+    objectIndividualInformation: ObjectInformation[];
     address: string;
     onBalance: string;
     payment: number;
@@ -35,35 +34,24 @@ export interface FullObjectDetails {
     endDate: Date;
     expertReviewSum: number;
     expertReviewDate: Date;
-    subtenants: Subtenant[] | null;
     objectType: string;
     decisionDate: Date;
     decisionNumber: string;
     decisionMaker: string;
 }
 
-export interface ObjectInformation {
-    objectId: number;
-    name: string;
-    value: string;
+export interface FullObjectDetailsWithSubtenants extends FullObjectDetails {
+    id: number;
+    subtenants: SubtenantWithObjectId[];
 }
 
-export interface AddObjectDto {
-    index: number;
-    businessTypeId: number;
-    areaId: number;
-    objectIndividualInformation: AssociativeArrayItem[];
-    address: string;
-    onBalance: string;
-    payment: number;
-    rentalRate: number;
-    startDate: string;
-    endDate: string;
-    expertReviewSum: number;
-    expertReviewDate: string;
-    subtenants: AddSubtenantDto[];
-    objectType: string;
-    decisionDate: string;
-    decisionNumber: string;
-    decisionMaker: string;
+export interface EditObjectDto extends FullObjectDetails {
+    id: number | null;
+    subtenants: EditSubtenantDto[];
+}
+
+export interface ObjectInformation {
+    objectId: number | null;
+    name: string;
+    value: string;
 }
