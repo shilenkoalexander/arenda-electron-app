@@ -14,7 +14,7 @@ import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filt
 import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
-import { AddObjectDto } from '@/backend/types/objects-types';
+import { EditObjectDto } from '@/backend/types/objects-types';
 import { PaymentContractInfo } from '@/backend/types/finance-types';
 import Optional from '@/backend/utils/optional';
 import { insertIndexingSign } from '@/backend/repository/finance-repository';
@@ -90,8 +90,7 @@ export function getContractDetails(id: number): FullContractDetails {
 
 // todo маппер сделать для этого
 export function getContractTypes(): InputItem[] {
-    const result = db().query(`select *
-                               from contract_type`);
+    const result = db().query(`select * from contract_type`);
 
     return result.map((value) => ({
         text: value.name,
@@ -100,7 +99,7 @@ export function getContractTypes(): InputItem[] {
 }
 
 // todo добавить даты всякие
-export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: AddObjectDto[]) {
+export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: EditObjectDto[]) {
     executeInTransaction(() => {
         const contractId = db().insert('contracts', {
             id_tenant: contractInfo.tenantId,

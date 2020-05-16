@@ -1,4 +1,5 @@
 import { $enum } from 'ts-enum-util';
+import { Directory } from '@/backend/types/common-types';
 
 export interface TenantInfo {
     fullName: string;
@@ -20,19 +21,19 @@ export function getTenantValue(type: TenantType): string {
     });
 }
 
-export interface AddSubtenantDto {
+export interface Subtenant {
     name: string;
     square: number;
     startDate: Date;
     endDate: Date;
-    businessTypeId: number;
+    businessType: Directory;
 }
 
-export interface Subtenant {
+export interface SubtenantWithObjectId extends Subtenant {
     objectId: number;
-    name: string;
-    square: number;
-    startDate: Date;
-    endDate: Date;
-    businessType: string;
+    id: number;
+}
+
+export interface EditSubtenantDto extends Subtenant {
+    id: number | null;
 }

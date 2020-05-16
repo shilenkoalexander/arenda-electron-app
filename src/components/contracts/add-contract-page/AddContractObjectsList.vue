@@ -5,7 +5,7 @@
                 <p class="title text-center">Информация об объектах</p>
             </v-col>
             <v-col offset="1" cols="2">
-                <v-btn to="/object/add" color="primary" block>
+                <v-btn to="/objects/new" color="primary" block>
                     Добавить
                 </v-btn>
             </v-col>
@@ -52,31 +52,31 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { BasicObjectInfo } from '@/backend/types/objects-types';
-import { CURRENCY } from '@/utils/finance-util';
-import { getModule } from 'vuex-module-decorators';
-import AddContractModule from '@/store/add-contract-module';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import { BasicObjectInfo } from '@/backend/types/objects-types';
+    import { CURRENCY } from '@/utils/finance-util';
+    import { getModule } from 'vuex-module-decorators';
+    import AddContractModule from '@/store/add-contract-module';
 
-@Component
-export default class AddContractObjectsList extends Vue {
-    @Prop({
-        type: Array,
-        default: () => [],
-    })
-    items!: BasicObjectInfo[];
+    @Component
+    export default class AddContractObjectsList extends Vue {
+        @Prop({
+            type: Array,
+            default: () => [],
+        })
+        items!: BasicObjectInfo[];
 
-    CURRENCY = CURRENCY;
+        CURRENCY = CURRENCY;
 
-    editObject(index: number) {
-        getModule(AddContractModule, this.$store).editObject(index);
-        this.$router.push('/object/edit');
+        editObject(index: number) {
+            getModule(AddContractModule, this.$store).editObjectFromAddingPage(index);
+            this.$router.push('/objects/new/edit');
+        }
+
+        removeObject(index: number) {
+            getModule(AddContractModule, this.$store).removeObject(index);
+        }
     }
-
-    removeObject(index: number) {
-        getModule(AddContractModule, this.$store).removeObject(index);
-    }
-}
 </script>
 
 <style scoped>

@@ -1,9 +1,9 @@
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import { AddObjectDto } from '@/backend/types/objects-types';
+import { EditObjectDto } from '@/backend/types/objects-types';
 
 @Module({ name: 'add-contract' })
 export default class AddContractModule extends VuexModule {
-    objects: AddObjectDto[] = [];
+    objects: EditObjectDto[] = [];
     tenantId: number | null = null;
     contractNumber = '';
     startDate = '';
@@ -11,30 +11,30 @@ export default class AddContractModule extends VuexModule {
     contractTypeId: number | null = null;
     indexing = false;
 
-    editingObjectIndex: number | null = null;
+    editingObjectId: number | null = null;
 
     @Mutation
-    addObject(object: AddObjectDto) {
+    addObject(object: EditObjectDto) {
         this.objects.push(object);
     }
 
     @Mutation
     removeObject(index: number) {
-        this.objects = this.objects.filter((value) => value.index !== index);
+        this.objects = this.objects.filter((value) => value.id !== index);
     }
 
     @Mutation
-    editObject(index: number) {
-        this.editingObjectIndex = index;
+    editObjectFromAddingPage(id: number) {
+        this.editingObjectId = id;
     }
 
     get editingObject() {
-        return this.objects.find((value) => value.index === this.editingObjectIndex);
+        return this.objects.find((value) => value.id === this.editingObjectId);
     }
 
     @Mutation
-    saveEditingObject(object: AddObjectDto) {
-        const editingObj = this.objects.find((value) => value.index === this.editingObjectIndex);
+    saveEditingObject(object: EditObjectDto) {
+        const editingObj = this.objects.find((value) => value.id === this.editingObjectId);
         if (editingObj) {
             console.log(editingObj);
             for (const field in object) {
@@ -49,7 +49,7 @@ export default class AddContractModule extends VuexModule {
             }
         }
 
-        this.editingObjectIndex = null;
+        this.editingObjectId = null;
     }
 
     @Mutation

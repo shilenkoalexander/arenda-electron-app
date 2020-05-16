@@ -6,7 +6,7 @@ import {
     FullContractDetails,
     FullContractExtension,
 } from '@/backend/types/contract-types';
-import { FullObjectDetails, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
+import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
 import {
     FinancePeriod,
     IndexingSign,
@@ -19,10 +19,11 @@ import {
     ContractExtensionMapper,
     ContractMapper,
     ContractPageMainInfoMapper,
+    DirectoryMapper,
     FinancePeriodMapper,
     FullContractDetailsMapper,
     FullContractExtensionMapper,
-    FullObjectDetailsMapper,
+    FullObjectDetailsWithSubtenantsMapper,
     IndexingSignMapper,
     InflationIndexMapper,
     ObjectInformationMapper,
@@ -30,16 +31,18 @@ import {
     PaymentMapper,
     ResultMapper,
     ShortObjectDetailsMapper,
-    SubtenantMapper,
+    SubtenantWithObjectIdMapper,
 } from '@/backend/mapper/result-mapper';
-import { Subtenant } from '@/backend/types/tenants-types';
+import { SubtenantWithObjectId } from '@/backend/types/tenants-types';
+import { Directory } from '@/backend/types/common-types';
 
 export class ResultMapperFactory {
     static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();
     static readonly fullContractDetailsMapper: ResultMapper<FullContractDetails> = new FullContractDetailsMapper();
     static readonly contractMapper: ResultMapper<ContractWithTenant> = new ContractMapper();
     static readonly shortObjectDetailsMapper: ResultMapper<ShortObjectDetails> = new ShortObjectDetailsMapper();
-    static readonly fullObjectDetailsMapper: ResultMapper<FullObjectDetails> = new FullObjectDetailsMapper();
+    static readonly fullObjectDetailsWithSubtenantsMapper: ResultMapper<FullObjectDetailsWithSubtenants>
+        = new FullObjectDetailsWithSubtenantsMapper();
     static readonly contractPageMainInfoMapper: ResultMapper<ContractPageMainInfo> = new ContractPageMainInfoMapper();
     static readonly financePeriodMapper: ResultMapper<FinancePeriod> = new FinancePeriodMapper();
     static readonly inflationIndexMapper: ResultMapper<InflationIndex> = new InflationIndexMapper();
@@ -48,7 +51,9 @@ export class ResultMapperFactory {
     static readonly paymentMapper: ResultMapper<Payment> = new PaymentMapper();
     static readonly indexingSignMapper: ResultMapper<IndexingSign> = new IndexingSignMapper();
     static readonly objectInformationMapper: ResultMapper<ObjectInformation> = new ObjectInformationMapper();
-    static readonly subtenantMapper: ResultMapper<Subtenant> = new SubtenantMapper();
+    static readonly subtenantWithObjectIdResultMapper: ResultMapper<SubtenantWithObjectId>
+        = new SubtenantWithObjectIdMapper();
+    static readonly directoryMapper: ResultMapper<Directory> = new DirectoryMapper();
     static readonly fullContractExtensionMapper: ResultMapper<FullContractExtension>
         = new FullContractExtensionMapper();
 }

@@ -44,18 +44,7 @@
                     </v-container>
                 </v-tab-item>
                 <v-tab-item>
-                    <v-container fluid class="back">
-                        <v-row v-if="objects.length> 0">
-                            <v-col cols="6" v-for="object in objects" :key="object.id">
-                                <ObjectDetailsCard :item="object"/>
-                            </v-col>
-                        </v-row>
-                        <v-row v-else>
-                            <v-col class="text-center title font-weight-regular">
-                                Объекты отсутствуют. Добавить? (кнопка)
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <ContractPageObjects class="back" :contract-id="contractId"/>
                 </v-tab-item>
             </CenteredCard>
         </v-tabs-items>
@@ -64,84 +53,83 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
-import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
-import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
-import FinanceCard from '@/components/contracts/contract-page/finance/FinanceCard.vue';
-import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-import RecalculatePeriodsDialog from '@/components/contracts/contract-page/dialogs/RecalculatePeriodsDialog.vue';
-import { getContractMainPageInfo, getFullContractExtensions } from '@/backend/repository/contract-repository';
-import { ContractPageMainInfo, FullContractExtension } from '@/backend/types/contract-types';
-import { FinancePeriod } from '@/backend/types/finance-types';
-import { getAllPeriods } from '@/backend/repository/finance-repository';
-import CenteredCard from '@/components/CenteredCard.vue';
-import { FullObjectDetails } from '@/backend/types/objects-types';
-import { isEmpty } from '@/backend/utils/other-util';
-import { getFullObjectsDetails } from '@/backend/service/objects-service';
+    import { Component, Vue } from 'vue-property-decorator';
+    import ContractInfo from '@/components/contracts/contract-page/ContractInfo.vue';
+    import ContractStatusCard from '@/components/contracts/contract-page/ContractStatusCard.vue';
+    import ContractInfoActionsCard from '@/components/contracts/contract-page/ContractInfoActionsCard.vue';
+    import FinanceCard from '@/components/contracts/contract-page/finance/FinanceCard.vue';
+    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+    import RecalculatePeriodsDialog from '@/components/contracts/contract-page/dialogs/RecalculatePeriodsDialog.vue';
+    import { getContractMainPageInfo, getFullContractExtensions } from '@/backend/repository/contract-repository';
+    import { ContractPageMainInfo, FullContractExtension } from '@/backend/types/contract-types';
+    import { FinancePeriod } from '@/backend/types/finance-types';
+    import { getAllPeriods } from '@/backend/repository/finance-repository';
+    import CenteredCard from '@/components/CenteredCard.vue';
+    import ContractPageObjects from '@/components/contracts/contract-page/ContractPageObjects.vue';
+    import { Route } from 'vue-router';
 
-@Component({
-    components: {
-        CenteredCard,
-        RecalculatePeriodsDialog,
-        ContractInfo,
-        ContractStatusCard,
-        ContractInfoActionsCard,
-        FinanceCard,
-        ObjectDetailsCard,
-    },
-})
-export default class ContractPage extends Vue {
-    tab = null;
-    contractId: number | null = null;
-    contractMainInfo: ContractPageMainInfo | null = null;
-    financePeriods: FinancePeriod[] = [];
-    contractExtensions: FullContractExtension[] = [];
-    objects: FullObjectDetails[] = [];
+    @Component({
+        components: {
+            ContractPageObjects,
+            CenteredCard,
+            RecalculatePeriodsDialog,
+            ContractInfo,
+            ContractStatusCard,
+            ContractInfoActionsCard,
+            FinanceCard,
+            ObjectDetailsCard,
+        },
+    })
+    export default class ContractPage extends Vue {
+        tab = null;
+        contractId: number | null = null;
+        contractMainInfo: ContractPageMainInfo | null = null;
+        financePeriods: FinancePeriod[] = [];
+        contractExtensions: FullContractExtension[] = [];
 
-    $refs!: {
-        recalculatePeriodDialog: RecalculatePeriodsDialog;
-    };
+        $refs!: {
+            recalculatePeriodDialog: RecalculatePeriodsDialog;
+        };
 
-    @Watch('tab')
-    onTabChanged() {
-        if (this.tab === 1 && isEmpty(this.objects)) {
-            this.objects = getFullObjectsDetails(this.contractId!);
+        beforeRouteEnter(to: Route, from: Route, next: any) {
+            const contractId = Number.parseInt(to.params.id, 10);
+            const contractMainInfo = getContractMainPageInfo(contractId)
+                .orElseThrowWithMessage(`Отсутствует информация о договоре с id = ${contractId}`);
+            next((vm: ContractPage) => {
+               vm.contractId = contractId;
+               vm.contractMainInfo = contractMainInfo;
+            });
         }
-    }
 
-    created() {
-        this.contractId = Number.parseInt(this.$route.params.id, 10);
-        this.contractMainInfo = getContractMainPageInfo(this.contractId)
-            .orElseThrowWithMessage(`Отсутствует информация о договоре с id = ${this.contractId}`);
-        this.updateAll();
-    }
-
-    onRecalculate() {
-        if (this.contractMainInfo && this.contractId) {
-            this.$refs.recalculatePeriodDialog.open(
-                this.contractId,
-                this.contractMainInfo.calculationStartDate,
-                this.contractMainInfo.validity,
-                this.contractExtensions,
-            );
+        created() {
+            this.updateAll();
         }
-    }
 
-    updateFinancePeriods() {
-        this.financePeriods = getAllPeriods(this.contractId!);
-    }
+        onRecalculate() {
+            if (this.contractMainInfo && this.contractId) {
+                this.$refs.recalculatePeriodDialog.open(
+                    this.contractId,
+                    this.contractMainInfo.calculationStartDate,
+                    this.contractMainInfo.validity,
+                    this.contractExtensions,
+                );
+            }
+        }
 
-    updateContractExtensions() {
-        this.contractExtensions = getFullContractExtensions(this.contractId!);
-    }
+        updateFinancePeriods() {
+            this.financePeriods = getAllPeriods(this.contractId!);
+        }
 
-    updateAll() {
-        this.updateFinancePeriods();
-        this.updateContractExtensions();
-    }
+        updateContractExtensions() {
+            this.contractExtensions = getFullContractExtensions(this.contractId!);
+        }
 
-}
+        updateAll() {
+            this.updateFinancePeriods();
+            this.updateContractExtensions();
+        }
+
+    }
 </script>
 
 <style scoped lang="scss">

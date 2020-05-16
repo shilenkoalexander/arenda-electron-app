@@ -9,8 +9,8 @@ import {
     FullContractExtension,
 } from '@/backend/types/contract-types';
 import { $enum } from 'ts-enum-util';
-import { Subtenant, TenantType } from '@/backend/types/tenants-types';
-import { FullObjectDetails, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
+import { SubtenantWithObjectId, TenantType } from '@/backend/types/tenants-types';
+import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
 import {
     FinancePeriod,
     IndexingSign,
@@ -21,6 +21,7 @@ import {
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { parseDate } from '@/utils/date-utils';
 import Period from '@/backend/utils/period';
+import { Directory } from '@/backend/types/common-types';
 import DataObject = BetterSqlite3Helper.DataObject;
 
 export abstract class ResultMapper<T> {
@@ -106,12 +107,12 @@ export class ShortObjectDetailsMapper extends ResultMapper<ShortObjectDetails> {
     }
 }
 
-export class FullObjectDetailsMapper extends ResultMapper<FullObjectDetails> {
-    protected innerMap(value: DataObject): FullObjectDetails {
+export class FullObjectDetailsWithSubtenantsMapper extends ResultMapper<FullObjectDetailsWithSubtenants> {
+    protected innerMap(value: DataObject): FullObjectDetailsWithSubtenants {
         return {
             id: value.id,
-            businessType: value.business_type,
-            area: value.area,
+            businessType: { id: value.business_type_id, name: value.business_type_name },
+            area: { id: value.area_id, name: value.area_name },
             address: value.address,
             onBalance: value.on_balance,
             payment: Number.parseFloat(value.payment),
@@ -124,8 +125,8 @@ export class FullObjectDetailsMapper extends ResultMapper<FullObjectDetails> {
             decisionDate: parseDate(value.decision_date),
             decisionNumber: value.decision_number,
             decisionMaker: value.decision_maker,
-            objectIndividualInformation: null,
-            subtenants: null,
+            objectIndividualInformation: [],
+            subtenants: [],
         };
     }
 }
@@ -229,15 +230,25 @@ export class ObjectInformationMapper extends ResultMapper<ObjectInformation> {
     }
 }
 
-export class SubtenantMapper extends ResultMapper<Subtenant> {
-    protected innerMap(value: DataObject): Subtenant {
+export class SubtenantWithObjectIdMapper extends ResultMapper<SubtenantWithObjectId> {
+    protected innerMap(value: DataObject): SubtenantWithObjectId {
         return {
+            id: value.id,
             objectId: value.id_object,
             name: value.full_name,
             businessType: value.business_type,
             square: Number.parseFloat(value.square),
             startDate: parseDate(value.start_date),
             endDate: parseDate(value.end_date),
+        };
+    }
+}
+
+export class DirectoryMapper extends ResultMapper<Directory> {
+    protected innerMap(value: DataObject): Directory {
+        return {
+            id: value.id,
+            name: value.name,
         };
     }
 }

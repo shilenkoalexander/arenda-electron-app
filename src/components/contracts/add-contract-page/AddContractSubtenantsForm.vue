@@ -9,6 +9,8 @@
                         v-model="businessTypeId"
                         :items="businessTypes"
                         label="Вид деятельности"
+                        item-text="name"
+                        item-value="id"
                         hide-details
                         outlined
                         dense
@@ -37,9 +39,10 @@
     import { Component, Vue } from 'vue-property-decorator';
     import EditableTextField from '@/components/EditableTextField.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { AddSubtenantDto } from '@/backend/types/tenants-types';
-    import { InputItem } from '@/types/common';
     import { getBusinessTypes } from '@/backend/repository/directory-repository';
+    import { parseDate } from '@/utils/date-utils';
+    import { Directory } from '@/backend/types/common-types';
+    import { EditSubtenantDto } from '@/backend/types/tenants-types';
 
     @Component({
         components: {
@@ -54,20 +57,25 @@
         startDate = '';
         endDate = '';
 
-        businessTypes: InputItem[] = [];
+        businessTypes: Directory[] = [];
 
         created() {
             this.businessTypes = getBusinessTypes();
         }
 
+        get businessType(): Directory | undefined {
+            return this.businessTypes.find((area) => area.id === this.businessTypeId);
+        }
+
         onSaveClick() {
             this.$emit('save', {
+                id: null,
                 name: this.name,
-                businessTypeId: this.businessTypeId,
+                businessType: this.businessType,
                 square: Number.parseFloat(this.square),
-                startDate: this.startDate,
-                endDate: this.endDate,
-            } as AddSubtenantDto);
+                startDate: parseDate(this.startDate),
+                endDate: parseDate(this.endDate),
+            } as EditSubtenantDto);
 
             this.name = '';
             this.businessTypeId = null;

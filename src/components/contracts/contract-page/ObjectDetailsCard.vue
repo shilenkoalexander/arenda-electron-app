@@ -1,15 +1,38 @@
 <template>
     <v-card>
         <v-card-title class="primary lighten-2 white--text text--darken-3">
-            <v-icon class="mr-3" color="white">mdi-home-city</v-icon>
-            <p class="mb-0 font-regular">{{ item.address }}</p>
+            <v-container fluid class="pa-0">
+                <v-row>
+                    <v-col cols="4" class="py-0 pl-3 d-flex">
+                        <v-icon class="mr-3" color="white">mdi-home-city</v-icon>
+                        <p class="mb-0 font-regular">{{ item.address }}</p>
+                    </v-col>
+                    <v-col cols="8" class="py-0 pr-3 d-flex justify-end">
+                        <v-btn color="white" text @click="onEditObjectClick">
+                            <v-icon class="mr-2">
+                                mdi-pencil
+                            </v-icon>
+                            Редактировать
+                        </v-btn>
+                        <v-btn color="white" text>
+                            <v-icon class="mr-2">
+                                mdi-text-box-remove-outline
+                            </v-icon>
+                            Расторгнуть
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
         </v-card-title>
 
         <v-container fluid class="pt-0 info-container">
             <v-row>
-                <v-col cols="12">
-                    <InfoBlock class="mt-2">
+                <v-col cols="5">
+                    <InfoBlock>
                         <v-row>
+                            <v-col cols="12">
+                                <Header value="Основная информация"/>
+                            </v-col>
                             <v-col cols="3">
                                 <Label label="Дата начала"
                                        :value="formatToFriendly(item.startDate)"
@@ -19,11 +42,16 @@
                                 <Label label="Срок действия"
                                        :value="formatToFriendly(item.endDate)"/>
                             </v-col>
-                            <v-col cols="6">
-                                <Label label="Район" :value="item.area"/>
+                            <v-col cols="3">
+                                <Label label="Дата расторжения"
+                                       :value="formatToFriendly(item.startDate)"
+                                />
                             </v-col>
-                            <v-col cols="12">
-                                <Label label="Вид деятельности" :value="item.businessType"/>
+                            <v-col cols="6">
+                                <Label label="Район" :value="item.area.name"/>
+                            </v-col>
+                            <v-col cols="6">
+                                <Label label="Вид деятельности" :value="item.businessType.name"/>
                             </v-col>
                             <v-col cols="6">
                                 <Label label="Тип объекта" :value="item.objectType"/>
@@ -35,7 +63,7 @@
                     </InfoBlock>
                 </v-col>
 
-                <v-col cols="6">
+                <v-col cols="4">
                     <InfoBlock>
                         <v-row>
                             <v-col cols="12">
@@ -67,7 +95,7 @@
                         </v-row>
                     </InfoBlock>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="3">
                     <InfoBlock>
                         <v-row>
                             <v-col cols="12">
@@ -83,16 +111,14 @@
                     </InfoBlock>
                 </v-col>
                 <v-col cols="12">
-                    <template>
-                        <v-row>
-                            <v-col>
-                                <Header value="Субарендаторы"/>
-                            </v-col>
-                            <v-col cols="12">
-                                <SubtenantsList :items="item.subtenants"/>
-                            </v-col>
-                        </v-row>
-                    </template>
+                    <v-row>
+                        <v-col class="pt-0">
+                            <Header value="Субарендаторы"/>
+                        </v-col>
+                        <v-col cols="12" class="pt-0">
+                            <SubtenantsList :items="item.subtenants"/>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-container>
@@ -101,7 +127,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { FullObjectDetails } from '@/backend/types/objects-types';
+    import { FullObjectDetailsWithSubtenants } from '@/backend/types/objects-types';
     import { formatDateToFriendly } from '@/utils/date-utils';
     import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
     import InfoBlock from '@/components/InfoBlock.vue';
@@ -121,7 +147,11 @@
             type: Object,
             required: true,
         })
-        item!: FullObjectDetails;
+        item!: FullObjectDetailsWithSubtenants;
+
+        onEditObjectClick() {
+            this.$emit('edit', this.item.id);
+        }
 
         formatToFriendly(date: Date): string {
             return formatDateToFriendly(date);

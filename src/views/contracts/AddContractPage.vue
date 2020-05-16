@@ -102,7 +102,7 @@
     import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
     import { getContractTypes, saveNewContract } from '@/backend/repository/contract-repository';
     import CenteredCard from '@/components/CenteredCard.vue';
-    import { AddObjectDto, BasicObjectInfo } from '@/backend/types/objects-types';
+    import { BasicObjectInfo, EditObjectDto } from '@/backend/types/objects-types';
     import { getModule } from 'vuex-module-decorators';
     import AddContractModule from '@/store/add-contract-module';
     import { AddContractMainInfoDto } from '@/backend/types/contract-types';
@@ -111,11 +111,35 @@
     @Component({
         components: { CenteredCard, DatePickerMenu, AddContractObjectsList },
     })
-    export default class AddContract extends Vue {
+    export default class AddContractPage extends Vue {
+        moduleState = this.$store.state.addContract;
+
+        notEmptyRule = notEmptyRule;
+
+        tenantId: number | null = this.moduleState.tenantId;
+        contractNumber = this.moduleState.contractNumber;
+        startDate = this.moduleState.startDate;
+        validity = this.moduleState.validity;
+        contractTypeId: number | null = this.moduleState.contractTypeId;
+        indexing = this.moduleState.indexing;
+
+        tenants: InputItem[] = [];
+        contractTypes: InputItem[] = [];
+
+        objects: EditObjectDto[] = this.moduleState.objects;
+
+        $refs!: {
+            form: HTMLFormElement;
+        };
+
+        created() {
+            this.tenants = getAllTenantsNames();
+            this.contractTypes = getContractTypes();
+        }
 
         get basicObjectsItems(): BasicObjectInfo[] {
             return this.objects.map((v) => ({
-                id: v.index,
+                id: v.id!,
                 address: v.address,
                 objectType: v.objectType,
                 payment: v.payment,
@@ -134,47 +158,23 @@
             };
         }
 
-        moduleState = this.$store.state.addContract;
 
-    notEmptyRule = notEmptyRule;
+        @Watch('moduleState.objects', { deep: true })
+        onObjectsChanged() {
+            this.objects = this.moduleState.objects;
+        }
 
-    tenantId: number | null = this.moduleState.tenantId;
-    contractNumber = this.moduleState.contractNumber;
-    startDate = this.moduleState.startDate;
-    validity = this.moduleState.validity;
-    contractTypeId: number | null = this.moduleState.contractTypeId;
-    indexing = this.moduleState.indexing;
+        @Watch('contract')
+        onContractChanged() {
+            const module = getModule(AddContractModule, this.$store);
 
-    tenants: InputItem[] = [];
-    contractTypes: InputItem[] = [];
-
-    objects: AddObjectDto[] = this.moduleState.objects;
-
-    $refs!: {
-        form: HTMLFormElement;
-    };
-
-    created() {
-        this.tenants = getAllTenantsNames();
-        this.contractTypes = getContractTypes();
-    }
-
-    @Watch('moduleState.objects', { deep: true })
-    onObjectsChanged() {
-        this.objects = this.moduleState.objects;
-    }
-
-    @Watch('contract')
-    onContractChanged() {
-        const module = getModule(AddContractModule, this.$store);
-
-        module.setContractNumber(this.contractNumber);
-        module.setContractTypeId(this.contractTypeId);
-        module.setIndexing(this.indexing);
-        module.setStartDate(this.startDate);
-        module.setValidity(this.validity);
-        module.setTenantId(this.tenantId);
-    }
+            module.setContractNumber(this.contractNumber);
+            module.setContractTypeId(this.contractTypeId);
+            module.setIndexing(this.indexing);
+            module.setStartDate(this.startDate);
+            module.setValidity(this.validity);
+            module.setTenantId(this.tenantId);
+        }
 
         clearAddingContract() {
             getModule(AddContractModule, this.$store).clearContract();

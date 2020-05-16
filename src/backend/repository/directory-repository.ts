@@ -1,20 +1,11 @@
-import db from 'better-sqlite3-helper';
-import { InputItem } from '@/types/common';
+import { Directory } from '@/backend/types/common-types';
+import { selectArray } from '@/backend/repository/repository';
+import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 
-export function getAreas(): InputItem[] {
-    const result = db().query('select * from areas');
-
-    return result.map((value) => ({
-        text: value.name,
-        value: value.id,
-    } as InputItem));
+export function getAreas(): Directory[] {
+    return selectArray('select * from areas', ResultMapperFactory.directoryMapper);
 }
 
-export function getBusinessTypes(): InputItem[] {
-    const result = db().query('select * from business_types');
-
-    return result.map((value) => ({
-        text: value.name,
-        value: value.id,
-    } as InputItem));
+export function getBusinessTypes(): Directory[] {
+    return selectArray('select * from business_types', ResultMapperFactory.directoryMapper);
 }
