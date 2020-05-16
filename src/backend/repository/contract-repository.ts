@@ -90,7 +90,8 @@ export function getContractDetails(id: number): FullContractDetails {
 
 // todo маппер сделать для этого
 export function getContractTypes(): InputItem[] {
-    const result = db().query(`select * from contract_type`);
+    const result = db().query(`select *
+                               from contract_type`);
 
     return result.map((value) => ({
         text: value.name,
@@ -99,7 +100,7 @@ export function getContractTypes(): InputItem[] {
 }
 
 // todo добавить даты всякие
-export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: EditObjectDto[]) {
+export function saveNewContractWithObjects(contractInfo: AddContractMainInfoDto, objects: EditObjectDto[]) {
     executeInTransaction(() => {
         const contractId = db().insert('contracts', {
             id_tenant: contractInfo.tenantId,
@@ -114,6 +115,26 @@ export function saveNewContract(contractInfo: AddContractMainInfoDto, objects: E
         insertIndexingSign(contractId, Period.ofString(contractInfo.startDate), true);
         objects.forEach((object) => saveObject(contractId, object));
     });
+}
+
+// todo добавить даты всякие
+export function saveNewContract(contractInfo: AddContractMainInfoDto): number | null {
+    let contractId: number | null = null;
+    executeInTransaction(() => {
+        contractId = db().insert('contracts', {
+            id_tenant: contractInfo.tenantId,
+            id_status: 1,
+            id_type: contractInfo.contractTypeId,
+            contract_number: contractInfo.contractNumber,
+            start_date: contractInfo.startDate,
+            validity: contractInfo.validity,
+        });
+
+        // todo: тут поменять на calculationStartDate
+        insertIndexingSign(contractId, Period.ofString(contractInfo.startDate), contractInfo.indexing);
+    });
+
+    return contractId;
 }
 
 export function getContractMainPageInfo(contractId: number): Optional<ContractPageMainInfo> {

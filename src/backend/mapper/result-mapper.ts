@@ -117,6 +117,7 @@ export class FullObjectDetailsWithSubtenantsMapper extends ResultMapper<FullObje
             onBalance: value.on_balance,
             payment: Number.parseFloat(value.payment),
             rentalRate: value.rental_rate,
+            square: value.square ? Number.parseFloat(value.square) : null,
             startDate: parseDate(value.start_date),
             endDate: parseDate(value.end_date),
             expertReviewSum: value.expert_review_sum,
@@ -223,6 +224,7 @@ export class FullContractExtensionMapper extends ResultMapper<FullContractExtens
 export class ObjectInformationMapper extends ResultMapper<ObjectInformation> {
     protected innerMap(value: DataObject): ObjectInformation {
         return {
+            id: value.id,
             objectId: value.id_object,
             name: value.name,
             value: value.value,
@@ -236,7 +238,7 @@ export class SubtenantWithObjectIdMapper extends ResultMapper<SubtenantWithObjec
             id: value.id,
             objectId: value.id_object,
             name: value.full_name,
-            businessType: value.business_type,
+            businessType: { id: value.business_type_id, name: value.business_type_name },
             square: Number.parseFloat(value.square),
             startDate: parseDate(value.start_date),
             endDate: parseDate(value.end_date),
