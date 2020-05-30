@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="py-3 pt-2 pb-3">
+    <v-container fluid class="pt-2 pb-3 px-5">
         <v-row>
             <v-col>
                 <v-text-field
@@ -13,31 +13,18 @@
                         v-model="filter.search"
                 />
             </v-col>
-        </v-row>
-        <v-row>
-            <v-col class="py-0 pl-4">
+            <v-col class="py-0 pl-4" cols="6" align-self="center">
                 <v-radio-group
                         v-model="filterMode"
                         hide-details
                         row
                         color="primary"
-                        class="mt-1"
+                        class="mt-0"
                 >
                     <v-radio color="primary" label="Адреса"/>
                     <v-radio color="primary" label="№ договора"/>
                     <v-radio color="primary" label="Арендатор"/>
                 </v-radio-group>
-            </v-col>
-            <v-col cols="4" class="py-0">
-                <v-combobox
-                        dense
-                        clearable
-                        color="primary"
-                        outlined
-                        hide-details
-                        v-model="status"
-                        :items="statuses"
-                />
             </v-col>
         </v-row>
     </v-container>
@@ -47,15 +34,15 @@
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { enumToComboBoxItems } from '@/utils/enum-utils';
     import { $enum } from 'ts-enum-util';
-    import { ContractsFilterInfo } from '@/backend/filter/filter';
+    import { ContractFilterMode, ContractsFilter as ContractsFilterDto } from '@/backend/filter/filter';
     import { InputItem } from '@/types/common';
-    import { ContractFilterMode, ContractStatus, getContractStatusValue } from '@/backend/types/contract-types';
+    import { ContractStatus, getContractStatusValue } from '@/backend/types/contract-types';
 
     @Component
     export default class ContractsFilter extends Vue {
         statuses = enumToComboBoxItems(ContractStatus, getContractStatusValue);
 
-        filter: ContractsFilterInfo = {
+        filter: ContractsFilterDto = {
             status: null,
             filterMode: ContractFilterMode.ADDRESS,
             search: null,

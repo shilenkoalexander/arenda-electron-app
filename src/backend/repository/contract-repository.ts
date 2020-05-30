@@ -9,8 +9,8 @@ import {
 import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
 import { executeInTransaction, findFirst, queryWithPagination, selectArray } from '@/backend/repository/repository';
-import { ContractOrderMapper } from '@/backend/mapper/order-mapper';
-import { contractFilterToWhereClause, ContractsFilterInfo } from '@/backend/filter/filter';
+import { ContractsOrderMapper } from '@/backend/mapper/order-mapper';
+import { contractFilterToWhereClause, ContractsFilter } from '@/backend/filter/filter';
 import db from 'better-sqlite3-helper';
 import { getContactsByTenantId } from '@/backend/repository/contact-repository';
 import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
@@ -20,7 +20,7 @@ import Optional from '@/backend/utils/optional';
 import { insertIndexingSign } from '@/backend/repository/finance-repository';
 import Period from '@/backend/utils/period';
 
-export function getAllContracts(pagination: Pagination, filter: ContractsFilterInfo | null): Page<ContractWithTenant> {
+export function getAllContracts(pagination: Pagination, filter: ContractsFilter | null): Page<ContractWithTenant> {
     const query = `
         select c.id,
                c.contract_number,
@@ -38,7 +38,7 @@ export function getAllContracts(pagination: Pagination, filter: ContractsFilterI
                  inner join contract_statuses cs on cs.id = c.id_status
         ${contractFilterToWhereClause(filter)}
         group by c.id`;
-    return queryWithPagination(query, pagination, ResultMapperFactory.contractMapper, new ContractOrderMapper());
+    return queryWithPagination(query, pagination, ResultMapperFactory.contractMapper, new ContractsOrderMapper());
 }
 
 export function getContractDetails(id: number): FullContractDetails {

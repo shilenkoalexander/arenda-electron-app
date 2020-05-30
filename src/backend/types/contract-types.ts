@@ -75,10 +75,6 @@ export enum ContactType {
     PHONE, EMAIL, SOCIAL, UNKNOWN,
 }
 
-export enum ContractFilterMode {
-    ADDRESS, CONTRACT_NUMBER, TENANT,
-}
-
 export function getContactTypeValue(type: ContactType): string {
     return $enum.mapValue(type).with({
         [ContactType.EMAIL]: 'Электронная почта',

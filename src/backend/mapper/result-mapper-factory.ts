@@ -32,8 +32,9 @@ import {
     ResultMapper,
     ShortObjectDetailsMapper,
     SubtenantWithObjectIdMapper,
+    TenantMapper,
 } from '@/backend/mapper/result-mapper';
-import { SubtenantWithObjectId } from '@/backend/types/tenants-types';
+import { SubtenantWithObjectId, Tenant } from '@/backend/types/tenants-types';
 import { Directory } from '@/backend/types/common-types';
 
 export class ResultMapperFactory {
@@ -56,4 +57,6 @@ export class ResultMapperFactory {
     static readonly directoryMapper: ResultMapper<Directory> = new DirectoryMapper();
     static readonly fullContractExtensionMapper: ResultMapper<FullContractExtension>
         = new FullContractExtensionMapper();
+    static readonly tenantMapper: ResultMapper<Tenant>
+        = new TenantMapper();
 }

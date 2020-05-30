@@ -34,7 +34,6 @@
                                             dense
                                     />
                                 </v-col>
-
                             </v-row>
                             <v-row>
                                 <v-col>
@@ -79,6 +78,11 @@
                                 <v-col cols="5">
                                     <v-btn color="primary" block @click="save">
                                         Сохранить
+                                    </v-btn>
+                                </v-col>
+                                <v-col cols="5">
+                                    <v-btn color="primary" block @click="$router.back()">
+                                        Отменить
                                     </v-btn>
                                 </v-col>
                             </v-row>
