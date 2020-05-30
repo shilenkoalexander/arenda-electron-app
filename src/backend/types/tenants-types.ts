@@ -37,3 +37,11 @@ export interface SubtenantWithObjectId extends Subtenant {
 export interface EditSubtenantDto extends Subtenant {
     id: number | null;
 }
+
+export interface Tenant {
+    id: number;
+    organizationName: string;
+    responsiblePerson: string;
+    legalAddress: string;
+    tenantType: TenantType;
+}

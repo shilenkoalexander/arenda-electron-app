@@ -1,6 +1,11 @@
 <template>
     <v-container fluid>
         <v-row>
+            <v-col class="py-0 pl-5">
+                <p class="mb-0 title font-weight-regular text-center">Список договоров</p>
+            </v-col>
+        </v-row>
+        <v-row>
             <ContractsFilter @filter="onFilterChanged"/>
         </v-row>
         <v-divider/>
@@ -11,14 +16,15 @@
                         :items="items"
                         :sort-by.sync="pagination.sort"
                         :sort-desc.sync="pagination.desc"
-                        height="65vh"
+                        height="58vh"
                         hide-default-footer
                         fixed-header
                 >
                     <template v-slot:item.status="{item}">
-                        <v-icon :color="getIconColorByStatus(item.status)" size="30">
+                        <v-icon :color="getIconColorByStatus(item.status)" size="30" class="mr-2">
                             {{ getIconByStatus(item.status) }}
                         </v-icon>
+                        <span class="secondary-text">{{ getContractStatusValue(item.status) }}</span>
                     </template>
                     <template v-slot:item.contract="{item}">
                         <router-link :to="'/contract/' + item.id">
@@ -32,13 +38,6 @@
                             <p class="clickable-text mb-0 mt-1">{{item.tenantInfo.fullName}}</p>
                         </router-link>
                         <p class="mb-0 secondary-text">{{item.tenantInfo.legalAddress}}</p>
-                    </template>
-                    <template v-slot:item.action="{item}">
-                        <v-btn icon color="info darken-4" @click="showDetails(item.id)">
-                            <v-icon size="30">
-                                mdi-logout-variant
-                            </v-icon>
-                        </v-btn>
                     </template>
                 </v-data-table>
             </v-col>
@@ -59,13 +58,13 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { getAllContracts } from '@/backend/repository/contract-repository';
-    import { ContractWithTenant } from '@/backend/types/contract-types';
+    import { ContractWithTenant, getContractStatusValue } from '@/backend/types/contract-types';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
-    import ContractsFilter from '@/components/contracts/ContractsFilter.vue';
+    import ContractsFilter from '@/components/home/ContractsFilter.vue';
     import { Pagination } from '@/types/common';
     import PaginationComponent from '@/components/Pagination.vue';
-    import { ContractsFilterInfo } from '@/backend/filter/filter';
+    import { ContractsFilter as ContractsFilterDto } from '@/backend/filter/filter';
 
     @Component({
         components: {
@@ -75,10 +74,9 @@
     })
     export default class ContractsList extends Vue {
         headers = [
-            { text: 'Статус', align: 'center', sortable: false, value: 'status', width: '10%' },
+            { text: 'Статус', align: 'left', sortable: false, value: 'status', width: '20%' },
             { text: 'Договор', value: 'contract', width: '30%' },
             { text: 'Арендатор', value: 'tenant', width: '50%' },
-            { text: 'Просмотр', value: 'action', sortable: false, align: 'center' },
         ];
         items: ContractWithTenant[] = [];
 
@@ -89,7 +87,7 @@
             sort: [null],
         };
 
-        filter: ContractsFilterInfo | null = null;
+        filter: ContractsFilterDto | null = null;
 
         totalItems: number | null = null;
         totalPages: number | null = null;
@@ -97,6 +95,7 @@
         formatToFriendly = formatToFriendly;
         getIconColorByStatus = getIconColorByStatus;
         getIconByStatus = getIconByStatus;
+        getContractStatusValue = getContractStatusValue;
 
         @Watch('pagination', { immediate: true, deep: true })
         onPaginationChanged() {
@@ -116,11 +115,7 @@
             this.totalPages = page.totalPages;
         }
 
-        showDetails(id: number) {
-            this.$emit('show-contract-details', id);
-        }
-
-        onFilterChanged(filter: ContractsFilterInfo) {
+        onFilterChanged(filter: ContractsFilterDto) {
             this.filter = filter;
         }
     }

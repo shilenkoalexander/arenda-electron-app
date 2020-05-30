@@ -1,12 +1,25 @@
-import { ContractFilterMode, ContractStatus } from '@/backend/types/contract-types';
+import { ContractStatus } from '@/backend/types/contract-types';
 
-export interface ContractsFilterInfo {
+export interface ContractsFilter {
     status: ContractStatus | null;
     filterMode: ContractFilterMode | null;
     search: string | null;
 }
 
-export function contractFilterToWhereClause(filter: ContractsFilterInfo | null): string {
+export enum ContractFilterMode {
+    ADDRESS, CONTRACT_NUMBER, TENANT,
+}
+
+export interface TenantsFilter {
+    filterMode: TenantsFilterMode | null;
+    search: string | null;
+}
+
+export enum TenantsFilterMode {
+    NAME, ADDRESS,
+}
+
+export function contractFilterToWhereClause(filter: ContractsFilter | null): string {
     if (!filter) {
         return '';
     }
@@ -44,4 +57,10 @@ export function contractFilterToWhereClause(filter: ContractsFilterInfo | null):
         clausesQuery = clauses.join(' AND ');
     }
     return `${addressSearchClause} ${clausesQuery ? 'WHERE' : ''} ${clausesQuery}`;
+}
+
+export function tenantFilterToWhereClause(filter: TenantsFilter | null) {
+    if (!filter) {
+        return '';
+    }
 }

@@ -1,6 +1,5 @@
 <template>
     <v-app class="app">
-        <Toolbar/>
         <v-content class="back">
             <v-fade-transition mode="out-in">
                 <router-view :key="$route.path"/>
@@ -11,17 +10,15 @@
 
 <script lang="ts">
     import Vue from 'vue';
-    import Toolbar from '@/components/Toolbar.vue';
 
     export default Vue.extend({
         name: 'App',
 
         components: {
-            Toolbar,
         },
 
         data: () => ({
-            //
+
         }),
     });
 </script>

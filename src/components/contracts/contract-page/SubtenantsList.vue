@@ -25,32 +25,35 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { Subtenant } from '@/backend/types/tenants-types';
-    import { formatDateToFriendly } from '@/utils/date-utils';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Subtenant } from '@/backend/types/tenants-types';
+import { formatDateToFriendly } from '@/utils/date-utils';
 
-    @Component({
-        components: {},
+// todo добавить удаление и редактирование субарендаторов и индивидуальных данных
+// todo добавить валидации
+// todo
+@Component({
+    components: {},
+})
+export default class SubtenantsList extends Vue {
+    @Prop({
+        type: Array,
+        default: [],
     })
-    export default class SubtenantsList extends Vue {
-        @Prop({
-            type: Array,
-            default: [],
-        })
-        items!: Subtenant[];
+    items!: Subtenant[];
 
-        headers = [
-            { text: 'Имя', sortable: false, value: 'name' },
-            { text: 'Площадь', sortable: false, value: 'square' },
-            { text: 'Дата начала', sortable: false, value: 'startDate' },
-            { text: 'Дата действия', sortable: false, value: 'endDate' },
-            { text: 'Вид деятельности', sortable: false, value: 'businessType' },
-        ];
+    headers = [
+        { text: 'Имя', sortable: false, value: 'name' },
+        { text: 'Площадь', sortable: false, value: 'square' },
+        { text: 'Дата начала', sortable: false, value: 'startDate' },
+        { text: 'Дата действия', sortable: false, value: 'endDate' },
+        { text: 'Вид деятельности', sortable: false, value: 'businessType' },
+    ];
 
-        formatToFriendly(date: Date): string {
-            return formatDateToFriendly(date);
-        }
+    formatToFriendly(date: Date): string {
+        return formatDateToFriendly(date);
     }
+}
 </script>
 
 <style scoped lang="scss">

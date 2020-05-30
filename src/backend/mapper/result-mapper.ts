@@ -9,7 +9,7 @@ import {
     FullContractExtension,
 } from '@/backend/types/contract-types';
 import { $enum } from 'ts-enum-util';
-import { SubtenantWithObjectId, TenantType } from '@/backend/types/tenants-types';
+import { SubtenantWithObjectId, Tenant, TenantType } from '@/backend/types/tenants-types';
 import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
 import {
     FinancePeriod,
@@ -251,6 +251,18 @@ export class DirectoryMapper extends ResultMapper<Directory> {
         return {
             id: value.id,
             name: value.name,
+        };
+    }
+}
+
+export class TenantMapper extends ResultMapper<Tenant> {
+    protected innerMap(value: DataObject): Tenant {
+        return {
+            id: value.id,
+            organizationName: value.organization_name,
+            responsiblePerson: value.responsible_person,
+            legalAddress: value.legal_address,
+            tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
         };
     }
 }
