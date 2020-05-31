@@ -31,7 +31,7 @@
 
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
-    import { TenantsFilter as TenantsFilterDto, TenantsFilterMode } from '@/backend/filter/filter';
+    import { TenantsFilter as TenantsFilterDto, TenantsFilterMode } from '@/model/filter/filter';
     import { InputItem } from '@/types/common';
     import { $enum } from 'ts-enum-util';
 

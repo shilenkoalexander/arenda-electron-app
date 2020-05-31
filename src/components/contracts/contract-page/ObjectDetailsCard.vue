@@ -127,7 +127,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { FullObjectDetailsWithSubtenants } from '@/backend/types/objects-types';
+    import { FullObjectDetailsWithSubtenants } from '@/model/types/objects-types';
     import { formatDateToFriendly } from '@/utils/date-utils';
     import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
     import InfoBlock from '@/components/InfoBlock.vue';

@@ -15,8 +15,8 @@
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
     import ObjectForm from '@/components/contracts/add-contract-page/ObjectForm.vue';
-    import { EditObjectDto } from '@/backend/types/objects-types';
-    import { getFullObjectForEditing } from '@/backend/service/objects-service';
+    import { EditObjectDto } from '@/model/types/objects-types';
+    import { getFullObjectForEditing } from '@/model/service/objects-service';
     import { Route } from 'vue-router';
 
     @Component({

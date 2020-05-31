@@ -1,5 +1,5 @@
-import { EditSubtenantDto, SubtenantWithObjectId } from '@/backend/types/tenants-types';
-import { Directory } from '@/backend/types/common-types';
+import { EditSubtenantDto, SubtenantWithObjectId } from '@/model/types/tenants-types';
+import { Directory } from '@/model/types/common-types';
 
 export interface ShortObjectDetails {
     id: number;

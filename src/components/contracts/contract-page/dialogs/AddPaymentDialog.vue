@@ -68,9 +68,9 @@
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
     import EditableTextField from '@/components/EditableTextField.vue';
-    import Period from '@/backend/utils/period';
+    import Period from '@/model/utils/period';
     import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
-    import { addPayment } from '@/backend/service/finance-service';
+    import { addPayment } from '@/model/service/finance-service';
 
     @Component({
         components: { ConfirmDialog, DatePickerMenu, EditableTextField },

@@ -34,9 +34,9 @@
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { enumToComboBoxItems } from '@/utils/enum-utils';
     import { $enum } from 'ts-enum-util';
-    import { ContractFilterMode, ContractsFilter as ContractsFilterDto } from '@/backend/filter/filter';
+    import { ContractFilterMode, ContractsFilter as ContractsFilterDto } from '@/model/filter/filter';
     import { InputItem } from '@/types/common';
-    import { ContractStatus, getContractStatusValue } from '@/backend/types/contract-types';
+    import { ContractStatus, getContractStatusValue } from '@/model/types/contract-types';
 
     @Component
     export default class ContractsFilter extends Vue {

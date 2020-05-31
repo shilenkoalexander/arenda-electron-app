@@ -1,4 +1,4 @@
-import { OrderMapper } from '@/backend/mapper/order-mapper';
+import { OrderMapper } from '@/model/mapper/order-mapper';
 import { Pagination } from '@/types/common';
 
 export function toOrderBy(pagination: Pagination, mapper: OrderMapper): string {

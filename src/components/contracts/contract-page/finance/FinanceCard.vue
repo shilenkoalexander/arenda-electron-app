@@ -103,9 +103,9 @@
     import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import Label from '@/components/Label.vue';
-    import { FinancePeriod, IndexingSign } from '@/backend/types/finance-types';
+    import { FinancePeriod, IndexingSign } from '@/model/types/finance-types';
     import EditableTextField from '@/components/EditableTextField.vue';
-    import Period from '@/backend/utils/period';
+    import Period from '@/model/utils/period';
     import EditAdjustmentDialog from '@/components/contracts/contract-page/dialogs/EditAdjustmentDialog.vue';
     import AddPaymentDialog from '@/components/contracts/contract-page/dialogs/AddPaymentDialog.vue';
     import PaymentsList from '@/components/contracts/contract-page/finance/PaymentsList.vue';
@@ -113,9 +113,9 @@
     import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
     import AddContractExtensionDialog
         from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
-    import { FullContractExtension } from '@/backend/types/contract-types';
-    import { addContractExtension, inverseIndexingSign } from '@/backend/service/finance-service';
-    import { getIndexingSigns } from '@/backend/repository/finance-repository';
+    import { FullContractExtension } from '@/model/types/contract-types';
+    import { addContractExtension, inverseIndexingSign } from '@/model/service/finance-service';
+    import { getIndexingSigns } from '@/model/repository/finance-repository';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
 
     @Component({

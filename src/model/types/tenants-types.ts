@@ -1,5 +1,5 @@
 import { $enum } from 'ts-enum-util';
-import { Directory } from '@/backend/types/common-types';
+import { Directory } from '@/model/types/common-types';
 
 export interface TenantInfo {
     fullName: string;

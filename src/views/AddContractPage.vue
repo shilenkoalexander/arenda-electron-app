@@ -103,13 +103,13 @@
     import { InputItem } from '@/types/common';
     import { notEmptyRule } from '@/validation/common-rules';
     import AddContractObjectsList from '@/components/contracts/add-contract-page/AddContractObjectsList.vue';
-    import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
-    import { getContractTypes, saveNewContractWithObjects } from '@/backend/repository/contract-repository';
+    import { getAllTenantsNames } from '@/model/repository/tenant-repository';
+    import { getContractTypes, saveNewContractWithObjects } from '@/model/repository/contract-repository';
     import CenteredCard from '@/components/CenteredCard.vue';
-    import { BasicObjectInfo, EditObjectDto } from '@/backend/types/objects-types';
+    import { BasicObjectInfo, EditObjectDto } from '@/model/types/objects-types';
     import { getModule } from 'vuex-module-decorators';
     import AddContractModule from '@/store/add-contract-module';
-    import { AddContractMainInfoDto } from '@/backend/types/contract-types';
+    import { AddContractMainInfoDto } from '@/model/types/contract-types';
 
 
     @Component({

@@ -1,5 +1,5 @@
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import { EditObjectDto } from '@/backend/types/objects-types';
+import { EditObjectDto } from '@/model/types/objects-types';
 
 @Module({ name: 'add-contract' })
 export default class AddContractModule extends VuexModule {

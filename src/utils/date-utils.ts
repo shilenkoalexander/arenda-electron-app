@@ -1,5 +1,5 @@
 import { format, parse, startOfMonth } from 'date-fns';
-import Period from '@/backend/utils/period';
+import Period from '@/model/utils/period';
 
 export function parseDate(date: string): Date {
     return parse(date, 'yyyy-MM-dd', new Date());

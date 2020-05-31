@@ -173,11 +173,11 @@
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
     import Label from '@/components/Label.vue';
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
-    import { getAreas, getBusinessTypes } from '@/backend/repository/directory-repository';
-    import { Directory } from '@/backend/types/common-types';
-    import { EditObjectDto, ObjectInformation } from '@/backend/types/objects-types';
+    import { getAreas, getBusinessTypes } from '@/model/repository/directory-repository';
+    import { Directory } from '@/model/types/common-types';
+    import { EditObjectDto, ObjectInformation } from '@/model/types/objects-types';
     import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
-    import { EditSubtenantDto } from '@/backend/types/tenants-types';
+    import { EditSubtenantDto } from '@/model/types/tenants-types';
 
     @Component({
         components: {

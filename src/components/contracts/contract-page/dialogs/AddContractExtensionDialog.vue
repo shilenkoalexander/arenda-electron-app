@@ -81,16 +81,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
-import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
-import EditableTextField from '@/components/EditableTextField.vue';
-import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
-import { FullContractExtension } from '@/backend/types/contract-types';
-import { addDays, isAfter, isBefore, isEqual, startOfMonth, subDays } from 'date-fns';
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
+    import { correctFloatRule, notEmptyRule, positiveNumberRule } from '@/validation/common-rules';
+    import EditableTextField from '@/components/EditableTextField.vue';
+    import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
+    import { FullContractExtension } from '@/model/types/contract-types';
+    import { addDays, isAfter, isBefore, isEqual, startOfMonth, subDays } from 'date-fns';
 
-@Component({
+    @Component({
     components: { ConfirmDialog, DatePickerMenu, EditableTextField },
 })
 export default class AddContractExtensionDialog extends Vue {

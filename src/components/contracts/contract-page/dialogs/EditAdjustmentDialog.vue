@@ -45,11 +45,11 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { saveNewAdjustment } from '@/backend/service/finance-service';
+    import { saveNewAdjustment } from '@/model/service/finance-service';
     import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
     import { correctFloatRule } from '@/validation/common-rules';
     import EditableTextField from '@/components/EditableTextField.vue';
-    import Period from '@/backend/utils/period';
+    import Period from '@/model/utils/period';
 
     @Component({
         components: { ConfirmDialog, DatePickerMenu, EditableTextField },

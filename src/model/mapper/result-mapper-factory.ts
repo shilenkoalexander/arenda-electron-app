@@ -5,15 +5,15 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/backend/types/contract-types';
-import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
+} from '@/model/types/contract-types';
+import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/model/types/objects-types';
 import {
     FinancePeriod,
     IndexingSign,
     InflationIndex,
     Payment,
     PaymentContractInfo,
-} from '@/backend/types/finance-types';
+} from '@/model/types/finance-types';
 import {
     ContactMapper,
     ContractExtensionMapper,
@@ -33,9 +33,9 @@ import {
     ShortObjectDetailsMapper,
     SubtenantWithObjectIdMapper,
     TenantMapper,
-} from '@/backend/mapper/result-mapper';
-import { SubtenantWithObjectId, Tenant } from '@/backend/types/tenants-types';
-import { Directory } from '@/backend/types/common-types';
+} from '@/model/mapper/result-mapper';
+import { SubtenantWithObjectId, Tenant } from '@/model/types/tenants-types';
+import { Directory } from '@/model/types/common-types';
 
 export class ResultMapperFactory {
     static readonly contactMapper: ResultMapper<Contact> = new ContactMapper();

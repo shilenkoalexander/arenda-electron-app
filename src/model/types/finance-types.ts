@@ -1,4 +1,4 @@
-import Period from '@/backend/utils/period';
+import Period from '@/model/utils/period';
 
 export interface FinancePeriod {
     period: Period;

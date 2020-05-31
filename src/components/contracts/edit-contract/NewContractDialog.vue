@@ -12,8 +12,8 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import EditContractForm from '@/components/contracts/edit-contract/EditContractForm.vue';
-    import { AddContractMainInfoDto } from '@/backend/types/contract-types';
-    import { saveNewContract } from '@/backend/repository/contract-repository';
+    import { AddContractMainInfoDto } from '@/model/types/contract-types';
+    import { saveNewContract } from '@/model/repository/contract-repository';
 
     @Component({
         components: { EditContractForm },

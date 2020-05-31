@@ -83,15 +83,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { notEmptyRule } from '@/validation/common-rules';
-import { InputItem } from '@/types/common';
-import { getAllTenantsNames } from '@/backend/repository/tenant-repository';
-import { getContractTypes } from '@/backend/repository/contract-repository';
-import { AddContractMainInfoDto } from '@/backend/types/contract-types';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import { Component, Vue } from 'vue-property-decorator';
+    import { notEmptyRule } from '@/validation/common-rules';
+    import { InputItem } from '@/types/common';
+    import { getAllTenantsNames } from '@/model/repository/tenant-repository';
+    import { getContractTypes } from '@/model/repository/contract-repository';
+    import { AddContractMainInfoDto } from '@/model/types/contract-types';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
 
-@Component({
+    @Component({
     components: {
         DatePickerMenu,
     },

@@ -5,20 +5,20 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/backend/types/contract-types';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
+} from '@/model/types/contract-types';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
 import { InputItem, Page, Pagination } from '@/types/common';
-import { executeInTransaction, findFirst, queryWithPagination, selectArray } from '@/backend/repository/repository';
-import { ContractsOrderMapper } from '@/backend/mapper/order-mapper';
-import { contractFilterToWhereClause, ContractsFilter } from '@/backend/filter/filter';
+import { executeInTransaction, findFirst, queryWithPagination, selectArray } from '@/model/repository/repository';
+import { ContractsOrderMapper } from '@/model/mapper/order-mapper';
+import { contractFilterToWhereClause, ContractsFilter } from '@/model/filter/filter';
 import db from 'better-sqlite3-helper';
-import { getContactsByTenantId } from '@/backend/repository/contact-repository';
-import { getShortObjectDetailsByContractId, saveObject } from '@/backend/repository/objects-repository';
-import { EditObjectDto } from '@/backend/types/objects-types';
-import { PaymentContractInfo } from '@/backend/types/finance-types';
-import Optional from '@/backend/utils/optional';
-import { insertIndexingSign } from '@/backend/repository/finance-repository';
-import Period from '@/backend/utils/period';
+import { getContactsByTenantId } from '@/model/repository/contact-repository';
+import { getShortObjectDetailsByContractId, saveObject } from '@/model/repository/objects-repository';
+import { EditObjectDto } from '@/model/types/objects-types';
+import { PaymentContractInfo } from '@/model/types/finance-types';
+import Optional from '@/model/utils/optional';
+import { insertIndexingSign } from '@/model/repository/finance-repository';
+import Period from '@/model/utils/period';
 
 export function getAllContracts(pagination: Pagination, filter: ContractsFilter | null): Page<ContractWithTenant> {
     const query = `

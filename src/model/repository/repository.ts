@@ -1,9 +1,9 @@
 import { Page, Pagination } from '@/types/common';
 import db from 'better-sqlite3-helper';
-import { toLimit, toOrderBy } from '@/backend/utils/sql-util';
-import { OrderMapper } from '@/backend/mapper/order-mapper';
-import { ResultMapper } from '@/backend/mapper/result-mapper';
-import Optional from '@/backend/utils/optional';
+import { toLimit, toOrderBy } from '@/model/utils/sql-util';
+import { OrderMapper } from '@/model/mapper/order-mapper';
+import { ResultMapper } from '@/model/mapper/result-mapper';
+import Optional from '@/model/utils/optional';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import DataObject = db.DataObject;

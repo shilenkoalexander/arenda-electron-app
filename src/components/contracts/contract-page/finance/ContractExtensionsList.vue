@@ -34,7 +34,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { FullContractExtension } from '@/backend/types/contract-types';
+    import { FullContractExtension } from '@/model/types/contract-types';
     import { formatDateToFriendly } from '@/utils/date-utils';
     import { CURRENCY } from '@/utils/finance-util';
     import { isAfter, isBefore } from 'date-fns';

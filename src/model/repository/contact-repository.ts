@@ -1,6 +1,6 @@
-import { Contact } from '@/backend/types/contract-types';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { selectArray } from '@/backend/repository/repository';
+import { Contact } from '@/model/types/contract-types';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
+import { selectArray } from '@/model/repository/repository';
 
 export function getContactsByTenantId(tenantId: number): Contact[] {
     return selectArray(`

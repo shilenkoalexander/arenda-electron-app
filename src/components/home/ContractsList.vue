@@ -57,14 +57,14 @@
 
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
-    import { getAllContracts } from '@/backend/repository/contract-repository';
-    import { ContractWithTenant, getContractStatusValue } from '@/backend/types/contract-types';
+    import { getAllContracts } from '@/model/repository/contract-repository';
+    import { ContractWithTenant, getContractStatusValue } from '@/model/types/contract-types';
     import { formatToFriendly } from '@/utils/date-utils';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
     import ContractsFilter from '@/components/home/ContractsFilter.vue';
     import { Pagination } from '@/types/common';
     import PaginationComponent from '@/components/Pagination.vue';
-    import { ContractsFilter as ContractsFilterDto } from '@/backend/filter/filter';
+    import { ContractsFilter as ContractsFilterDto } from '@/model/filter/filter';
 
     @Component({
         components: {

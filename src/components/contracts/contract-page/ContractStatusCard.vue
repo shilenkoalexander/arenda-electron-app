@@ -68,10 +68,9 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import { getIconByStatus, getIconColorByStatus } from '@/utils/icon-utils';
-    import { ContractStatus, getContractStatusValue } from '@/backend/types/contract-types';
+    import { ContractExtension, ContractStatus, getContractStatusValue } from '@/model/types/contract-types';
     import { formatToFriendly } from '@/utils/date-utils';
     import Label from '@/components/Label.vue';
-    import { ContractExtension } from '@/backend/types/contract-types';
 
     @Component({
         components: {
