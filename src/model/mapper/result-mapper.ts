@@ -7,21 +7,21 @@ import {
     ContractWithTenant,
     FullContractDetails,
     FullContractExtension,
-} from '@/backend/types/contract-types';
+} from '@/model/types/contract-types';
 import { $enum } from 'ts-enum-util';
-import { SubtenantWithObjectId, Tenant, TenantType } from '@/backend/types/tenants-types';
-import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/backend/types/objects-types';
+import { SubtenantWithObjectId, Tenant, TenantType } from '@/model/types/tenants-types';
+import { FullObjectDetailsWithSubtenants, ObjectInformation, ShortObjectDetails } from '@/model/types/objects-types';
 import {
     FinancePeriod,
     IndexingSign,
     InflationIndex,
     Payment,
     PaymentContractInfo,
-} from '@/backend/types/finance-types';
+} from '@/model/types/finance-types';
 import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { parseDate } from '@/utils/date-utils';
-import Period from '@/backend/utils/period';
-import { Directory } from '@/backend/types/common-types';
+import Period from '@/model/utils/period';
+import { Directory } from '@/model/types/common-types';
 import DataObject = BetterSqlite3Helper.DataObject;
 
 export abstract class ResultMapper<T> {

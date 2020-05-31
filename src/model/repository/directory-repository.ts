@@ -1,6 +1,6 @@
-import { Directory } from '@/backend/types/common-types';
-import { selectArray } from '@/backend/repository/repository';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
+import { Directory } from '@/model/types/common-types';
+import { selectArray } from '@/model/repository/repository';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
 
 export function getAreas(): Directory[] {
     return selectArray('select * from areas', ResultMapperFactory.directoryMapper);

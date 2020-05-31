@@ -1,10 +1,10 @@
-import { FinancePeriod, IndexingSign, InflationIndex, Payment } from '@/backend/types/finance-types';
+import { FinancePeriod, IndexingSign, InflationIndex, Payment } from '@/model/types/finance-types';
 import db from 'better-sqlite3-helper';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
 import { formatDateToDefaultFormat, parseDate } from '@/utils/date-utils';
-import Optional from '@/backend/utils/optional';
-import Period, { toSqlArray } from '@/backend/utils/period';
-import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
+import Optional from '@/model/utils/optional';
+import Period, { toSqlArray } from '@/model/utils/period';
+import { EditableContractExtension, FullContractExtension } from '@/model/types/contract-types';
 import { executeInTransaction, findFirst, selectArray } from './repository';
 
 export function getFinancePeriod(period: Period, contractId: number): Optional<FinancePeriod> {

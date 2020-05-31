@@ -17,7 +17,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { IndexingSign } from '@/backend/types/finance-types';
+    import { IndexingSign } from '@/model/types/finance-types';
 
     @Component
     export default class IndexingList extends Vue {

@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { ShortObjectDetails } from '@/backend/types/objects-types';
+    import { ShortObjectDetails } from '@/model/types/objects-types';
     import { CURRENCY } from '@/utils/finance-util';
     import Label from '@/components/Label.vue';
 

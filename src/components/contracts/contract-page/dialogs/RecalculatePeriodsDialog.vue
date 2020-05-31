@@ -118,23 +118,23 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import DatePickerMenu from '@/components/DatePickerMenu.vue';
-import { formatDateToMonthString } from '@/utils/date-utils';
-import { calculateFinancePeriods } from '@/backend/service/accruals-service';
-import Period from '@/backend/utils/period';
-import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
-import { FinancePeriod } from '@/backend/types/finance-types';
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
-import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
-import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
-import AddContractExtensionDialog
-    from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
-import { saveRecalculatedData } from '@/backend/service/finance-service';
+    import DatePickerMenu from '@/components/DatePickerMenu.vue';
+    import { formatDateToMonthString } from '@/utils/date-utils';
+    import { calculateFinancePeriods } from '@/model/service/accruals-service';
+    import Period from '@/model/utils/period';
+    import FinanceList from '@/components/contracts/contract-page/finance/FinanceList.vue';
+    import { FinancePeriod } from '@/model/types/finance-types';
+    import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue';
+    import ContractExtensionsList from '@/components/contracts/contract-page/finance/ContractExtensionsList.vue';
+    import { EditableContractExtension, FullContractExtension } from '@/model/types/contract-types';
+    import AddContractExtensionDialog
+        from '@/components/contracts/contract-page/dialogs/AddContractExtensionDialog.vue';
+    import { saveRecalculatedData } from '@/model/service/finance-service';
 
-// todo перерасчет нужен только для проверки возможного доп соглашения и задним числом тоже
+    // todo перерасчет нужен только для проверки возможного доп соглашения и задним числом тоже
 // несколько доп соглашений тоже должно быть
 // а еще проверить как там поживает replace в базе.
-@Component({
+    @Component({
     components: { AddContractExtensionDialog, ContractExtensionsList, ConfirmDialog, FinanceList, DatePickerMenu },
 })
 export default class RecalculatePeriodsDialog extends Vue {

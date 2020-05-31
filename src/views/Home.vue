@@ -27,8 +27,8 @@
     import { Component, Vue } from 'vue-property-decorator';
     import ContractsList from '@/components/home/ContractsList.vue';
     import ContractDetails from '@/components/contracts/ContractDetails.vue';
-    import { getContractDetails } from '@/backend/repository/contract-repository';
-    import { FullContractDetails } from '@/backend/types/contract-types';
+    import { getContractDetails } from '@/model/repository/contract-repository';
+    import { FullContractDetails } from '@/model/types/contract-types';
     import NewContractDialog from '@/components/contracts/edit-contract/NewContractDialog.vue';
     import TenantsList from '@/components/home/TenantsList.vue';
     import ActionsCard from '@/components/home/ActionsCard.vue';

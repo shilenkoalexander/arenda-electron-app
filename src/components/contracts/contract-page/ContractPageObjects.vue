@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { FullObjectDetailsWithSubtenants } from '@/backend/types/objects-types';
-import { getFullObjectsDetails } from '@/backend/service/objects-service';
-import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-import NewObjectDialog from '@/components/contracts/edit-contract/NewObjectDialog.vue';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import { FullObjectDetailsWithSubtenants } from '@/model/types/objects-types';
+    import { getFullObjectsDetails } from '@/model/service/objects-service';
+    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+    import NewObjectDialog from '@/components/contracts/edit-contract/NewObjectDialog.vue';
 
-@Component({
+    @Component({
     components: {
         NewObjectDialog,
         ObjectDetailsCard,

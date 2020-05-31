@@ -1,4 +1,4 @@
-import { ContractStatus } from '@/backend/types/contract-types';
+import { ContractStatus } from '@/model/types/contract-types';
 
 export interface ContractsFilter {
     status: ContractStatus | null;

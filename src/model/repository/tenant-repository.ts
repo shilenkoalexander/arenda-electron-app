@@ -1,10 +1,10 @@
 import db from 'better-sqlite3-helper';
 import { InputItem, Page, Pagination } from '@/types/common';
-import { tenantFilterToWhereClause, TenantsFilter } from '@/backend/filter/filter';
-import { Tenant } from '@/backend/types/tenants-types';
-import { queryWithPagination } from '@/backend/repository/repository';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { TenantsOrderMapper } from '@/backend/mapper/order-mapper';
+import { tenantFilterToWhereClause, TenantsFilter } from '@/model/filter/filter';
+import { Tenant } from '@/model/types/tenants-types';
+import { queryWithPagination } from '@/model/repository/repository';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
+import { TenantsOrderMapper } from '@/model/mapper/order-mapper';
 
 export function getAllTenantsNames(): InputItem[] {
     const result = db().query(`select id, organization_name, responsible_person from tenants`);

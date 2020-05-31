@@ -67,10 +67,10 @@
     import FinanceCard from '@/components/contracts/contract-page/finance/FinanceCard.vue';
     import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
     import RecalculatePeriodsDialog from '@/components/contracts/contract-page/dialogs/RecalculatePeriodsDialog.vue';
-    import { getContractMainPageInfo, getFullContractExtensions } from '@/backend/repository/contract-repository';
-    import { ContractPageMainInfo, FullContractExtension } from '@/backend/types/contract-types';
-    import { FinancePeriod } from '@/backend/types/finance-types';
-    import { getAllPeriods } from '@/backend/repository/finance-repository';
+    import { getContractMainPageInfo, getFullContractExtensions } from '@/model/repository/contract-repository';
+    import { ContractPageMainInfo, FullContractExtension } from '@/model/types/contract-types';
+    import { FinancePeriod } from '@/model/types/finance-types';
+    import { getAllPeriods } from '@/model/repository/finance-repository';
     import CenteredCard from '@/components/CenteredCard.vue';
     import ContractPageObjects from '@/components/contracts/contract-page/ContractPageObjects.vue';
     import { Route } from 'vue-router';

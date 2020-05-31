@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { FinancePeriod } from '@/backend/types/finance-types';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import { FinancePeriod } from '@/model/types/finance-types';
 
-@Component
+    @Component
 export default class FinanceList extends Vue {
     @Prop({
         type: String,

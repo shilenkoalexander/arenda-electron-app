@@ -1,4 +1,4 @@
-import { EditObjectDto, FullObjectDetailsWithSubtenants } from '@/backend/types/objects-types';
+import { EditObjectDto, FullObjectDetailsWithSubtenants } from '@/model/types/objects-types';
 import {
     getFullObjectDetailsByObjectId,
     getFullObjectsDetailsByContractId,
@@ -6,9 +6,9 @@ import {
     getObjectInformationByObjectsId,
     getSubtenantsByObjectId,
     getSubtenantsByObjectsIds,
-} from '@/backend/repository/objects-repository';
-import { isEmpty } from '@/backend/utils/other-util';
-import Optional from '@/backend/utils/optional';
+} from '@/model/repository/objects-repository';
+import { isEmpty } from '@/model/utils/other-util';
+import Optional from '@/model/utils/optional';
 
 export function getFullObjectsDetails(contractId: number): FullObjectDetailsWithSubtenants[] {
     const fullObjectsDetails = getFullObjectsDetailsByContractId(contractId);

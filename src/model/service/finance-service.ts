@@ -10,12 +10,12 @@ import {
     savePayment,
     updateFinancePeriod,
     updateIndexingSign,
-} from '@/backend/repository/finance-repository';
-import Period from '@/backend/utils/period';
-import { FinancePeriod, Payment } from '@/backend/types/finance-types';
-import { EditableContractExtension, FullContractExtension } from '@/backend/types/contract-types';
-import { executeInTransaction } from '@/backend/repository/repository';
-import { isEmpty } from '@/backend/utils/other-util';
+} from '@/model/repository/finance-repository';
+import Period from '@/model/utils/period';
+import { FinancePeriod, Payment } from '@/model/types/finance-types';
+import { EditableContractExtension, FullContractExtension } from '@/model/types/contract-types';
+import { executeInTransaction } from '@/model/repository/repository';
+import { isEmpty } from '@/model/utils/other-util';
 
 export function saveNewAdjustment(contractId: number, sum: number, period: Period) {
     const financePeriod = getFinancePeriod(period, contractId)

@@ -6,8 +6,8 @@ export interface ContractExtension {
 }
 
 import { $enum } from 'ts-enum-util';
-import { TenantInfo } from '@/backend/types/tenants-types';
-import { ShortObjectDetails } from '@/backend/types/objects-types';
+import { TenantInfo } from '@/model/types/tenants-types';
+import { ShortObjectDetails } from '@/model/types/objects-types';
 
 export enum ContractStatus {
     ACTIVE,

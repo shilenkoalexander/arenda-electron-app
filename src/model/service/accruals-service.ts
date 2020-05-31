@@ -2,20 +2,19 @@ import { generatePeriodsArray } from '@/utils/date-utils';
 import { differenceInDays, isSameMonth } from 'date-fns';
 import {
     getContractStartCalculationDate,
-    getFinancePeriod, getIndexingSigns,
+    getFinancePeriod,
+    getIndexingSigns,
     getInflationIndexesByPeriods,
     getMonthDebt,
     getPeriodsAdjustments,
     getPeriodsPayments,
-} from '@/backend/repository/finance-repository';
-import { getContractExtensions, getPaymentContractInfo } from '@/backend/repository/contract-repository';
-import { isEmpty, isNotEmpty } from '@/backend/utils/other-util';
-import { ContractExtension } from '@/backend/types/contract-types';
-import Period, { isSamePeriods } from '@/backend/utils/period';
-import { FinancePeriod, InflationIndex } from '@/backend/types/finance-types';
-import Optional from '@/backend/utils/optional';
-import { FullContractExtension } from '@/backend/types/contract-types';
-import logger from 'vuex/dist/logger';
+} from '@/model/repository/finance-repository';
+import { getContractExtensions, getPaymentContractInfo } from '@/model/repository/contract-repository';
+import { isEmpty, isNotEmpty } from '@/model/utils/other-util';
+import { ContractExtension, FullContractExtension } from '@/model/types/contract-types';
+import Period, { isSamePeriods } from '@/model/utils/period';
+import { FinancePeriod, InflationIndex } from '@/model/types/finance-types';
+import Optional from '@/model/utils/optional';
 
 let calculatedPeriods: FinancePeriod[] = [];
 let localContractExtensions: ContractExtension[] = [];

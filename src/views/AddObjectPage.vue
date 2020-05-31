@@ -15,7 +15,7 @@
     import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
     import AddContractModule from '../store/add-contract-module';
     import { getModule } from 'vuex-module-decorators';
-    import { EditObjectDto } from '@/backend/types/objects-types';
+    import { EditObjectDto } from '@/model/types/objects-types';
     import ObjectForm from '@/components/contracts/add-contract-page/ObjectForm.vue';
 
     @Component({

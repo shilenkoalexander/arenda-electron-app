@@ -48,11 +48,11 @@
 <script lang="ts">
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { Pagination } from '@/types/common';
-    import { TenantsFilter as TenantsFilterDto } from '@/backend/filter/filter';
+    import { TenantsFilter as TenantsFilterDto } from '@/model/filter/filter';
     import PaginationComponent from '@/components/Pagination.vue';
     import TenantsFilter from '@/components/home/TenantsFilter.vue';
-    import { Tenant } from '@/backend/types/tenants-types';
-    import { getAllTenants } from '@/backend/repository/tenant-repository';
+    import { Tenant } from '@/model/types/tenants-types';
+    import { getAllTenants } from '@/model/repository/tenant-repository';
 
     @Component({
         components: {

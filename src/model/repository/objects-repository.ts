@@ -4,12 +4,12 @@ import {
     FullObjectDetailsWithSubtenants,
     ObjectInformation,
     ShortObjectDetails,
-} from '@/backend/types/objects-types';
-import { ResultMapperFactory } from '@/backend/mapper/result-mapper-factory';
-import { toArrayString } from '@/backend/utils/sql-util';
-import { EditSubtenantDto, SubtenantWithObjectId } from '@/backend/types/tenants-types';
-import { executeInTransaction, findFirst, selectArray } from '@/backend/repository/repository';
-import Optional from '@/backend/utils/optional';
+} from '@/model/types/objects-types';
+import { ResultMapperFactory } from '@/model/mapper/result-mapper-factory';
+import { toArrayString } from '@/model/utils/sql-util';
+import { EditSubtenantDto, SubtenantWithObjectId } from '@/model/types/tenants-types';
+import { executeInTransaction, findFirst, selectArray } from '@/model/repository/repository';
+import Optional from '@/model/utils/optional';
 import { formatDateToDefaultFormat } from '@/utils/date-utils';
 
 /*export function getObjectInformationByObjectId(id: number): Record<string, string> {

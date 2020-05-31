@@ -1,5 +1,6 @@
 import {
-    formatDateToDefaultFormat, formatDateToFriendly,
+    formatDateToDefaultFormat,
+    formatDateToFriendly,
     formatDateToMonthString,
     formatMonthToFriendly,
     parseMonth,

@@ -39,10 +39,10 @@
     import { Component, Vue } from 'vue-property-decorator';
     import EditableTextField from '@/components/EditableTextField.vue';
     import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import { getBusinessTypes } from '@/backend/repository/directory-repository';
+    import { getBusinessTypes } from '@/model/repository/directory-repository';
     import { parseDate } from '@/utils/date-utils';
-    import { Directory } from '@/backend/types/common-types';
-    import { EditSubtenantDto } from '@/backend/types/tenants-types';
+    import { Directory } from '@/model/types/common-types';
+    import { EditSubtenantDto } from '@/model/types/tenants-types';
 
     @Component({
         components: {

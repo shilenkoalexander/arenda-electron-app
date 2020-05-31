@@ -1,4 +1,4 @@
-import { ContractStatus } from '@/backend/types/contract-types';
+import { ContractStatus } from '@/model/types/contract-types';
 import { $enum } from 'ts-enum-util';
 
 export function getIconColorByStatus(status: ContractStatus): string {
