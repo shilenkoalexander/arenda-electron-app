@@ -12,7 +12,17 @@
         <v-tabs-items v-model="tab">
             <CenteredCard xl="10" transparent class="back">
                 <v-tab-item>
-                    <v-container fluid v-if="contractId">
+                    <v-container fluid v-if="contractId" class="py-0">
+                        <v-row>
+                            <v-col class="py-0" cols="1">
+                                <v-btn block text color="primary" @click="$router.back()">
+                                    <v-icon class="mr-2">
+                                        mdi-arrow-left
+                                    </v-icon>
+                                    Назад
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                         <v-row justify="center">
                             <v-col cols="7">
                                 <ContractInfo :main-info="contractMainInfo" class="fill-height"/>
