@@ -9,5 +9,6 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 0,
         'max-line-length': 0,
         'import-spacing-rule': 0,
+        '@typescript-eslint/ban-ts-ignore': 0,
     },
 };
