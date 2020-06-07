@@ -1,6 +1,7 @@
 import {
     AddContractMainInfoDto,
     ContractExtension,
+    ContractNumberWithTenantName,
     ContractPageMainInfo,
     ContractWithTenant,
     FullContractDetails,
@@ -184,5 +185,18 @@ export function getFullContractExtensions(contractId: number): FullContractExten
             order by start_date desc
         `,
         ResultMapperFactory.fullContractExtensionMapper,
+    );
+}
+
+export function getContractsForAccrualsCalculation(): ContractNumberWithTenantName[] {
+    return selectArray(
+            `
+                select c.id, c.contract_number, t.organization_name, t.responsible_person
+                from contracts c
+                         inner join tenants t on c.id_tenant = t.id
+                         inner join contract_statuses cs on c.id_status = cs.id
+                where cs.name = 'ACTIVE' OR cs.name = 'EXTENDED';
+        `,
+        ResultMapperFactory.contractNumberWithTenantNameMapper,
     );
 }

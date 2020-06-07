@@ -27,7 +27,7 @@
                             color="primary lighten-1"
                             class="button-text"
                     >
-                        Кнопка
+                        Печать договора
                     </v-btn>
                 </v-col>
                 <v-col cols="6">

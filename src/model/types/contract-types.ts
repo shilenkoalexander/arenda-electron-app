@@ -1,3 +1,7 @@
+import { $enum } from 'ts-enum-util';
+import { TenantInfo } from '@/model/types/tenants-types';
+import { ShortObjectDetails } from '@/model/types/objects-types';
+
 export interface ContractExtension {
     dateStart: Date;
     dateEnd: Date;
@@ -5,9 +9,6 @@ export interface ContractExtension {
     rentPayment: number;
 }
 
-import { $enum } from 'ts-enum-util';
-import { TenantInfo } from '@/model/types/tenants-types';
-import { ShortObjectDetails } from '@/model/types/objects-types';
 
 export enum ContractStatus {
     ACTIVE,
@@ -114,4 +115,10 @@ export interface FullContractExtension {
 export interface EditableContractExtension extends FullContractExtension {
     isNew: boolean;
     isDeleted: boolean;
+}
+
+export interface ContractNumberWithTenantName {
+    id: number;
+    contractNumber: string;
+    tenantName: string;
 }

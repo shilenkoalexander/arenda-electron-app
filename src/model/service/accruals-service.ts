@@ -219,6 +219,7 @@ function calculateAccruals(period: Period, contractId: number): number {
 }
 
 // todo добавить в базу индексацию по умолчанию - true при добавлении контракта
+// todo баг такой есть. если мы получили индекс минимум за 04.2020, а алгоритмы полезли раньше жтого периода
 function getInflationIndexesConsideringIndexing(periods: Period[], contractId: number): InflationIndex[] {
     const indexes = getInflationIndexesByPeriods(periods);
     const indexingSigns = getIndexingSigns(contractId);
@@ -232,7 +233,12 @@ function getInflationIndexesConsideringIndexing(periods: Period[], contractId: n
         const indexPeriod = Period.ofString(index.period);
         for (let j = lastSignIndex; j < indexingSigns.length + 1; j++) {
             if (j === indexingSigns.length || indexingSigns[j].period.isAfter(indexPeriod)) {
-                if (!indexingSigns[j - 1].indexing) {
+                // todo отдебажить. тут ошибка какая то
+                const indexingSign = indexingSigns[j - 1];
+                if (!indexingSign) {
+                    throw new Error(`Отсутствует индекс инфляции за ${indexPeriod.subMonths(1).toFriendlyFormat()}`);
+                }
+                if (!indexingSign.indexing) {
                     index.index = 1;
                 }
                 lastSignIndex = j;
@@ -241,7 +247,6 @@ function getInflationIndexesConsideringIndexing(periods: Period[], contractId: n
         }
     });
 
-    console.log(indexes);
     return indexes;
 }
 
@@ -279,12 +284,17 @@ export function calculateFinancePeriods(
         localContractExtensions.push(...allContractExtensions);
     }
 
+    const periodsForIndexes = generatePeriodsArray(
+        Period.ofDate(getContractStartCalculationDate(contractId)),
+        periodTo,
+    );
+    inflationIndexes = getInflationIndexesConsideringIndexing(periodsForIndexes, contractId);
+
     const periods = generatePeriodsArray(periodFrom, periodTo);
-    inflationIndexes = getInflationIndexesConsideringIndexing(periods, contractId);
     const periodsPayments = getPeriodsPayments(periods, contractId);
     const periodsAdjustments = getPeriodsAdjustments(periods, contractId);
     const prevPeriodDebt = getMonthDebt(periodFrom.subMonths(1), contractId);
-    let dept = prevPeriodDebt.orElse(0);
+    let debt = prevPeriodDebt.orElse(0);
 
     periods.forEach((period) => {
         const accruals = calculateAccruals(period, contractId);
@@ -293,13 +303,13 @@ export function calculateFinancePeriods(
         const safePayments = payments ? payments.sum : 0;
         const safeAdjustment = adjustment ? adjustment.adjustment : 0;
         const totalAccruals = accruals + safeAdjustment;
-        dept += (totalAccruals - safePayments);
+        debt += (totalAccruals - safePayments);
         calculatedPeriods.push(
             {
                 period,
                 accruals: totalAccruals,
                 payments: safePayments,
-                debt: dept,
+                debt,
                 adjustments: safeAdjustment,
             },
         );
@@ -311,4 +321,38 @@ export function calculateFinancePeriods(
     inflationIndexes = [];
 
     return tempCalculatedPeriods;
+}
+
+export function calculateFinancePeriod(
+    period: Period,
+    contractId: number,
+): FinancePeriod {
+    localContractExtensions = getContractExtensions(contractId);
+    const periodsForIndexes = generatePeriodsArray(
+        Period.ofDate(getContractStartCalculationDate(contractId)),
+        period,
+    );
+
+    inflationIndexes = getInflationIndexesConsideringIndexing(periodsForIndexes, contractId);
+
+    const periodPayments = getPeriodsPayments([period], contractId)[0] || 0;
+    const periodAdjustments = getPeriodsAdjustments([period], contractId)[0] || 0;
+    const prevPeriodDebt = getMonthDebt(period.subMonths(1), contractId).orElse(0);
+
+    const accruals = calculateAccruals(period, contractId);
+
+    const totalAccruals = accruals + periodAdjustments.adjustment;
+    const debt = totalAccruals - periodPayments.sum + prevPeriodDebt;
+    const financePeriod = {
+        period,
+        accruals: totalAccruals,
+        payments: periodPayments.sum,
+        debt,
+        adjustments: periodAdjustments.adjustment,
+    };
+
+    localContractExtensions = [];
+    inflationIndexes = [];
+
+    return financePeriod;
 }

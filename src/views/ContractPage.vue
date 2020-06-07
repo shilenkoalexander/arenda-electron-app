@@ -115,11 +115,8 @@
             next((vm: ContractPage) => {
                vm.contractId = contractId;
                vm.contractMainInfo = contractMainInfo;
+               vm.updateAll();
             });
-        }
-
-        created() {
-            this.updateAll();
         }
 
         onRecalculate() {

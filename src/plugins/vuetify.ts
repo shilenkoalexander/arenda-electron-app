@@ -2,8 +2,13 @@ import '@mdi/font/css/materialdesignicons.css';
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import { ru } from 'vuetify/src/locale';
+import { Ripple } from 'vuetify/lib/directives';
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+    directives: {
+        Ripple,
+    },
+});
 
 export default new Vuetify({
     customProperties: true,
