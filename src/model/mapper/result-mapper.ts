@@ -2,6 +2,7 @@ import {
     Contact,
     ContactType,
     ContractExtension,
+    ContractNumberWithTenantName,
     ContractPageMainInfo,
     ContractStatus,
     ContractWithTenant,
@@ -22,6 +23,7 @@ import { BetterSqlite3Helper } from 'better-sqlite3-helper';
 import { parseDate } from '@/utils/date-utils';
 import Period from '@/model/utils/period';
 import { Directory } from '@/model/types/common-types';
+import { getTenantName } from '@/model/utils/other-util';
 import DataObject = BetterSqlite3Helper.DataObject;
 
 export abstract class ResultMapper<T> {
@@ -46,7 +48,7 @@ export class ContractMapper extends ResultMapper<ContractWithTenant> {
                 tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
                 legalAddress: value.legal_address,
                 inn: value.inn,
-                fullName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
+                fullName: getTenantName(value.organization_name, value.responsible_person),
             },
             status: $enum(ContractStatus).getValueOrDefault(value.status, ContractStatus.UNKNOWN),
         };
@@ -72,7 +74,7 @@ export class FullContractDetailsMapper extends ResultMapper<FullContractDetails>
                 tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
                 legalAddress: value.legal_address,
                 inn: value.inn,
-                fullName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
+                fullName: getTenantName(value.organization_name, value.responsible_person),
             },
             contacts: value.contacts,
             objectsInfo: value.objectsInfo,
@@ -136,7 +138,7 @@ export class ContractPageMainInfoMapper extends ResultMapper<ContractPageMainInf
     protected innerMap(value: DataObject): ContractPageMainInfo {
         return {
             tenantId: value.tenant_id,
-            tenantName: (value.organization_name ? `"${value.organization_name}" ` : ``) + value.responsible_person,
+            tenantName: getTenantName(value.organization_name, value.responsible_person),
             contractNumber: value.contract_number,
             contractType: value.contract_type,
             calculationStartDate: parseDate(value.calculation_start_date),
@@ -263,6 +265,16 @@ export class TenantMapper extends ResultMapper<Tenant> {
             responsiblePerson: value.responsible_person,
             legalAddress: value.legal_address,
             tenantType: $enum(TenantType).getValueOrDefault(value.tenant_type, TenantType.UNKNOWN),
+        };
+    }
+}
+
+export class ContractNumberWithTenantNameMapper extends ResultMapper<ContractNumberWithTenantName> {
+    protected innerMap(value: DataObject): ContractNumberWithTenantName {
+        return {
+            id: value.id,
+            tenantName: getTenantName(value.organization_name, value.responsible_person),
+            contractNumber: value.contract_number,
         };
     }
 }

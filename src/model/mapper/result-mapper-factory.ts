@@ -1,6 +1,7 @@
 import {
     Contact,
     ContractExtension,
+    ContractNumberWithTenantName,
     ContractPageMainInfo,
     ContractWithTenant,
     FullContractDetails,
@@ -18,6 +19,7 @@ import {
     ContactMapper,
     ContractExtensionMapper,
     ContractMapper,
+    ContractNumberWithTenantNameMapper,
     ContractPageMainInfoMapper,
     DirectoryMapper,
     FinancePeriodMapper,
@@ -59,4 +61,6 @@ export class ResultMapperFactory {
         = new FullContractExtensionMapper();
     static readonly tenantMapper: ResultMapper<Tenant>
         = new TenantMapper();
+    static readonly contractNumberWithTenantNameMapper: ResultMapper<ContractNumberWithTenantName>
+        = new ContractNumberWithTenantNameMapper();
 }

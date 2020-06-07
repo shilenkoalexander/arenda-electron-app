@@ -2,7 +2,10 @@
     <v-container fluid>
         <v-row justify="center">
             <v-col xl="10" xs="12">
-                <ActionsCard/>
+                <ActionsCard
+                        @calculate-accruals="onCalculateAccrualsClicked"
+                        @add-contract="onContractAddClicked"
+                />
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -18,6 +21,7 @@
             </v-col>
         </v-row>
         <NewContractDialog ref="newContractDialog"/>
+        <AccrualsCalculateDialog ref="accrualsCalculateDialog"/>
     </v-container>
 </template>
 
@@ -32,33 +36,40 @@
     import NewContractDialog from '@/components/contracts/edit-contract/NewContractDialog.vue';
     import TenantsList from '@/components/home/TenantsList.vue';
     import ActionsCard from '@/components/home/ActionsCard.vue';
+    import AccrualsCalculateDialog from '@/components/home/AccrualsCalculateDialog.vue';
 
     @Component({
-    components: {
-        ActionsCard,
-        TenantsList,
-        NewContractDialog,
-        ContractsFilter,
-        ContractsActionPanel,
-        ContractsList,
-        ContractDetails,
-    },
-})
-export default class Home extends Vue {
-    item: FullContractDetails | null = null;
+        components: {
+            AccrualsCalculateDialog,
+            ActionsCard,
+            TenantsList,
+            NewContractDialog,
+            ContractsFilter,
+            ContractsActionPanel,
+            ContractsList,
+            ContractDetails,
+        },
+    })
+    export default class Home extends Vue {
+        item: FullContractDetails | null = null;
 
-    $refs!: {
-        newContractDialog: NewContractDialog;
-    };
+        $refs!: {
+            newContractDialog: NewContractDialog;
+            accrualsCalculateDialog: AccrualsCalculateDialog;
+        };
 
-    showContractDetails(id: number) {
-        this.item = getContractDetails(id);
+        showContractDetails(id: number) {
+            this.item = getContractDetails(id);
+        }
+
+        onCalculateAccrualsClicked() {
+            this.$refs.accrualsCalculateDialog.open();
+        }
+
+        onContractAddClicked() {
+            this.$refs.newContractDialog.open();
+        }
     }
-
-    onContractAddClicked() {
-        this.$refs.newContractDialog.open();
-    }
-}
 </script>
 
 <style scoped lang="scss">

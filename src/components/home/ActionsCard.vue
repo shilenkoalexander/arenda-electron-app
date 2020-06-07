@@ -3,7 +3,15 @@
         <v-container fluid class="py-0">
             <v-row>
                 <v-col>
-                    <v-btn block text color="primary" to="/contracts/add">
+                    <v-btn block text color="primary" @click="$emit('calculate-accruals')">
+                        <v-icon class="mr-2">
+                            mdi-cash-multiple
+                        </v-icon>
+                        Расчет начислений
+                    </v-btn>
+                </v-col>
+                <v-col>
+                    <v-btn block text color="primary" @click="$emit('add-contract')">
                         <v-icon class="mr-2">
                             mdi-text-box-plus-outline
                         </v-icon>
