@@ -16,13 +16,13 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import EditContractForm from '@/components/contracts/edit-contract/EditContractForm.vue';
-    import ObjectForm from '@/components/contracts/add-contract-page/ObjectForm.vue';
-    import { EditObjectDto } from '@/model/types/objects-types';
-    import { saveNewObject, updateObject } from '@/model/repository/objects-repository';
+import { Component, Vue } from 'vue-property-decorator';
+import EditContractForm from '@/components/contracts/edit-contract/EditContractForm.vue';
+import ObjectForm from '@/components/contracts/edit-contract/ObjectForm.vue';
+import { EditObjectDto } from '@/model/types/objects-types';
+import { saveNewObject, updateObject } from '@/model/repository/objects-repository';
 
-    @Component({
+@Component({
     components: { ObjectForm, EditContractForm },
 })
 export default class NewObjectDialog extends Vue {

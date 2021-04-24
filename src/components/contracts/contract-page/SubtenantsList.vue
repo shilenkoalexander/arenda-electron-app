@@ -26,13 +26,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { Subtenant } from '@/model/types/tenants-types';
-    import { formatDateToFriendly } from '@/utils/date-utils';
+import { Subtenant } from '@/model/types/tenants-types';
+import { formatDateToFriendly } from '@/utils/date-utils';
 
-    // todo добавить удаление и редактирование субарендаторов и индивидуальных данных
+// todo добавить удаление и редактирование субарендаторов и индивидуальных данных
 // todo добавить валидации
 // todo
-    @Component({
+@Component({
     components: {},
 })
 export default class SubtenantsList extends Vue {

@@ -52,13 +52,13 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Vue } from 'vue-property-decorator';
-    import { BasicObjectInfo } from '@/model/types/objects-types';
-    import { CURRENCY } from '@/utils/finance-util';
-    import { getModule } from 'vuex-module-decorators';
-    import AddContractModule from '@/store/add-contract-module';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { BasicObjectInfo } from '@/model/types/objects-types';
+import { CURRENCY } from '@/utils/finance-util';
+import { getModule } from 'vuex-module-decorators';
+import AddContractModule from '@/store/add-contract-module';
 
-    @Component
+@Component
     export default class AddContractObjectsList extends Vue {
         @Prop({
             type: Array,

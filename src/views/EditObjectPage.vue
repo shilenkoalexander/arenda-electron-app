@@ -5,21 +5,21 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import Header from '@/components/Header.vue';
-    import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
-    import EditableTextField from '@/components/EditableTextField.vue';
-    import CenteredCard from '@/components/CenteredCard.vue';
-    import DatePickerMenu from '@/components/DatePickerMenu.vue';
-    import Label from '@/components/Label.vue';
-    import AddContractSubtenantsForm from '@/components/contracts/add-contract-page/AddContractSubtenantsForm.vue';
-    import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
-    import ObjectForm from '@/components/contracts/add-contract-page/ObjectForm.vue';
-    import { EditObjectDto } from '@/model/types/objects-types';
-    import { getFullObjectForEditing } from '@/model/service/objects-service';
-    import { Route } from 'vue-router';
+import { Component, Vue } from 'vue-property-decorator';
+import Header from '@/components/Header.vue';
+import SubtenantsList from '@/components/contracts/contract-page/SubtenantsList.vue';
+import EditableTextField from '@/components/EditableTextField.vue';
+import CenteredCard from '@/components/CenteredCard.vue';
+import DatePickerMenu from '@/components/DatePickerMenu.vue';
+import Label from '@/components/Label.vue';
+import AddContractSubtenantsForm from '@/components/contracts/edit-contract/AddContractSubtenantsForm.vue';
+import ObjectDetailsCard from '@/components/contracts/contract-page/ObjectDetailsCard.vue';
+import ObjectForm from '@/components/contracts/edit-contract/ObjectForm.vue';
+import { EditObjectDto } from '@/model/types/objects-types';
+import { getFullObjectForEditing } from '@/model/service/objects-service';
+import { Route } from 'vue-router';
 
-    @Component({
+@Component({
         components: {
             ObjectForm,
             ObjectDetailsCard,

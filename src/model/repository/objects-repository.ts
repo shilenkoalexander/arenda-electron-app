@@ -314,7 +314,7 @@ export function updateObject(contractId: number, object: EditObjectDto) {
 
 export function saveNewObject(contractId: number, object: EditObjectDto) {
     executeInTransaction(() => {
-        db().insert(
+        const objectId = db().insert(
             'objects',
             {
                 id_contract: contractId,
@@ -336,7 +336,7 @@ export function saveNewObject(contractId: number, object: EditObjectDto) {
             },
         );
 
-        object.subtenants.forEach((value) => insertSubtenant(object.id!, value));
-        object.objectIndividualInformation.forEach((value) => insertObjectInformation(object.id!, value));
+        object.subtenants.forEach((value) => insertSubtenant(objectId, value));
+        object.objectIndividualInformation.forEach((value) => insertObjectInformation(objectId, value));
     });
 }
